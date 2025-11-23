@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* Tell Tailwind where to scan for classes */
+@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
+@source "../../storage/framework/views/*.php";
+@source "../**/*.blade.php";
+@source "../**/*.js";
+
+/* Dark / Light variants */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(:not(.dark), :not(.dark) *));
+
+/* ============================
+   DURO THEME VARIABLES
+============================ */
+@theme {
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* ELECTRIC BLUE */
+  --color-electric-50:  oklch(0.97 0.02 200);
+  --color-electric-100: oklch(0.94 0.03 200);
+  --color-electric-200: oklch(0.88 0.05 200);
+  --color-electric-300: oklch(0.82 0.09 200);
+  --color-electric-400: oklch(0.75 0.13 200);
+  --color-electric-500: oklch(0.70 0.15 215);
+  --color-electric-600: oklch(0.63 0.14 210);
+  --color-electric-700: oklch(0.53 0.12 210);
+  --color-electric-800: oklch(0.44 0.10 210);
+  --color-electric-900: oklch(0.35 0.07 210);
+
+  /* ELECTRIC PURPLE (ARCANE) */
+  --color-purplearc-glow: oklch(0.80 0.14 320);
+  --color-purplearc-deep: oklch(0.60 0.20 320);
+
+  /* GOLD */
+  --color-gold-50:  oklch(0.95 0.04 95);
+  --color-gold-100: oklch(0.90 0.07 95);
+  --color-gold-200: oklch(0.86 0.10 90);
+  --color-gold-300: oklch(0.82 0.19 85);
+  --color-gold-400: oklch(0.76 0.18 85);
+  --color-gold-500: oklch(0.70 0.21 80);
+  --color-gold-600: oklch(0.63 0.17 80);
+  --color-gold-700: oklch(0.54 0.15 80);
+  --color-gold-800: oklch(0.45 0.12 80);
+  --color-gold-900: oklch(0.38 0.10 80);
+
+  /* SILVER */
+  --color-silver-50:  oklch(0.96 0.007 260);
+  --color-silver-100: oklch(0.92 0.01 260);
+  --color-silver-200: oklch(0.88 0.01 260);
+  --color-silver-300: oklch(0.82 0.015 260);
+  --color-silver-400: oklch(0.76 0.02 260);
+  --color-silver-500: oklch(0.70 0.02 260);
+  --color-silver-600: oklch(0.60 0.02 260);
+  --color-silver-700: oklch(0.48 0.015 260);
+  --color-silver-800: oklch(0.36 0.012 260);
+  --color-silver-900: oklch(0.28 0.01 260);
+
+  /* SHADOW */
+  --color-shadow-50:  oklch(0.24 0.03 255);
+  --color-shadow-100: oklch(0.22 0.03 255);
+  --color-shadow-200: oklch(0.20 0.03 255);
+  --color-shadow-300: oklch(0.18 0.025 255);
+  --color-shadow-400: oklch(0.16 0.025 255);
+  --color-shadow-500: oklch(0.14 0.025 255);
+  --color-shadow-600: oklch(0.14 0.02 255);
+  --color-shadow-700: oklch(0.13 0.02 255);
+  --color-shadow-800: oklch(0.12 0.02 255); /* given */
+  --color-shadow-900: oklch(0.08 0.02 255); /* given */
+  --color-shadow-950: oklch(0.05 0.01 255); /* given */
+
+  /* NEUTRAL FOG */
+  --color-neutralfog-50:  oklch(0.99 0.005 250);
+  --color-neutralfog-100: oklch(0.97 0.01 250); /* given */
+  --color-neutralfog-200: oklch(0.94 0.01 250); /* given */
+  --color-neutralfog-300: oklch(0.90 0.01 250); /* given */
+  --color-neutralfog-400: oklch(0.85 0.01 250);
+  --color-neutralfog-500: oklch(0.80 0.01 250);
+  --color-neutralfog-600: oklch(0.75 0.015 250);
+  --color-neutralfog-700: oklch(0.65 0.015 250);
+  --color-neutralfog-800: oklch(0.55 0.015 250);
+  --color-neutralfog-900: oklch(0.45 0.015 250);
+  --color-neutralfog-950: oklch(0.35 0.02 250);
+
+}
+/* ============================
+   CUSTOM UTILITIES
+============================ */
+@layer utilities {
+  .glow-electric {
+    box-shadow:
+      0 0 12px var(--color-electric-500),
+      0 0 30px var(--color-electric-300);
+  }
+
+  .glow-arcane {
+    box-shadow: 0 0 20px var(--color-purplearc-glow);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px var(--color-gold-300);
+  }
+
+  .aura-shadow {
+    background: radial-gradient(circle at center, transparent, var(--color-shadow-900) 80%);
+  }
+
+  .bg-aurora-light {
+    background:
+      radial-gradient(circle at 0% 0%, oklch(0.97 0.02 200 / 0.4), transparent 60%),
+      radial-gradient(circle at 100% 0%, oklch(0.95 0.04 95 / 0.35), transparent 65%),
+      radial-gradient(circle at 50% 100%, oklch(0.90 0.01 250 / 0.3), transparent 65%);
+  }
+
+  .bg-aurora-dark {
+    background:
+      radial-gradient(circle at 0% 0%, oklch(0.70 0.15 215 / 0.35), transparent 60%),
+      radial-gradient(circle at 100% 0%, oklch(0.60 0.20 320 / 0.30), transparent 65%),
+      radial-gradient(circle at 50% 100%, oklch(0.08 0.02 255 / 0.85), oklch(0.05 0.01 255));
+  }
+}
+
+/* ============================
+   COMPONENTS: MARKDOWN + RICH EDITOR
+============================ */
+@layer components {
+  /* Markdown */
+  .markdown-preview h1 { @apply text-lg font-semibold mt-2 mb-1 text-shadow-900 dark:text-neutralfog-100; }
+  .markdown-preview h2 { @apply text-base font-semibold mt-2 mb-1; }
+  .markdown-preview h3 { @apply text-sm font-semibold mt-2 mb-1; }
+  .markdown-preview p  { @apply text-sm leading-relaxed mb-2; }
+  .markdown-preview code { @apply px-1 py-0.5 rounded bg-shadow-900/80 text-[0.75rem] text-neutralfog-100; }
+  .markdown-preview a { @apply underline decoration-electric-500 decoration-2 underline-offset-2; }
+
+  /* Rich Preview */
+  .duro-rich-preview strong { @apply font-semibold text-shadow-900 dark:text-neutralfog-100; }
+  .duro-rich-preview em { @apply italic opacity-90; }
+  .duro-rich-preview u { @apply underline decoration-electric-500 underline-offset-2; }
+  .duro-rich-preview p, 
+  .duro-rich-preview div { @apply text-sm leading-relaxed mb-2; }
+
+  /* TipTap-like Editor */
+  .duro-editor-content {
+    @apply w-full rounded-lg px-3 py-2 text-sm leading-relaxed
+           bg-transparent text-shadow-900
+           outline-none focus:outline-none focus:ring-0
+           dark:text-neutralfog-100;
+    min-height: var(--duro-editor-min-h, 140px);
+    white-space: pre-wrap;
+  }
+
+  .duro-editor-content[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    @apply text-neutral-400 dark:text-neutralfog-400/70;
+  }
+
+  .duro-editor-btn {
+    @apply inline-flex items-center justify-center h-6 px-2 rounded-lg
+           border border-transparent text-[11px]
+           text-neutral-600 dark:text-neutralfog-300
+           hover:bg-electric-500/10 hover:text-electric-700
+           dark:hover:bg-electric-500/20 dark:hover:text-electric-200
+           transition;
+  }
+
+  .duro-editor-btn-active {
+    @apply bg-electric-500/15 text-electric-700 dark:text-electric-200
+           border-electric-500/60;
+  }
+}
