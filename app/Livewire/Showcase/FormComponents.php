@@ -50,7 +50,7 @@ class FormComponents extends Component
 
     public function render()
     {
-        return view('livewire.landing.showcase')
+        return view('livewire.showcase.form-components')
             ->layout('layouts.app', [
                 'title' => 'Form Components — Durolord UI',
             ]);

@@ -5,8 +5,8 @@
 ])
 
 @php
-    // Get the wire:model field name so we can show validation errors
-    $wireModelField = $attributes->whereStartsWith('wire:model')->first();
+    // Properly extract the wire:model field name (e.g. "documents")
+    $wireModelField = optional($attributes->wire('model'))->value();
 @endphp
 
 <div
@@ -15,9 +15,10 @@
         uploading: false,
         overallProgress: 0,
         files: [],
+        isDragging: false,
 
-        handleChange(event) {
-            const selected = Array.from(event.target.files || []);
+        syncFilesToPreviews(fileList) {
+            const selected = Array.from(fileList || []);
             this.files = selected.map((file, index) => ({
                 id: `${file.name}-${index}-${Date.now()}`,
                 name: file.name,
@@ -32,9 +33,39 @@
             }));
         },
 
+        handleChange(event) {
+            this.syncFilesToPreviews(event.target.files);
+        },
+
+        handleDrop(event) {
+            event.preventDefault();
+            this.isDragging = false;
+
+            const droppedFiles = event.dataTransfer?.files;
+            if (!droppedFiles || !droppedFiles.length) return;
+
+            const dt = new DataTransfer();
+
+            Array.from(droppedFiles).forEach((file, index) => {
+                if (this.$refs.input.multiple || index === 0) {
+                    dt.items.add(file);
+                }
+            });
+
+            // Put files on the real <input> so Livewire can see them
+            this.$refs.input.files = dt.files;
+
+            // Update Alpine previews
+            this.syncFilesToPreviews(this.$refs.input.files);
+
+            // IMPORTANT: Trigger a real change event so Livewire uploads
+            this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+        },
+
         startUpload() {
             this.uploading = true;
             this.overallProgress = 0;
+            this.files.forEach((f) => f.progress = 0);
         },
 
         updateProgress(p) {
@@ -51,8 +82,8 @@
         removeFile(id) {
             this.files = this.files.filter(f => f.id !== id);
 
-            // Rebuild input FileList to match remaining previews
             const dt = new DataTransfer();
+            // Keep only the files that still have previews
             Array.from(this.$refs.input.files).forEach((file) => {
                 const stillPresent = this.files.find(
                     f => f.name === file.name && f.size === file.size
@@ -62,10 +93,13 @@
                 }
             });
             this.$refs.input.files = dt.files;
+
+            // Fire change so Livewire updates its pending upload list
+            this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
         },
 
         formatSize(bytes) {
-            if (!bytes && bytes !== 0) return '';
+            if (bytes === undefined || bytes === null) return '';
             const mb = bytes / 1024 / 1024;
             if (mb < 1) {
                 return (bytes / 1024).toFixed(1) + ' KB';
@@ -75,7 +109,7 @@
     }"
     x-on:livewire-upload-start="startUpload()"
     x-on:livewire-upload-progress="updateProgress($event.detail.progress)"
-    x-on:livewire-upload-error="finishUpload()"
+    x-on:livewire-upload-error="uploading = false"
     x-on:livewire-upload-finish="finishUpload()"
 >
     {{-- Label --}}
@@ -92,6 +126,11 @@
                text-xs text-neutral-600 hover:border-electric-400 hover:bg-neutralfog-100
                dark:border-shadow-700 dark:bg-shadow-950/60 dark:text-neutralfog-300
                dark:hover:border-electric-400/80 transition-colors duration-150"
+        :class="isDragging ? 'border-electric-500 bg-neutralfog-100 dark:border-electric-400/90' : ''"
+        x-on:dragover.prevent
+        x-on:dragenter.prevent="isDragging = true"
+        x-on:dragleave.prevent="isDragging = false"
+        x-on:drop="handleDrop($event)"
     >
         <span class="text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:text-neutralfog-400">
             Drop files here or click to upload
@@ -110,14 +149,16 @@
     </label>
 
     {{-- Validation bubble --}}
-    @error($wireModelField)
-        <div class="inline-flex items-center gap-2 mt-1 rounded-full bg-crimson-50 px-3 py-1.5
-                    text-[11px] text-crimson-700 border border-crimson-100
-                    dark:bg-crimson-900/20 dark:text-crimson-200 dark:border-crimson-800/80">
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-crimson-500 dark:bg-crimson-300"></span>
-            <span>{{ $message }}</span>
-        </div>
-    @enderror
+    @if($wireModelField)
+        @error($wireModelField)
+            <div class="inline-flex items-center gap-2 mt-1 rounded-full bg-crimson-50 px-3 py-1.5
+                        text-[11px] text-crimson-700 border border-crimson-100
+                        dark:bg-crimson-900/20 dark:text-crimson-200 dark:border-crimson-800/80">
+                <span class="inline-block h-1.5 w-1.5 rounded-full bg-crimson-500 dark:bg-crimson-300"></span>
+                <span>{{ $message }}</span>
+            </div>
+        @enderror
+    @endif
 
     {{-- Overall upload progress --}}
     <div x-show="uploading" x-transition.opacity class="mt-2 space-y-1">
@@ -179,7 +220,6 @@
                         <span x-text="formatSize(file.size)"></span>
                     </p>
 
-                    {{-- Per-file progress bar (mirrors overall progress) --}}
                     <div class="h-1.5 rounded-full bg-neutralfog-200/70 dark:bg-shadow-900 overflow-hidden">
                         <div
                             class="h-1.5 bg-electric-500 dark:bg-electric-400 rounded-full transition-all duration-150"

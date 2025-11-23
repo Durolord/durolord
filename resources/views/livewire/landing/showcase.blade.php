@@ -1,245 +1,233 @@
 <div class="min-h-[calc(100vh-5rem)]">
-    <section class="container mx-auto px-6 py-16 lg:py-20 space-y-12">
 
-        {{-- PAGE HEADING --}}
-        <header class="max-w-xl space-y-4">
-            <x-duro.badge variant="gold">
-                Form System • Duro UI
-            </x-duro.badge>
+    <div class="space-y-8 p-6">
 
-            <div class="space-y-2">
-                <h1 class="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight text-electric-700 dark:text-electric-300">
-                    Structured, modern form layout
-                </h1>
-
-                <p class="text-sm md:text-base text-neutral-700 dark:text-neutralfog-300">
-                    A clean, two-column form flow using Duro components.
-                </p>
-            </div>
-        </header>
-
-        {{-- MAIN CONTENT AREA --}}
-        <div class="lg:grid lg:gap-12">
-
-            {{-- LEFT COLUMN (two-column card grid) --}}
-            <div class="space-y-12">
-
-                {{-- FORM START --}}
-                <form wire:submit.prevent="submit" class="space-y-12">
-
-                    {{-- =============== TWO-COLUMN CARD GRID =============== --}}
-                    <div class="grid gap-8 lg:gap-10 md:grid-cols-2">
-
-                        {{-- CARD: BASIC IDENTITY --}}
-                        <x-duro.card class="space-y-6 h-full flex flex-col justify-between">
-                            <div class="space-y-2">
-                                <h2 class="text-base md:text-lg font-semibold text-shadow-900 dark:text-silver-50">
-                                    Profile & Basic Details
-                                </h2>
-                                <p class="text-xs md:text-sm text-neutral-700 dark:text-neutralfog-300">
-                                    Capture essential data.
-                                </p>
-                            </div>
-
-                            @if($submitted)
-                                <x-duro.alert variant="success" title="Saved">
-                                    Your details have been saved.
-                                </x-duro.alert>
-                            @endif
-
-                            <div class="grid gap-4">
-                                <x-duro.input
-                                    name="name"
-                                    label="Full name"
-                                    wire:model.defer="name"
-                                />
-
-                                <x-duro.input
-                                    name="email"
-                                    type="email"
-                                    label="Email"
-                                    wire:model.defer="email"
-                                />
-                            </div>
-
-                            <x-duro.select
-                                label="Primary role"
-                                wire:model.defer="role"
-                                name="role"
-                                placeholder="Select..."
-                                :options="[
-                                    'developer' => 'Developer',
-                                    'designer'  => 'Designer',
-                                    'architect' => 'Architect',
-                                    'overseer'  => 'Overseer',
-                                ]"
-                            />
-
-                            <x-duro.textarea
-                                label="Short bio"
-                                name="about"
-                                wire:model.defer="about"
-                                rows="4"
-                            />
-
-                            <x-duro.markdown-editor
-                                label="Extended description"
-                                name="markdown"
-                                wire:model.defer="markdown"
-                            />
-
-                            <x-duro.button type="submit" class="px-6 py-3 text-sm font-semibold">
-                                {{ $submitted ? 'Retract form' : 'Submit form' }}
-                            </x-duro.button>
-                        </x-duro.card>
-
-                        {{-- CARD: PREFERENCES --}}
-                        <x-duro.card class="space-y-6 h-full">
-                            <div class="space-y-2">
-                                <h3 class="text-xs font-semibold tracking-[0.18em] uppercase text-neutral-600 dark:text-neutralfog-400">
-                                    Preferences
-                                </h3>
-                                <p class="text-xs text-neutral-700 dark:text-neutralfog-300">
-                                    Customize system behavior.
-                                </p>
-                            </div>
-
-                            <div class="grid gap-4">
-                                <x-duro.checkbox
-                                    wire:model.defer="newsletter"
-                                    name="newsletter"
-                                    label="Receive updates"
-                                />
-
-                                <x-duro.toggle
-                                    label="Enhanced visual mode"
-                                    wire:model.defer="arcaneMode"
-                                />
-                            </div>
-
-                            <div class="grid gap-4">
-                                <x-duro.checkbox-list
-                                    label="Focus areas"
-                                    :options="[
-                                        'hrms'      => 'HRMS',
-                                        'cms'       => 'CMS',
-                                        'church'    => 'Church systems',
-                                        'analytics' => 'Analytics dashboards',
-                                    ]"
-                                />
-
-                                <x-duro.radio
-                                    label="Complexity preference"
-                                    :options="[
-                                        'casual'   => 'Casual',
-                                        'standard' => 'Standard',
-                                        'soulslike'=> 'Soulslike',
-                                    ]"
-                                    inline
-                                    wire:model.defer="difficulty"
-                                />
-                            </div>
-                        </x-duro.card>
-
-                        {{-- CARD: META --}}
-                        <x-duro.card class="space-y-6 h-full">
-                            <div class="space-y-2">
-                                <h3 class="text-xs font-semibold tracking-[0.18em] uppercase text-neutral-600 dark:text-neutralfog-400">
-                                    Meta & Configuration
-                                </h3>
-                            </div>
-
-                            <div class="grid gap-4">
-                                <x-duro.date-time-picker
-                                    label="Next event"
-                                    wire:model.defer="deploy_at"
-                                />
-
-                                <x-duro.slider
-                                    label="Complexity"
-                                    wire:model.defer="complexity"
-                                    :min="1"
-                                    :max="10"
-                                />
-                            </div>
-
-                            <div class="grid gap-4">
-                                <x-duro.tags-input
-                                    label="Tags"
-                                    name="tags"
-                                    value="{{ $tags ?? '' }}"
-                                />
-
-                                <x-duro.color-picker
-                                    label="Accent color"
-                                    wire:model.defer="accent_color"
-                                />
-                            </div>
-                        </x-duro.card>
-
-                        {{-- CARD: FILES --}}
-                        <x-duro.card class="space-y-6 h-full">
-                            <h3 class="text-xs font-semibold tracking-[0.18em] uppercase text-neutral-600 dark:text-neutralfog-400">
-                                Files & Data
-                            </h3>
-
-                            <div class="grid gap-4">
-                                <x-duro.file-upload
-                                    label="Attachments"
-                                    name="attachments"
-                                    wire:model="attachments"
-                                    multiple
-                                />
-
-                                <x-duro.key-value
-                                    label="Environment variables"
-                                    name="env"
-                                />
-                            </div>
-                        </x-duro.card>
-
-                        {{-- CARD: REPEATER + BUILDER --}}
-                        <x-duro.card class="space-y-6 h-full">
-                            <h3 class="text-xs font-semibold tracking-[0.18em] uppercase text-neutral-600 dark:text-neutralfog-400">
-                                Repeater & Builder
-                            </h3>
-
-                            <div class="grid gap-4">
-                                <x-duro.repeater label="Service slots">
-                                    <x-duro.input name="service_name" label="Service name" />
-                                    <x-duro.date-time-picker label="Start time" />
-                                </x-duro.repeater>
-
-                                <x-duro.builder
-                                    label="Page builder"
-                                    :blocks="[
-                                        'text'  => 'Text',
-                                        'image' => 'Image',
-                                        'cta'   => 'CTA',
-                                    ]"
-                                />
-                            </div>
-                        </x-duro.card>
-
-                        {{-- CARD: CODE EDITOR --}}
-                        <x-duro.card class="space-y-6 h-full">
-                            <h3 class="text-xs font-semibold tracking-[0.18em] uppercase text-neutral-600 dark:text-neutralfog-400">
-                                Code Snippet
-                            </h3>
-
-                            <x-duro.code-editor
-                                label="Initialization script"
-                                name="init_script"
-                                wire:model.defer="init_script"
-                                language="php"
-                            />
-                        </x-duro.card>
-                    </div>
-
-                </form>
-            </div>
-
+        {{-- Header --}}
+        <div class="space-y-1">
+            <h2 class="text-lg font-semibold text-shadow-900 dark:text-silver-50">
+                Component Reference
+            </h2>
+            <p class="text-xs text-neutral-700 dark:text-neutralfog-300">
+                Quick overview of each form component in the Duro kit.
+            </p>
         </div>
 
-    </section>
+        {{-- CTA Buttons --}}
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+            <a href="/form-components"
+               class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 rounded-xl
+                      bg-electric-500 text-white text-xs font-semibold tracking-wide shadow-md
+                      hover:bg-electric-600 transition dark:bg-electric-400 dark:hover:bg-electric-300">
+                ⚡ Form Components
+            </a>
+
+            <a href="/table-components"
+               class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 rounded-xl
+                      bg-neutralfog-300 text-shadow-900 text-xs font-semibold tracking-wide shadow-md
+                      hover:bg-neutralfog-400 transition dark:bg-shadow-700 dark:text-neutralfog-100 dark:hover:bg-shadow-800">
+                📊 Table Components
+            </a>
+        </div>
+
+        {{-- Grid of form categories --}}
+        <div class="grid gap-3 text-xs md:grid-cols-2">
+
+            {{-- Inputs --}}
+            <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+                <h3 class="font-semibold text-electric-700 dark:text-electric-300">Inputs & Text</h3>
+                <ul class="mt-1 space-y-1">
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.input&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.textarea&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.rich-editor&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.markdown-editor&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.code-editor&gt;</code></li>
+                </ul>
+            </x-duro.card>
+
+            {{-- Choices --}}
+            <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+                <h3 class="font-semibold text-electric-700 dark:text-electric-300">Choices & Toggles</h3>
+                <ul class="mt-1 space-y-1">
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.select&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.checkbox&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.checkbox-list&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.radio&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.toggle&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.toggle-buttons&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.slider&gt;</code></li>
+                </ul>
+            </x-duro.card>
+
+            {{-- Meta --}}
+            <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+                <h3 class="font-semibold text-electric-700 dark:text-electric-300">Meta & Structure</h3>
+                <ul class="mt-1 space-y-1">
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.date-time-picker&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt>x-duro.tags-input&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt>x-duro.key-value&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt>x-duro.color-picker&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt>x-duro.repeater&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt>x-duro.builder&gt;</code></li>
+                </ul>
+            </x-duro.card>
+
+            {{-- Chrome --}}
+            <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+                <h3 class="font-semibold text-electric-700 dark:text-electric-300">Files & Chrome</h3>
+                <ul class="mt-1 space-y-1">
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.file-upload&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.button&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.alert&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.badge&gt;</code></li>
+                    <li><code class="font-mono text-[11px]">&lt;x-duro.card&gt;</code></li>
+                </ul>
+            </x-duro.card>
+
+        </div>
+        <div class="grid gap-3 text-xs md:grid-cols-2 lg:grid-cols-3">
+
+    {{-- Table Shell --}}
+    <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+        <h3 class="font-semibold text-electric-700 dark:text-electric-300">Table Shell</h3>
+        <ul class="mt-1 space-y-1">
+            <li>
+                <code class="font-mono text-[11px]">table.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">head.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">body.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">empty-state.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">filters.blade.php</code>
+            </li>
+        </ul>
+    </x-duro.card>
+
+    {{-- Rows & Cells (repeated -row / -cell) --}}
+    <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+        <h3 class="font-semibold text-electric-700 dark:text-electric-300">Rows & Cells</h3>
+        <ul class="mt-1 space-y-1">
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">group-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">row</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">row</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">header-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">cell</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">cell</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">summary-row.blade.php</code>
+            </li>
+        </ul>
+    </x-duro.card>
+
+    {{-- Columns (repeated -column) --}}
+    <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+        <h3 class="font-semibold text-electric-700 dark:text-electric-300">Columns</h3>
+        <ul class="mt-1 space-y-1">
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">actions-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">checkbox-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">color-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">icon-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">image-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">input-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">select-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">text-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">
+                    <span class="opacity-70">toggle-</span>
+                    <span class="text-electric-600 dark:text-electric-300 font-semibold">column</span>.blade.php
+                </code>
+            </li>
+        </ul>
+    </x-duro.card>
+
+    {{-- Filters & Search --}}
+    <x-duro.card class="space-y-1 text-xs bg-neutral-50/60 dark:bg-shadow-900/40">
+        <h3 class="font-semibold text-electric-700 dark:text-electric-300">Filters & Search</h3>
+        <ul class="mt-1 space-y-1">
+            <li>
+                <code class="font-mono text-[11px]">filter-search.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">filter-select.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">filter-checkbox.blade.php</code>
+            </li>
+            <li>
+                <code class="font-mono text-[11px]">filter-input.blade.php</code>
+            </li>
+        </ul>
+    </x-duro.card>
+
+</div>
+
+        {{-- Footer --}}
+        <div class="pt-3 text-[11px] text-neutral-600 dark:text-neutralfog-400">
+            Tune the styling on these components once, and every feature you ship —
+            HRMS, CMS, church tracker, analytics — inherits the same mystical Duro aesthetic.
+        </div>
+
+</div>
+
 </div>
