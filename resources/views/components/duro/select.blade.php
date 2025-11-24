@@ -8,22 +8,23 @@
 ])
 
 @php
-    $fieldName = $name ?? $model;
+    $boundModel = $model ?? optional($attributes->wire('model'))->value();
+    $fieldName = $name ?? $boundModel;
+    $initialValue = $fieldName
+        ? old($fieldName, $attributes->get('value'))
+        : $attributes->get('value');
 @endphp
 
 <div
     x-data="{
         open: false,
         search: '',
-        selectedValue: @js(optional($attributes->get('value'))),
+        value: @if($boundModel) @entangle($boundModel)->defer @else @js($initialValue ?? '') @endif,
         selectedLabel: '',
         init() {
-            // Set initial label based on initial value
-            const initial = this.selectedValue;
-            if (initial) {
-                const found = this.options.find(o => o.value == initial);
-                if (found) this.selectedLabel = found.label;
-            }
+            this.syncLabel(this.value ?? '');
+
+            this.$watch('value', (value) => this.syncLabel(value ?? ''));
 
             // Close on outside click
             document.addEventListener('click', (e) => {
@@ -33,7 +34,7 @@
             });
         },
         options: @js(
-            collect($options)->map(fn ($label, $value) => ['value' => $value, 'label' => $label])->values()
+            collect($options)->map(fn ($label, $value) => ['value' => (string) $value, 'label' => $label])->values()
         ),
         filteredOptions() {
             if (!this.search) return this.options;
@@ -41,30 +42,24 @@
             return this.options.filter(o => o.label.toLowerCase().includes(q));
         },
         selectOption(option) {
-            this.selectedValue = option.value;
+            this.value = option.value;
             this.selectedLabel = option.label;
             this.open = false;
             this.search = '';
 
-            // sync to hidden input
-            this.$refs.hidden.value = option.value;
             this.$dispatch('input', option.value);
-
-            @if($model)
-                // Simple Livewire bridge
-                if (window.Livewire) {
-                    Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), option.value);
-                }
-            @endif
         },
         clear() {
-            this.selectedValue = null;
+            this.value = null;
             this.selectedLabel = '';
-            this.$refs.hidden.value = '';
             this.$dispatch('input', '');
+        },
+        syncLabel(value) {
+            const found = this.options.find(o => o.value == value);
+            this.selectedLabel = found ? found.label : '';
         }
     }"
-    class="space-y-1.5"
+    class="space-y-1.5 w-full"
 >
     @if($label)
         <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
@@ -72,7 +67,7 @@
         </label>
     @endif
 
-    <div class="relative">
+    <div class="relative w-full"> {{-- 🔥 full width wrapper --}}
         {{-- Trigger --}}
         <button
             type="button"
@@ -83,22 +78,19 @@
                    dark:bg-shadow-950/70 dark:border-shadow-800 dark:text-neutralfog-100
                    transition"
         >
-            <div class="flex-1 text-left">
+            <div class="flex-1 text-left min-w-0">
                 <span
                     x-show="selectedLabel"
                     x-text="selectedLabel"
-                    class="block truncate"
+                    class="block whitespace-normal break-words"
                 ></span>
                 <span
                     x-show="!selectedLabel"
-                    class="block truncate text-neutral-400 dark:text-neutralfog-400/80"
+                    class="block whitespace-normal break-words text-neutral-400 dark:text-neutralfog-400/80"
                 >
                     {{ $placeholder }}
                 </span>
             </div>
-
-            
-
         </button>
 
         {{-- Dropdown --}}
@@ -127,15 +119,20 @@
                         <button
                             type="button"
                             x-on:click="selectOption(option)"
-                            class="flex w-full items-center justify-between px-3 py-1.5 text-left
+                            class="flex w-full items-start justify-between gap-2 px-3 py-1.5 text-left
                                    hover:bg-electric-500/10 hover:text-electric-700
                                    dark:hover:bg-electric-500/15 dark:hover:text-electric-300"
-                            :class="selectedValue === option.value ? 'text-electric-700 dark:text-electric-300 bg-electric-500/5' : 'text-neutral-700 dark:text-neutralfog-200'"
+                            :class="value === option.value
+                                ? 'text-electric-700 dark:text-electric-300 bg-electric-500/5'
+                                : 'text-neutral-700 dark:text-neutralfog-200'"
                         >
-                            <span x-text="option.label" class="truncate"></span>
                             <span
-                                x-show="selectedValue === option.value"
-                                class="ml-2 text-[10px] text-electric-600 dark:text-electric-300"
+                                x-text="option.label"
+                                class="block flex-1 whitespace-normal break-words text-left"
+                            ></span>
+                            <span
+                                x-show="value === option.value"
+                                class="ml-2 text-[10px] text-electric-600 dark:text-electric-300 shrink-0"
                             >
                                 ●
                             </span>
@@ -151,10 +148,11 @@
             </ul>
         </div>
 
-        {{-- Hidden input for forms / Livewire --}}
+        {{-- Hidden input --}}
         <input
             type="hidden"
             x-ref="hidden"
+            x-model="value"
             @if($fieldName) name="{{ $fieldName }}" @endif
             {{ $attributes->whereDoesntStartWith('wire:')->whereDoesntStartWith('value') }}
         >

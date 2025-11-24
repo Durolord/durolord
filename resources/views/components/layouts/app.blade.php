@@ -80,6 +80,23 @@
                         Components
                     </span>
                 </a>
+
+                <a
+                    href="{{ route('profile') }}"
+                    x-tooltip.bottom="'Profile'"
+                    class="flex items-center gap-3 px-3 py-2 rounded-xl transition
+                        {{ request()->routeIs('profile')
+                            ? 'bg-neutralfog-200 text-electric-600 border border-electric-500/40 dark:bg-shadow-900 dark:text-electric-300 dark:border-electric-500/40 glow-electric'
+                            : 'text-neutral-700 hover:text-electric-700 hover:bg-neutralfog-200/80 dark:text-neutralfog-300 dark:hover:text-electric-200 dark:hover:bg-shadow-900/70' }}"
+                >
+                    <span class="inline-flex w-2 h-2 rounded-full bg-electric-500"></span>
+                    <span
+                        class="truncate transition-all duration-150"
+                        :class="sidebarCollapsed ? 'opacity-0 scale-90 w-0' : 'opacity-100 scale-100 w-auto'"
+                    >
+                        Profile
+                    </span>
+                </a>
             </nav>
 
             {{-- Sidebar footer --}}

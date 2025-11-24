@@ -1,15 +1,38 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Profile\SessionController;
+use App\Http\Middleware\OnlyAnalyticsUser;
+use App\Livewire\Dashboard\Analytics as AnalyticsDashboard;
 use App\Livewire\Landing\Hero;
 use App\Livewire\Landing\Showcase;
+use App\Livewire\Services\Create as ServicesCreate;
+use App\Livewire\Services\Edit as ServicesEdit;
+use App\Livewire\Services\Index as ServicesIndex;
 use App\Livewire\Showcase\FormComponents;
 use App\Livewire\Showcase\TableComponents;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', Hero::class)->name('home');
 Route::get('/showcase', Showcase::class)->name('showcase');
 Route::get('/form-components', FormComponents::class)->name('form-components');
-Route::get('/table-components', TableComponents::class)->name('Table-components');
+Route::get('/table-components', TableComponents::class)->name('table-components');
+
+Route::middleware(['auth'])
+    ->group(function () {
+        Route::get('/profile', ProfileController::class)->name('profile');
+        Route::delete('/profile/sessions', SessionController::class)->name('profile.sessions.destroy');
+
+        Route::prefix('services')->group(function () {
+            Route::get('/', ServicesIndex::class)->name('services.index');
+            Route::get('/create', ServicesCreate::class)->name('services.create');
+            Route::get('/{service}/edit', ServicesEdit::class)->name('services.edit');
+        });
+
+        Route::get('/dashboard/analytics', AnalyticsDashboard::class)
+            ->middleware(OnlyAnalyticsUser::class)
+            ->name('dashboard.analytics');
+    });
 
 Route::middleware(['auth', 'verified'])
     ->group(function () {

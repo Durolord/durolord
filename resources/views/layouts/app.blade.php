@@ -153,7 +153,35 @@
 
                 <div class="flex items-center gap-3 md:gap-4 text-xs">
                     {{-- Auth links --}}
-                    
+                    @if (Route::has('login'))
+                        @auth
+                            <a
+                                href="{{ url('/dashboard') }}"
+                                x-tooltip.bottom="'Go to dashboard'"
+                                class="hidden sm:inline-flex px-3 py-1.5 rounded-full border bg-neutralfog-100 border-neutralfog-300 text-neutral-700 hover:text-electric-700 hover:border-electric-500/50 dark:bg-shadow-900 dark:border-shadow-800 dark:text-neutralfog-200 dark:hover:text-electric-200 dark:hover:border-electric-500/50 transition"
+                            >
+                                Dashboard
+                            </a>
+                        @else
+                            <a
+                                href="{{ route('login') }}"
+                                x-tooltip.bottom="'Log in to your realm'"
+                                class="px-3 py-1.5 rounded-full border bg-neutralfog-100 border-neutralfog-300 text-neutral-700 hover:text-electric-700 hover:border-electric-500/50 dark:bg-shadow-900 dark:border-shadow-800 dark:text-neutralfog-200 dark:hover:text-electric-200 dark:hover:border-electric-500/50 transition"
+                            >
+                                Log in
+                            </a>
+
+                            @if (Route::has('register'))
+                                <a
+                                    href="{{ route('register') }}"
+                                    x-tooltip.bottom="'Create a new account'"
+                                    class="hidden sm:inline-flex px-3 py-1.5 rounded-full border border-electric-500/70 bg-electric-500/5 text-electric-700 hover:bg-electric-500/15 dark:bg-electric-500/10 dark:text-electric-300 dark:hover:bg-electric-500/20 transition"
+                                >
+                                    Register
+                                </a>
+                            @endif
+                        @endauth
+                    @endif
 
                     {{-- Theme switcher: single button cycling light → dark → system --}}
                     <div class="flex items-center">

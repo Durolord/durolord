@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -38,6 +40,8 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+        Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
+        Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
     }
 
     /**
@@ -46,21 +50,21 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         // Authentication
-        Fortify::loginView(fn () => view('livewire.auth.login'));
-        Fortify::registerView(fn () => view('livewire.auth.register'));
+        Fortify::loginView(fn () => view('auth.login'));
+        Fortify::registerView(fn () => view('auth.register'));
 
         // Password reset
-        Fortify::requestPasswordResetLinkView(fn () => view('livewire.auth.forgot-password'));
-        Fortify::resetPasswordView(fn () => view('livewire.auth.reset-password'));
+        Fortify::requestPasswordResetLinkView(fn () => view('auth.forgot-password'));
+        Fortify::resetPasswordView(fn () => view('auth.reset-password'));
 
         // Email verification
-        Fortify::verifyEmailView(fn () => view('livewire.auth.verify-email'));
+        Fortify::verifyEmailView(fn () => view('auth.verify-email'));
 
         // Password confirmation
-        Fortify::confirmPasswordView(fn () => view('livewire.auth.confirm-password'));
+        Fortify::confirmPasswordView(fn () => view('auth.confirm-password'));
 
         // Two-factor challenge
-        Fortify::twoFactorChallengeView(fn () => view('livewire.auth.two-factor-challenge'));
+        Fortify::twoFactorChallengeView(fn () => view('auth.two-factor-challenge'));
     }
 
     /**
@@ -71,7 +75,7 @@ class FortifyServiceProvider extends ServiceProvider
         // Login throttling
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(
-                Str::lower($request->input(Fortify::username())) . '|' . $request->ip()
+                Str::lower($request->input(Fortify::username())).'|'.$request->ip()
             );
 
             return Limit::perMinute(5)->by($throttleKey);

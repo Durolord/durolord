@@ -7,6 +7,7 @@
     <span class="mt-0.5 inline-flex">
         <input
             type="checkbox"
+            value="1"
             {{ $attributes->merge([
                 'class' =>
                     'h-4 w-4 rounded-md border border-neutralfog-300 bg-neutralfog-100

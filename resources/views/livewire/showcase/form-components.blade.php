@@ -62,7 +62,7 @@
                                 />
                             </div>
 
-                            <x-duro.select
+                            <x-duro.multi-select
                                 label="Primary role"
                                 wire:model.defer="role"
                                 name="role"
