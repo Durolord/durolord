@@ -7,7 +7,8 @@
 ])
 
 @php
-    $fieldName = $name ?? $model;
+    $boundModel = $model ?? $attributes->wire('model')->value();
+    $fieldName = $name ?? $boundModel;
 @endphp
 
 <div
@@ -27,7 +28,7 @@
 
         init() {
             // Use initial value if present: HH:MM (24h)
-            const initial = this.$refs.hidden.value;
+            const initial = @if ($boundModel) ($wire.get(@js($boundModel)) ?? '') @else this.$refs.hidden.value @endif;
             if (initial) {
                 const parts = initial.split(':').map(Number);
                 if (parts.length === 2 && !parts.some(isNaN)) {
@@ -138,12 +139,7 @@
             this.$refs.hidden.value = value;
             this.open = false;
             this.$dispatch('input', value);
-
-            @if($model)
-                if (window.Livewire) {
-                    Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), value);
-                }
-            @endif
+            this.$refs.hidden.dispatchEvent(new Event('input'));
         },
 
         clear() {
@@ -154,6 +150,7 @@
             this.minute = null;
             this.meridiem = 'AM';
             this.$refs.hidden.value = '';
+            this.$refs.hidden.dispatchEvent(new Event('input'));
             this.$dispatch('input', '');
         },
 
@@ -172,18 +169,13 @@
             this.$refs.hidden.value = value;
             this.open = false;
             this.$dispatch('input', value);
-
-            @if($model)
-                if (window.Livewire) {
-                    Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), value);
-                }
-            @endif
+            this.$refs.hidden.dispatchEvent(new Event('input'));
         },
     }"
     class="space-y-1.5"
 >
     @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <label class="duro-label">
             {{ $label }}
         </label>
     @endif
@@ -193,17 +185,17 @@
         <button
             type="button"
             x-on:click="open = !open"
-            class="flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-sm
-                   bg-neutralfog-100 border-neutralfog-300 text-shadow-900
-                   hover:border-electric-400 hover:ring-1 hover:ring-electric-400
-                   dark:bg-shadow-950/70 dark:border-shadow-800 dark:text-neutralfog-100
+            class="flex w-full items-center gap-2 rounded-ui border px-3 py-2 text-sm
+ bg-surface-2 border-line text-ink
+                   hover:border-primary hover:ring-1 hover:ring-primary
+
                    transition pr-8"
         >
             <div class="flex items-center gap-2 min-w-0">
                 {{-- Icon --}}
                 <span class="inline-flex h-5 w-5 items-center justify-center rounded-full
-                             bg-electric-500/10 text-electric-700
-                             dark:bg-electric-500/20 dark:text-electric-300 text-[11px]">
+ bg-primary/10 text-primary-ink
+                               text-[11px]">
                     ⏰
                 </span>
 
@@ -215,7 +207,7 @@
 
                 <span
                     x-show="!displayLabel"
-                    class="truncate text-neutral-400 dark:text-neutralfog-400/80"
+                    class="truncate text-ink-subtle "
                 >
                     {{ $placeholder }}
                 </span>
@@ -228,7 +220,7 @@
             x-show="displayLabel"
             x-on:click.stop="clear()"
             class="absolute inset-y-0 right-2 my-auto flex h-5 w-5 items-center justify-center
-                   text-[11px] text-neutral-500 hover:text-red-500 dark:text-neutralfog-400"
+ text-[11px] text-ink-subtle hover:text-danger "
             aria-label="Clear time"
         >
             ✕
@@ -240,20 +232,20 @@
         x-show="open"
         x-transition
         x-cloak
-        class="absolute z-40 mt-1 w-80 rounded-xl border bg-neutralfog-100 border-neutralfog-300 shadow-2xl
-               dark:bg-shadow-950 dark:border-shadow-800 glow-arcane"
+        class="absolute z-40 mt-1 w-80 rounded-ui border bg-surface-2 border-line shadow-2xl
+ glow-arcane"
     >
         {{-- Header --}}
-        <div class="px-3 py-2 border-b border-neutralfog-300/80 dark:border-shadow-800/80 flex items-center justify-between">
-            <span class="text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:text-neutralfog-400">
+        <div class="px-3 py-2 border-b border-line/80 flex items-center justify-between">
+            <span class="text-[11px] uppercase tracking-[0.16em] text-ink-subtle ">
                 Select time
             </span>
 
             <button
                 type="button"
-                class="text-[10px] px-2 py-1 rounded-full border border-electric-500/60
-                       bg-electric-500/5 text-electric-700 hover:bg-electric-500/15
-                       dark:text-electric-300 dark:border-electric-400/70"
+                class="text-[10px] px-2 py-1 rounded-full border border-primary/60
+ bg-primary/5 text-primary-ink hover:bg-primary/15
+                        "
                 x-on:click="setNow()"
             >
                 Now
@@ -261,34 +253,34 @@
         </div>
 
         {{-- Body: wheel pickers --}}
-        <div class="p-3 grid grid-cols-[1.5fr_1.5fr_auto] gap-3 text-xs text-neutral-700 dark:text-neutralfog-200">
+        <div class="p-3 grid grid-cols-[1.5fr_1.5fr_auto] gap-3 text-xs text-ink-muted ">
             {{-- HOURS WHEEL --}}
             <div class="space-y-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] text-neutral-600 dark:text-neutralfog-400">Hour</span>
+                    <span class="text-[11px] text-ink-muted ">Hour</span>
                 </div>
 
                 <div class="relative h-32">
                     {{-- Center slot line --}}
-                    <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 rounded-lg
-                                border border-electric-500/50 bg-electric-500/5 dark:bg-electric-500/10"></div>
+                    <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 rounded-ui
+ border border-primary/50 bg-primary/5 "></div>
 
                     {{-- Top/Bottom gradients --}}
                     <div class="pointer-events-none absolute inset-x-0 top-0 h-6
-                                bg-gradient-to-b from-neutralfog-100 dark:from-shadow-950 to-transparent"></div>
+ bg-gradient-to-b from-surface-2  to-transparent"></div>
                     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-6
-                                bg-gradient-to-t from-neutralfog-100 dark:from-shadow-950 to-transparent"></div>
+ bg-gradient-to-t from-surface-2  to-transparent"></div>
 
                     <div class="h-32 overflow-y-auto no-scrollbar py-4">
                         <template x-for="h in hours12()" :key="h">
                             <button
                                 type="button"
                                 x-on:click="setHour12(h)"
-                                class="w-full h-7 flex items-center justify-center rounded-lg mb-1
-                                       transition border border-transparent"
+                                class="w-full h-7 flex items-center justify-center rounded-ui mb-1
+ transition border border-transparent"
                                 :class="hour12 === h
-                                    ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 border-electric-500 shadow-sm'
-                                    : 'text-neutral-700 dark:text-neutralfog-200 hover:bg-electric-500/5 hover:border-electric-400/70'"
+ ? 'bg-primary text-on-primary   border-primary shadow-sm'
+                                    : 'text-ink-muted  hover:bg-primary/5 hover:border-primary/70'"
                                 x-text="h"
                             ></button>
                         </template>
@@ -299,30 +291,30 @@
             {{-- MINUTES WHEEL --}}
             <div class="space-y-1">
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] text-neutral-600 dark:text-neutralfog-400">Minute</span>
+                    <span class="text-[11px] text-ink-muted ">Minute</span>
                 </div>
 
                 <div class="relative h-32">
                     {{-- Center slot line --}}
-                    <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 rounded-lg
-                                border border-electric-500/50 bg-electric-500/5 dark:bg-electric-500/10"></div>
+                    <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-7 rounded-ui
+ border border-primary/50 bg-primary/5 "></div>
 
                     {{-- Top/Bottom gradients --}}
                     <div class="pointer-events-none absolute inset-x-0 top-0 h-6
-                                bg-gradient-to-b from-neutralfog-100 dark:from-shadow-950 to-transparent"></div>
+ bg-gradient-to-b from-surface-2  to-transparent"></div>
                     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-6
-                                bg-gradient-to-t from-neutralfog-100 dark:from-shadow-950 to-transparent"></div>
+ bg-gradient-to-t from-surface-2  to-transparent"></div>
 
                     <div class="h-32 overflow-y-auto no-scrollbar py-4">
                         <template x-for="m in minutes()" :key="m">
                             <button
                                 type="button"
                                 x-on:click="setMinute(m)"
-                                class="w-full h-7 flex items-center justify-center rounded-lg mb-1
-                                       transition border border-transparent"
+                                class="w-full h-7 flex items-center justify-center rounded-ui mb-1
+ transition border border-transparent"
                                 :class="minute === m
-                                    ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 border-electric-500 shadow-sm'
-                                    : 'text-neutral-700 dark:text-neutralfog-200 hover:bg-electric-500/5 hover:border-electric-400/70'"
+ ? 'bg-primary text-on-primary   border-primary shadow-sm'
+                                    : 'text-ink-muted  hover:bg-primary/5 hover:border-primary/70'"
                                 x-text="pad(m)"
                             ></button>
                         </template>
@@ -332,19 +324,19 @@
 
             {{-- AM/PM + Preview --}}
             <div class="space-y-2">
-                <span class="text-[11px] text-neutral-600 dark:text-neutralfog-400 block">Period</span>
+                <span class="text-[11px] text-ink-muted block">Period</span>
 
                 <div class="flex flex-col gap-2">
                     <button
                         type="button"
                         x-on:click="setMeridiem('AM')"
-                        class="h-8 rounded-lg text-[11px] flex items-center justify-center
-                               border border-neutralfog-300
-                               hover:border-electric-400 hover:bg-electric-500/5
-                               dark:border-shadow-700 dark:hover:border-electric-400/80 dark:hover:bg-shadow-800"
+                        class="h-8 rounded-ui text-[11px] flex items-center justify-center
+ border border-line
+                               hover:border-primary hover:bg-primary/5
+                                 "
                         :class="meridiem === 'AM'
-                            ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 border-electric-500'
-                            : 'text-neutral-700 dark:text-neutralfog-200'"
+ ? 'bg-primary text-on-primary   border-primary'
+                            : 'text-ink-muted '"
                     >
                         AM
                     </button>
@@ -352,19 +344,19 @@
                     <button
                         type="button"
                         x-on:click="setMeridiem('PM')"
-                        class="h-8 rounded-lg text-[11px] flex items-center justify-center
-                               border border-neutralfog-300
-                               hover:border-electric-400 hover:bg-electric-500/5
-                               dark:border-shadow-700 dark:hover:border-electric-400/80 dark:hover:bg-shadow-800"
+                        class="h-8 rounded-ui text-[11px] flex items-center justify-center
+ border border-line
+                               hover:border-primary hover:bg-primary/5
+                                 "
                         :class="meridiem === 'PM'
-                            ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 border-electric-500'
-                            : 'text-neutral-700 dark:text-neutralfog-200'"
+ ? 'bg-primary text-on-primary   border-primary'
+                            : 'text-ink-muted '"
                     >
                         PM
                     </button>
                 </div>
 
-                <div class="mt-1 text-[11px] text-neutral-600 dark:text-neutralfog-300">
+                <div class="mt-1 text-[11px] text-ink-muted ">
                     <span class="opacity-70">Selected:</span>
                     <span class="font-medium" x-text="formatDisplay() || '—'"></span>
                 </div>
@@ -375,7 +367,7 @@
         <div class="flex items-center justify-between px-3 pb-3 text-[11px]">
             <button
                 type="button"
-                class="text-neutral-500 hover:text-red-500 dark:text-neutralfog-400"
+                class="text-ink-subtle hover:text-danger "
                 x-on:click="clear(); open = false;"
             >
                 Clear
@@ -383,9 +375,9 @@
 
             <button
                 type="button"
-                class="px-2.5 py-1.5 rounded-full border border-neutralfog-300 text-neutral-600
-                       hover:text-shadow-900 hover:border-shadow-700
-                       dark:border-shadow-700 dark:text-neutralfog-300 dark:hover:text-neutralfog-100"
+                class="px-2.5 py-1.5 rounded-full border border-line text-ink-muted
+ hover:text-ink hover:border-line
+                         "
                 x-on:click="apply()"
             >
                 Apply
@@ -398,10 +390,11 @@
         type="hidden"
         x-ref="hidden"
         @if($fieldName) name="{{ $fieldName }}" @endif
-        {{ $attributes->whereDoesntStartWith('wire:')->whereDoesntStartWith('value') }}
+        {{ $attributes->except(['class', 'value']) }}
+        @if (! $boundModel && $attributes->get('value')) value="{{ $attributes->get('value') }}" @endif
     >
 
     @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+        <p class="text-[11px] text-ink-subtle ">{{ $hint }}</p>
     @endif
 </div>

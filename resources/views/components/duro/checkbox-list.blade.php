@@ -1,30 +1,20 @@
 @props([
     'label' => null,
-    'options' => [], // ['value' => 'Label']
+    'options' => [],
+    'columns' => 2,
 ])
 
-<div class="space-y-2">
-    @if($label)
-        <p class="text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
-            {{ $label }}
-        </p>
+<fieldset class="space-y-2">
+    @if ($label)
+        <legend class="duro-label mb-2">{{ $label }}</legend>
     @endif
 
-    <div class="space-y-1.5">
-        @foreach($options as $value => $text)
-            <label class="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                    type="checkbox"
-                    value="{{ $value }}"
-                    {{ $attributes->merge([
-                        'class' =>
-                            'h-4 w-4 rounded-md border border-neutralfog-300 bg-neutralfog-100
-                             text-electric-600 accent-electric-600
-                             dark:bg-shadow-950 dark:border-shadow-700 dark:accent-electric-400',
-                    ]) }}
-                >
-                <span class="text-neutral-800 dark:text-neutralfog-100">{{ $text }}</span>
+    <div @class(['grid gap-2', 'sm:grid-cols-2' => $columns >= 2, 'lg:grid-cols-3' => $columns >= 3])>
+        @foreach ($options as $value => $text)
+            <label class="flex cursor-pointer items-center gap-2.5 rounded-ui border border-line bg-surface-2 px-3 py-2 text-sm text-ink transition hover:border-primary/60 has-[:checked]:border-primary has-[:checked]:bg-primary/10" wire:key="checkbox-list-{{ $value }}">
+                <input type="checkbox" value="{{ $value }}" {{ $attributes->class(['duro-check']) }}>
+                <span>{{ $text }}</span>
             </label>
         @endforeach
     </div>
-</div>
+</fieldset>

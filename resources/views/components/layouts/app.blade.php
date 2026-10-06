@@ -1,274 +1,224 @@
+@props([
+    'title' => null,
+    'description' => null,
+])
+
+@php
+    $user = auth()->user();
+
+    $navGroups = [
+        'Overview' => array_values(array_filter([
+            $user ? ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'home'] : null,
+            ['label' => 'Portfolio', 'route' => 'home', 'icon' => 'globe'],
+        ])),
+        'UI Kit' => [
+            ['label' => 'Overview', 'route' => 'showcase', 'icon' => 'sparkles'],
+            ['label' => 'Forms', 'route' => 'form-components', 'icon' => 'edit'],
+            ['label' => 'Tables', 'route' => 'table-components', 'icon' => 'table'],
+            ['label' => 'Elements', 'route' => 'elements', 'icon' => 'layers', 'badge' => 'New'],
+        ],
+    ];
+
+    if ($user) {
+        $navGroups['Workspace'] = array_values(array_filter([
+            ['label' => 'Services', 'route' => 'services.index', 'active' => 'services.*', 'icon' => 'calendar'],
+            $user->email === 'noreply@durolord.com' ? ['label' => 'Analytics', 'route' => 'dashboard.analytics', 'icon' => 'bar-chart'] : null,
+            ['label' => 'Profile', 'route' => 'profile', 'icon' => 'user'],
+        ]));
+    }
+
+    $commands = collect($navGroups)
+        ->flatMap(fn ($items, $group) => collect($items)->map(fn ($item) => [
+            'label' => $item['label'],
+            'group' => $group,
+            'icon' => $item['icon'],
+            'href' => route($item['route']),
+        ]))
+        ->merge(collect(config('duro.themes'))->map(fn ($theme, $key) => [
+            'label' => 'Switch to '.$theme['name'],
+            'group' => 'Realms',
+            'icon' => 'palette',
+            'theme' => $key,
+            'keywords' => 'theme '.$theme['mode'],
+        ])->values())
+        ->values();
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <title>{{ $title ?? 'Durolord — Digital Realms' }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
+    @include('partials.head', ['title' => $title ? $title.' · '.config('portfolio.name') : null, 'description' => $description])
 </head>
-<body
-    class="min-h-screen antialiased bg-neutralfog-100 text-shadow-900 light:bg-neutralfog-100 light:text-shadow-900 dark:bg-shadow-950 dark:text-neutralfog-100"
-    x-data="layoutState()"
->
-    <div class="min-h-screen flex">
-        {{-- SIDEBAR --}}
-        <aside
-            class="hidden md:flex flex-col transition-all duration-200
-                   bg-neutralfog-100/95 border-r border-neutralfog-300/80
-                   dark:bg-shadow-950/95 dark:border-shadow-800/80"
-            :class="sidebarCollapsed ? 'w-20' : 'w-64'"
-        >
-            {{-- Logo / brand --}}
-            <div class="px-4 py-5 border-b border-neutralfog-300/80 dark:border-shadow-800/80 flex justify-center md:justify-start">
-                <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <div class="w-9 h-9 rounded-full border border-electric-500 glow-electric flex items-center justify-center overflow-hidden bg-neutralfog-100 dark:bg-shadow-900">
-                        <img
-                            src="{{ asset('images/logo.png') }}"
-                            alt="Durolord logo"
-                            class="w-full h-full object-contain"
-                        >
-                    </div>
+<body class="min-h-screen font-sans antialiased" x-data="layoutState()">
+    <div class="duro-backdrop" aria-hidden="true"></div>
 
-                    <div
-                        class="origin-left transition-all duration-150"
-                        :class="sidebarCollapsed ? 'opacity-0 scale-90 pointer-events-none w-0' : 'opacity-100 scale-100 w-auto'"
-                    >
-                        <div class="text-sm font-semibold tracking-wide text-gold-500 group-hover:text-gold-400 dark:text-gold-300 dark:group-hover:text-gold-200 transition">
-                            DUROLORD
-                        </div>
-                        <div class="text-[11px] text-neutral-500 dark:text-neutralfog-400">
-                            Maker of Digital Realms
-                        </div>
-                    </div>
+    <div class="flex min-h-screen">
+        {{-- DESKTOP SIDEBAR --}}
+        <aside
+            class="sticky top-0 hidden h-screen shrink-0 flex-col border-r border-line bg-canvas/70 backdrop-blur-xl transition-[width] duration-300 lg:flex"
+            :class="sidebarCollapsed ? 'w-[4.75rem]' : 'w-64'"
+        >
+            <div class="flex h-16 items-center border-b border-line px-4">
+                <a href="{{ route('home') }}" class="overflow-hidden">
+                    <x-duro.logo size="sm" x-bind:class="sidebarCollapsed && '[&>span:last-child]:hidden'" />
                 </a>
             </div>
 
-            {{-- Navigation --}}
-            <nav class="flex-1 px-2 py-4 space-y-1 text-sm">
-                <a
-                    href="{{ route('home') }}"
-                    x-tooltip.bottom="'Realm Landing'"
-                    class="flex items-center gap-3 px-3 py-2 rounded-xl transition
-                        {{ request()->routeIs('home')
-                            ? 'bg-neutralfog-200 text-electric-600 border border-electric-500/40 dark:bg-shadow-900 dark:text-electric-300 dark:border-electric-500/40 glow-electric'
-                            : 'text-neutral-700 hover:text-electric-700 hover:bg-neutralfog-200/80 dark:text-neutralfog-300 dark:hover:text-electric-200 dark:hover:bg-shadow-900/70' }}"
-                >
-                    <span class="inline-flex w-2 h-2 rounded-full bg-electric-500"></span>
-                    <span
-                        class="truncate transition-all duration-150"
-                        :class="sidebarCollapsed ? 'opacity-0 scale-90 w-0' : 'opacity-100 scale-100 w-auto'"
-                    >
-                        Realm Landing
-                    </span>
-                </a>
+            <x-layouts.sidebar :groups="$navGroups" />
 
-                <a
-                    href="{{ route('showcase') }}"
-                    x-tooltip.bottom="'Components'"
-                    class="flex items-center gap-3 px-3 py-2 rounded-xl transition
-                        {{ request()->routeIs('showcase')
-                            ? 'bg-neutralfog-200 text-electric-600 border border-electric-500/40 dark:bg-shadow-900 dark:text-electric-300 dark:border-electric-500/40 glow-electric'
-                            : 'text-neutral-700 hover:text-electric-700 hover:bg-neutralfog-200/80 dark:text-neutralfog-300 dark:hover:text-electric-200 dark:hover:bg-shadow-900/70' }}"
-                >
-                    <span class="inline-flex w-2 h-2 rounded-full bg-gold-500"></span>
-                    <span
-                        class="truncate transition-all duration-150"
-                        :class="sidebarCollapsed ? 'opacity-0 scale-90 w-0' : 'opacity-100 scale-100 w-auto'"
-                    >
-                        Components
-                    </span>
-                </a>
-
-                <a
-                    href="{{ route('profile') }}"
-                    x-tooltip.bottom="'Profile'"
-                    class="flex items-center gap-3 px-3 py-2 rounded-xl transition
-                        {{ request()->routeIs('profile')
-                            ? 'bg-neutralfog-200 text-electric-600 border border-electric-500/40 dark:bg-shadow-900 dark:text-electric-300 dark:border-electric-500/40 glow-electric'
-                            : 'text-neutral-700 hover:text-electric-700 hover:bg-neutralfog-200/80 dark:text-neutralfog-300 dark:hover:text-electric-200 dark:hover:bg-shadow-900/70' }}"
-                >
-                    <span class="inline-flex w-2 h-2 rounded-full bg-electric-500"></span>
-                    <span
-                        class="truncate transition-all duration-150"
-                        :class="sidebarCollapsed ? 'opacity-0 scale-90 w-0' : 'opacity-100 scale-100 w-auto'"
-                    >
-                        Profile
-                    </span>
-                </a>
-            </nav>
-
-            {{-- Sidebar footer --}}
-            <div class="px-3 py-3 border-t border-neutralfog-300/80 dark:border-shadow-800/80 text-[10px] text-neutral-500 dark:text-neutralfog-400">
-                <span
-                    class="block transition-all duration-150"
-                    :class="sidebarCollapsed ? 'opacity-0 scale-90 w-0' : 'opacity-100 scale-100 w-auto'"
-                >
-                    v0.1 • Duro UI
-                </span>
+            <div class="border-t border-line p-3">
+                <button type="button" x-on:click="toggleSidebar()" class="duro-menu-item justify-center" :class="! sidebarCollapsed && '!justify-start'" aria-label="Toggle sidebar">
+                    <x-duro.icon name="chevrons-left" class="transition-transform" x-bind:class="sidebarCollapsed && 'rotate-180'" />
+                    <span x-show="! sidebarCollapsed" class="text-xs">Collapse</span>
+                </button>
             </div>
         </aside>
 
-        {{-- MAIN AREA --}}
-        <div class="flex-1 flex flex-col">
-            {{-- TOP NAVBAR --}}
-            <header class="px-4 md:px-6 py-3 flex items-center justify-between border-b bg-neutralfog-100/95 border-neutralfog-300/80 dark:bg-shadow-950/95 dark:border-shadow-800/80">
-                <div class="flex items-center gap-3">
-                    {{-- Sidebar toggle (desktop) --}}
-                    <button
-                        type="button"
-                        class="hidden md:inline-flex items-center justify-center w-8 h-8 rounded-full border bg-neutralfog-100 border-neutralfog-300 text-neutral-700 hover:bg-neutralfog-200 hover:text-electric-700 dark:bg-shadow-900 dark:border-shadow-800 dark:text-neutralfog-300 dark:hover:bg-shadow-800 dark:hover:text-electric-300 transition"
-                        x-on:click="toggleSidebar()"
-                        x-tooltip.bottom="'Toggle sidebar'"
-                        aria-label="Toggle sidebar"
-                    >
-                        {{-- Expanded icon --}}
-                        <svg
-                            x-show="!sidebarCollapsed"
-                            x-transition.opacity.duration.150ms
-                            class="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.6"
-                        >
-                            <path d="M4 6h16M4 12h10M4 18h16" />
-                        </svg>
-
-                        {{-- Collapsed icon --}}
-                        <svg
-                            x-show="sidebarCollapsed"
-                            x-transition.opacity.duration.150ms
-                            class="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.6"
-                        >
-                            <path d="M5 6h14M9 12h10M5 18h14" />
-                        </svg>
+        {{-- MOBILE SIDEBAR --}}
+        <div x-cloak x-show="mobileNav" class="fixed inset-0 z-[60] lg:hidden" x-on:keydown.escape.window="mobileNav = false">
+            <div x-show="mobileNav" x-transition.opacity class="absolute inset-0 bg-black/60 backdrop-blur-sm" x-on:click="mobileNav = false"></div>
+            <aside
+                x-show="mobileNav"
+                x-trap.inert="mobileNav"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="-translate-x-full"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-end="-translate-x-full"
+                class="duro-panel absolute inset-y-0 left-0 flex w-72 flex-col !rounded-none"
+            >
+                <div class="flex h-16 items-center justify-between border-b border-line px-4">
+                    <x-duro.logo size="sm" />
+                    <button type="button" x-on:click="mobileNav = false" class="duro-btn duro-btn-ghost duro-btn-sm duro-btn-icon" aria-label="Close menu">
+                        <x-duro.icon name="x" size="md" />
                     </button>
-
-                    {{-- Mobile logo / brand --}}
-                    <a href="{{ route('home') }}" class="flex md:hidden items-center gap-2">
-                        <div class="w-8 h-8 rounded-full border border-electric-500 flex items-center justify-center overflow-hidden bg-neutralfog-100 dark:bg-shadow-900">
-                            <img
-                                src="{{ asset('images/logo.png') }}"
-                                alt="Durolord logo"
-                                class="w-full h-full object-contain"
-                            >
-                        </div>
-                        <span class="text-xs font-semibold text-gold-600 dark:text-gold-300">DUROLORD</span>
-                    </a>
-
-                    {{-- Page title --}}
-                    <span class="hidden md:inline-flex text-xs uppercase tracking-[0.16em] text-neutral-500 dark:text-neutralfog-400">
-                        {{ $title ?? 'Digital Realms' }}
-                    </span>
                 </div>
+                <x-layouts.sidebar :groups="$navGroups" />
+            </aside>
+        </div>
 
-                <div class="flex items-center gap-3 md:gap-4 text-xs">
-                    {{-- Auth links --}}
-                    @if (Route::has('login'))
-                        @auth
-                            <a
-                                href="{{ url('/dashboard') }}"
-                                x-tooltip.bottom="'Go to dashboard'"
-                                class="hidden sm:inline-flex px-3 py-1.5 rounded-full border bg-neutralfog-100 border-neutralfog-300 text-neutral-700 hover:text-electric-700 hover:border-electric-500/50 dark:bg-shadow-900 dark:border-shadow-800 dark:text-neutralfog-200 dark:hover:text-electric-200 dark:hover:border-electric-500/50 transition"
-                            >
-                                Dashboard
-                            </a>
-                        @else
-                            <a
-                                href="{{ route('login') }}"
-                                x-tooltip.bottom="'Log in to your realm'"
-                                class="px-3 py-1.5 rounded-full border bg-neutralfog-100 border-neutralfog-300 text-neutral-700 hover:text-electric-700 hover:border-electric-500/50 dark:bg-shadow-900 dark:border-shadow-800 dark:text-neutralfog-200 dark:hover:text-electric-200 dark:hover:border-electric-500/50 transition"
-                            >
-                                Log in
-                            </a>
+        {{-- MAIN --}}
+        <div class="flex min-w-0 flex-1 flex-col">
+            <header class="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-line bg-canvas/75 px-4 backdrop-blur-xl sm:px-6">
+                <button type="button" class="duro-btn duro-btn-ghost duro-btn-sm duro-btn-icon lg:hidden" x-on:click="mobileNav = true" aria-label="Open menu">
+                    <x-duro.icon name="menu" size="md" />
+                </button>
 
-                            @if (Route::has('register'))
-                                <a
-                                    href="{{ route('register') }}"
-                                    x-tooltip.bottom="'Create a new account'"
-                                    class="hidden sm:inline-flex px-3 py-1.5 rounded-full border border-electric-500/70 bg-electric-500/5 text-electric-700 hover:bg-electric-500/15 dark:bg-electric-500/10 dark:text-electric-300 dark:hover:bg-electric-500/20 transition"
-                                >
-                                    Register
-                                </a>
-                            @endif
-                        @endauth
-                    @endif
+                <button type="button" x-on:click="palette = true" class="duro-btn duro-btn-ghost duro-btn-sm duro-btn-icon sm:hidden" aria-label="Search">
+                    <x-duro.icon name="search" size="md" />
+                </button>
 
-                    {{-- Theme switcher: single button cycling light → dark → system --}}
-                    <div class="flex items-center">
-                        <button
-                            type="button"
-                            x-on:click="cycleTheme()"
-                            x-tooltip.bottom="'Switch theme'"
-                            class="inline-flex items-center gap-2 rounded-full bg-neutralfog-100/90 border border-neutralfog-300/80 px-2.5 py-1.5 text-[11px] text-neutral-700 hover:text-electric-700 hover:border-electric-500/60 dark:bg-shadow-900/80 dark:border-silver-500/60 dark:text-neutralfog-300 dark:hover:text-electric-300 transition"
-                            :aria-label="`Theme: ${theme}`"
-                        >
-                            <span class="inline-flex">
-                                {{-- Light icon --}}
-                                <svg
-                                    x-show="theme === 'light'"
-                                    x-transition.opacity.duration.150ms
-                                    class="w-3.5 h-3.5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="1.6"
-                                >
-                                    <circle cx="12" cy="12" r="3.5" />
-                                    <path d="M12 2.5v2.5M12 19v2.5M4.22 4.22l1.77 1.77M18.01 17.99l1.77 1.77M2.5 12h2.5M19 12h2.5M4.22 19.78l1.77-1.77M18.01 6.01l1.77-1.77" />
-                                </svg>
+                <button
+                    type="button"
+                    x-on:click="palette = true"
+                    class="duro-field hidden max-w-sm flex-1 cursor-pointer px-3 py-2 text-left text-sm text-ink-subtle sm:flex"
+                >
+                    <x-duro.icon name="search" />
+                    <span class="flex-1 truncate">Search pages & realms…</span>
+                    <span class="hidden items-center gap-1 sm:flex"><x-duro.kbd>⌘</x-duro.kbd><x-duro.kbd>K</x-duro.kbd></span>
+                </button>
 
-                                {{-- Dark icon --}}
-                                <svg
-                                    x-show="theme === 'dark'"
-                                    x-transition.opacity.duration.150ms
-                                    class="w-3.5 h-3.5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="1.6"
-                                >
-                                    <path d="M20.5 14.5A7.5 7.5 0 0 1 11 5a7.5 7.5 0 1 0 9.5 9.5Z" />
-                                </svg>
+                <div class="ml-auto flex items-center gap-2">
+                    <x-duro.theme-switcher class="hidden sm:block" />
+                    <x-duro.theme-switcher compact class="sm:hidden" />
 
-                                {{-- System icon --}}
-                                <svg
-                                    x-show="theme === 'system'"
-                                    x-transition.opacity.duration.150ms
-                                    class="w-3.5 h-3.5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="1.6"
-                                >
-                                    <rect x="3" y="4" width="18" height="13" rx="2" />
-                                    <path d="M8 20h8" />
-                                </svg>
-                            </span>
+                    @auth
+                        <x-duro.dropdown align="right" width="w-60">
+                            <x-slot:trigger>
+                                <button type="button" class="flex items-center gap-2 rounded-full p-0.5 transition hover:ring-2 hover:ring-primary/40" aria-label="Account menu">
+                                    <x-duro.avatar :name="$user->name" size="sm" status="online" />
+                                </button>
+                            </x-slot:trigger>
 
-                            <span class="capitalize" x-text="theme"></span>
-                        </button>
-                    </div>
+                            <div class="px-3 py-2">
+                                <p class="truncate text-sm font-semibold text-ink">{{ $user->name }}</p>
+                                <p class="truncate text-xs text-ink-subtle">{{ $user->email }}</p>
+                            </div>
+                            <x-duro.dropdown.divider />
+                            <x-duro.dropdown.item :href="route('dashboard')" icon="home">Dashboard</x-duro.dropdown.item>
+                            <x-duro.dropdown.item :href="route('profile')" icon="settings">Profile & security</x-duro.dropdown.item>
+                            <x-duro.dropdown.divider />
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-duro.dropdown.item type="submit" icon="logout" danger>Sign out</x-duro.dropdown.item>
+                            </form>
+                        </x-duro.dropdown>
+                    @else
+                        <x-duro.button :href="route('login')" variant="secondary" size="sm">Log in</x-duro.button>
+                    @endauth
                 </div>
             </header>
 
-            {{-- Page content --}}
             <main class="flex-1">
-                {{ $slot }}
+                <div class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+                    {{ $slot }}
+                </div>
             </main>
 
-            {{-- Footer --}}
-            <footer class="py-4 text-center text-xs bg-neutralfog-100/95 border-t border-neutralfog-300/80 text-neutral-600 dark:bg-shadow-900/80 dark:border-shadow-800/80 dark:text-neutralfog-300">
-                Forged in light and darkness • {{ date('Y') }}
+            <footer class="border-t border-line px-6 py-4 text-center text-xs text-ink-subtle">
+                {{ config('portfolio.name') }} UI · Realm: <span class="font-semibold text-ink-muted" x-text="$store.theme.meta.name"></span> · {{ date('Y') }}
             </footer>
         </div>
     </div>
+
+    {{-- COMMAND PALETTE --}}
+    <div
+        x-cloak
+        x-show="palette"
+        x-on:keydown.escape.window="palette = false"
+        x-on:close-palette.window="palette = false"
+        class="fixed inset-0 z-[80] flex items-start justify-center p-4 pt-[12vh]"
+    >
+        <div x-show="palette" x-transition.opacity class="absolute inset-0 bg-black/60 backdrop-blur-sm" x-on:click="palette = false"></div>
+
+        <div
+            x-show="palette"
+            x-trap.noscroll="palette"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-data="commandPalette(@js($commands))"
+            class="duro-panel relative w-full max-w-xl overflow-hidden"
+            role="dialog"
+            aria-label="Command palette"
+        >
+            <div class="flex items-center gap-3 border-b border-line px-4">
+                <x-duro.icon name="search" class="text-ink-subtle" />
+                <input
+                    type="text"
+                    x-model="query"
+                    x-on:input="active = 0"
+                    x-on:keydown.down.prevent="move(1)"
+                    x-on:keydown.up.prevent="move(-1)"
+                    x-on:keydown.enter.prevent="run(results[active], $event)"
+                    placeholder="Jump to a page or switch realm…"
+                    class="h-14 w-full border-0 bg-transparent text-sm text-ink placeholder:text-ink-subtle focus:outline-none focus:ring-0"
+                >
+                <x-duro.kbd>Esc</x-duro.kbd>
+            </div>
+
+            <ul x-ref="list" class="max-h-80 overflow-y-auto p-2">
+                <template x-for="(command, index) in results" :key="command.label">
+                    <li>
+                        <button
+                            type="button"
+                            x-on:click="run(command, $event)"
+                            x-on:mouseenter="active = index"
+                            :data-active="(active === index).toString()"
+                            :class="active === index && 'is-active'"
+                            class="duro-menu-item"
+                        >
+                            <span class="duro-icon-tile size-7"><x-duro.icon name="arrow-right" class="size-3.5" /></span>
+                            <span class="flex-1 text-ink" x-text="command.label"></span>
+                            <span class="text-[0.65rem] uppercase tracking-wider text-ink-subtle" x-text="command.group"></span>
+                        </button>
+                    </li>
+                </template>
+                <li x-show="results.length === 0" class="py-10 text-center text-sm text-ink-subtle">No matches. Try “tables” or “neon”.</li>
+            </ul>
+        </div>
+    </div>
+
+    <x-duro.toasts />
 
     @livewireScripts
 </body>

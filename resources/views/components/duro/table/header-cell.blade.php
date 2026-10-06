@@ -1,12 +1,24 @@
-@props(['align' => 'left'])
+@props([
+    'align' => 'left',
+    'sortable' => false,
+    'direction' => null,
+])
 
 <th
+    scope="col"
+    @if ($direction) aria-sort="{{ $direction === 'asc' ? 'ascending' : 'descending' }}" @endif
     {{ $attributes->class([
-        'px-4 py-2.5 text-[11px] font-semibold tracking-[0.16em] uppercase text-neutral-600 dark:text-neutralfog-400 border-b border-neutralfog-300/70 dark:border-shadow-800/80',
         'text-left' => $align === 'left',
         'text-center' => $align === 'center',
         'text-right' => $align === 'right',
     ]) }}
 >
-    {{ $slot }}
+    @if ($sortable)
+        <span class="inline-flex cursor-pointer select-none items-center gap-1 transition hover:text-ink">
+            {{ $slot }}
+            <x-duro.icon :name="$direction === 'desc' ? 'chevron-down' : 'chevron-up'" @class(['size-3', 'opacity-30' => ! $direction, 'text-primary-ink' => $direction]) />
+        </span>
+    @else
+        {{ $slot }}
+    @endif
 </th>

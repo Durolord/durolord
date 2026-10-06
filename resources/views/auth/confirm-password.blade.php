@@ -7,10 +7,10 @@
                         SECURITY RITUAL · CONFIRM
                     </x-duro.badge>
 
-                    <h1 class="text-2xl font-extrabold tracking-tight text-electric-700 dark:text-electric-300">
+                    <h1 class="text-2xl font-extrabold tracking-tight text-primary-ink">
                         Confirm your secret phrase
                     </h1>
-                    <p class="text-xs text-neutral-700 dark:text-neutralfog-300">
+                    <p class="text-xs text-ink-muted">
                         This is a secure area of the realm. Please confirm your password before continuing.
                     </p>
                 </div>

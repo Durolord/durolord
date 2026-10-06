@@ -1,43 +1,36 @@
 @props([
-    'variant' => $variant ?? 'info',
-    'title' => $title ?? null,
+    'variant' => 'info',
+    'title' => null,
+    'icon' => null,
+    'dismissible' => false,
 ])
 
 @php
-    $base = 'rounded-2xl border px-4 py-3 text-sm flex gap-3 items-start';
-
-    $variants = [
-        'info' => 'bg-electric-500/5 border-electric-400/60 text-shadow-900 dark:bg-electric-500/10 dark:border-electric-500/60 dark:text-neutralfog-100',
-        'success' => 'bg-emerald-500/5 border-emerald-400/60 text-shadow-900 dark:bg-emerald-500/10 dark:border-emerald-500/60 dark:text-neutralfog-100',
-        'warning' => 'bg-gold-500/8 border-gold-400/70 text-shadow-900 dark:bg-gold-500/12 dark:border-gold-400/70 dark:text-neutralfog-100',
-        'danger' => 'bg-red-500/8 border-red-500/80 text-shadow-900 dark:bg-red-600/15 dark:border-red-500/80 dark:text-red-100',
-    ];
-
-    $bullet = [
-        'info' => 'bg-electric-400',
-        'success' => 'bg-emerald-400',
-        'warning' => 'bg-gold-400',
-        'danger' => 'bg-red-400',
-    ];
-
-    $variantClasses = $variants[$variant] ?? $variants['info'];
-    $bulletClasses = $bullet[$variant] ?? $bullet['info'];
-
-    $classes = implode(' ', [$base, $variantClasses, $attributes->get('class')]);
+    $icon ??= [
+        'info' => 'info',
+        'success' => 'check-circle',
+        'warning' => 'alert-triangle',
+        'danger' => 'x-circle',
+    ][$variant] ?? 'info';
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}>
-    <div class="mt-1">
-        <span class="inline-block h-2 w-2 rounded-full {{ $bulletClasses }} glow-gold"></span>
-    </div>
-    <div class="space-y-1">
-        @if($title)
-            <div class="font-semibold text-[13px]">
-                {{ $title }}
-            </div>
+<div
+    role="alert"
+    @if ($dismissible) x-data="{ shown: true }" x-show="shown" x-transition.opacity @endif
+    {{ $attributes->class(['duro-alert', 'duro-alert-'.$variant]) }}
+>
+    <x-duro.icon :name="$icon" size="md" class="duro-alert-icon" />
+
+    <div class="min-w-0 flex-1 space-y-1">
+        @if ($title)
+            <p class="font-semibold leading-snug">{{ $title }}</p>
         @endif
-        <div class="text-[13px] text-neutral-700 dark:text-neutralfog-200">
-            {{ $slot }}
-        </div>
+        <div class="text-[0.82rem] leading-relaxed text-ink-muted">{{ $slot }}</div>
     </div>
+
+    @if ($dismissible)
+        <button type="button" x-on:click="shown = false" class="-m-1 rounded p-1 text-ink-subtle transition hover:text-ink" aria-label="Dismiss">
+            <x-duro.icon name="x" />
+        </button>
+    @endif
 </div>

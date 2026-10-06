@@ -1,181 +1,1526 @@
 @import "tailwindcss";
 
-/* Tell Tailwind where to scan for classes */
 @source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
 @source "../../storage/framework/views/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
+@source "../../config/*.php";
 
-/* Dark / Light variants */
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant light (&:where(:not(.dark), :not(.dark) *));
 
-/* ============================
-   DURO THEME VARIABLES
-============================ */
-@theme {
-  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+/* =====================================================================
+   DURO DESIGN TOKENS
+   ---------------------------------------------------------------------
+   Utilities (bg-surface, text-ink, font-display, rounded-ui …) point to
+   raw --duro-* variables, which every [data-theme] block redefines.
+   ===================================================================== */
+@theme inline {
+  --font-sans: var(--duro-font-sans);
+  --font-display: var(--duro-font-display);
+  --font-label: var(--duro-font-label);
+  --font-mono: var(--duro-font-mono);
 
-  /* ELECTRIC BLUE */
-  --color-electric-50:  oklch(0.97 0.02 200);
-  --color-electric-100: oklch(0.94 0.03 200);
-  --color-electric-200: oklch(0.88 0.05 200);
-  --color-electric-300: oklch(0.82 0.09 200);
-  --color-electric-400: oklch(0.75 0.13 200);
-  --color-electric-500: oklch(0.70 0.15 215);
-  --color-electric-600: oklch(0.63 0.14 210);
-  --color-electric-700: oklch(0.53 0.12 210);
-  --color-electric-800: oklch(0.44 0.10 210);
-  --color-electric-900: oklch(0.35 0.07 210);
+  --color-canvas: var(--duro-canvas);
+  --color-canvas-alt: var(--duro-canvas-alt);
+  --color-surface: var(--duro-surface);
+  --color-surface-2: var(--duro-surface-2);
+  --color-surface-3: var(--duro-surface-3);
+  --color-line: var(--duro-line);
+  --color-line-strong: var(--duro-line-strong);
+  --color-ink: var(--duro-ink);
+  --color-ink-muted: var(--duro-ink-muted);
+  --color-ink-subtle: var(--duro-ink-subtle);
+  --color-primary: var(--duro-primary);
+  --color-primary-hover: var(--duro-primary-hover);
+  --color-primary-ink: var(--duro-primary-ink);
+  --color-on-primary: var(--duro-on-primary);
+  --color-accent: var(--duro-accent);
+  --color-accent-ink: var(--duro-accent-ink);
+  --color-on-accent: var(--duro-on-accent);
+  --color-success: var(--duro-success);
+  --color-warning: var(--duro-warning);
+  --color-danger: var(--duro-danger);
+  --color-info: var(--duro-info);
 
-  /* ELECTRIC PURPLE (ARCANE) */
-  --color-purplearc-glow: oklch(0.80 0.14 320);
-  --color-purplearc-deep: oklch(0.60 0.20 320);
+  --radius-ui: var(--duro-radius-ui);
+  --radius-card: var(--duro-radius-card);
+  --radius-pill: var(--duro-radius-pill);
 
-  /* GOLD */
-  --color-gold-50:  oklch(0.95 0.04 95);
-  --color-gold-100: oklch(0.90 0.07 95);
-  --color-gold-200: oklch(0.86 0.10 90);
-  --color-gold-300: oklch(0.82 0.19 85);
-  --color-gold-400: oklch(0.76 0.18 85);
-  --color-gold-500: oklch(0.70 0.21 80);
-  --color-gold-600: oklch(0.63 0.17 80);
-  --color-gold-700: oklch(0.54 0.15 80);
-  --color-gold-800: oklch(0.45 0.12 80);
-  --color-gold-900: oklch(0.38 0.10 80);
+  --shadow-card: var(--duro-shadow-card);
+  --shadow-pop: var(--duro-shadow-pop);
+  --shadow-glow: var(--duro-shadow-glow);
 
-  /* SILVER */
-  --color-silver-50:  oklch(0.96 0.007 260);
-  --color-silver-100: oklch(0.92 0.01 260);
-  --color-silver-200: oklch(0.88 0.01 260);
-  --color-silver-300: oklch(0.82 0.015 260);
-  --color-silver-400: oklch(0.76 0.02 260);
-  --color-silver-500: oklch(0.70 0.02 260);
-  --color-silver-600: oklch(0.60 0.02 260);
-  --color-silver-700: oklch(0.48 0.015 260);
-  --color-silver-800: oklch(0.36 0.012 260);
-  --color-silver-900: oklch(0.28 0.01 260);
+  /* Legacy palette — derived from the active theme so older markup keeps working. */
+  --color-electric-50: oklch(0.97 calc(var(--duro-p-c) * 0.15) var(--duro-p-h));
+  --color-electric-100: oklch(0.94 calc(var(--duro-p-c) * 0.25) var(--duro-p-h));
+  --color-electric-200: oklch(0.88 calc(var(--duro-p-c) * 0.4) var(--duro-p-h));
+  --color-electric-300: oklch(0.82 calc(var(--duro-p-c) * 0.65) var(--duro-p-h));
+  --color-electric-400: oklch(0.76 calc(var(--duro-p-c) * 0.88) var(--duro-p-h));
+  --color-electric-500: oklch(0.7 var(--duro-p-c) var(--duro-p-h));
+  --color-electric-600: oklch(0.63 calc(var(--duro-p-c) * 0.95) var(--duro-p-h));
+  --color-electric-700: oklch(0.53 calc(var(--duro-p-c) * 0.85) var(--duro-p-h));
+  --color-electric-800: oklch(0.44 calc(var(--duro-p-c) * 0.7) var(--duro-p-h));
+  --color-electric-900: oklch(0.35 calc(var(--duro-p-c) * 0.5) var(--duro-p-h));
 
-  /* SHADOW */
-  --color-shadow-50:  oklch(0.24 0.03 255);
-  --color-shadow-100: oklch(0.22 0.03 255);
-  --color-shadow-200: oklch(0.20 0.03 255);
-  --color-shadow-300: oklch(0.18 0.025 255);
-  --color-shadow-400: oklch(0.16 0.025 255);
-  --color-shadow-500: oklch(0.14 0.025 255);
-  --color-shadow-600: oklch(0.14 0.02 255);
-  --color-shadow-700: oklch(0.13 0.02 255);
-  --color-shadow-800: oklch(0.12 0.02 255); /* given */
-  --color-shadow-900: oklch(0.08 0.02 255); /* given */
-  --color-shadow-950: oklch(0.05 0.01 255); /* given */
+  --color-gold-50: oklch(0.96 calc(var(--duro-a-c) * 0.2) var(--duro-a-h));
+  --color-gold-100: oklch(0.92 calc(var(--duro-a-c) * 0.35) var(--duro-a-h));
+  --color-gold-200: oklch(0.87 calc(var(--duro-a-c) * 0.5) var(--duro-a-h));
+  --color-gold-300: oklch(0.82 calc(var(--duro-a-c) * 0.8) var(--duro-a-h));
+  --color-gold-400: oklch(0.76 calc(var(--duro-a-c) * 0.92) var(--duro-a-h));
+  --color-gold-500: oklch(0.7 var(--duro-a-c) var(--duro-a-h));
+  --color-gold-600: oklch(0.62 calc(var(--duro-a-c) * 0.9) var(--duro-a-h));
+  --color-gold-700: oklch(0.53 calc(var(--duro-a-c) * 0.8) var(--duro-a-h));
+  --color-gold-800: oklch(0.44 calc(var(--duro-a-c) * 0.65) var(--duro-a-h));
+  --color-gold-900: oklch(0.36 calc(var(--duro-a-c) * 0.5) var(--duro-a-h));
 
-  /* NEUTRAL FOG */
-  --color-neutralfog-50:  oklch(0.99 0.005 250);
-  --color-neutralfog-100: oklch(0.97 0.01 250); /* given */
-  --color-neutralfog-200: oklch(0.94 0.01 250); /* given */
-  --color-neutralfog-300: oklch(0.90 0.01 250); /* given */
-  --color-neutralfog-400: oklch(0.85 0.01 250);
-  --color-neutralfog-500: oklch(0.80 0.01 250);
-  --color-neutralfog-600: oklch(0.75 0.015 250);
-  --color-neutralfog-700: oklch(0.65 0.015 250);
-  --color-neutralfog-800: oklch(0.55 0.015 250);
-  --color-neutralfog-900: oklch(0.45 0.015 250);
-  --color-neutralfog-950: oklch(0.35 0.02 250);
+  --color-purplearc-glow: oklch(0.8 calc(var(--duro-a-c) * 0.9) var(--duro-a-h));
+  --color-purplearc-deep: oklch(0.6 var(--duro-a-c) var(--duro-a-h));
 
+  --color-silver-50: oklch(0.96 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-100: oklch(0.92 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-200: oklch(0.88 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-300: oklch(0.82 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-400: oklch(0.76 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-500: oklch(0.7 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-600: oklch(0.6 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-700: oklch(0.48 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-800: oklch(0.36 var(--duro-t-c) var(--duro-t-h));
+  --color-silver-900: oklch(0.28 var(--duro-t-c) var(--duro-t-h));
+
+  --color-shadow-50: oklch(0.26 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-100: oklch(0.24 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-200: oklch(0.22 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-300: oklch(0.2 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-400: oklch(0.19 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-500: oklch(0.18 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-600: oklch(0.17 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-700: oklch(0.26 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-800: oklch(0.22 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-900: oklch(0.17 var(--duro-t-c) var(--duro-t-h));
+  --color-shadow-950: oklch(0.13 var(--duro-t-c) var(--duro-t-h));
+
+  --color-neutralfog-50: oklch(0.99 calc(var(--duro-t-c) * 0.5) var(--duro-t-h));
+  --color-neutralfog-100: oklch(0.97 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-200: oklch(0.94 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-300: oklch(0.89 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-400: oklch(0.8 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-500: oklch(0.74 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-600: oklch(0.68 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-700: oklch(0.6 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-800: oklch(0.52 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-900: oklch(0.45 var(--duro-t-c) var(--duro-t-h));
+  --color-neutralfog-950: oklch(0.35 var(--duro-t-c) var(--duro-t-h));
+
+  --animate-float: duro-float 7s ease-in-out infinite;
+  --animate-glow: duro-glow 4s ease-in-out infinite;
+  --animate-marquee: duro-marquee 40s linear infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+  --animate-shimmer: duro-shimmer 2.2s linear infinite;
 }
-/* ============================
-   CUSTOM UTILITIES
-============================ */
-@layer utilities {
-  .glow-electric {
-    box-shadow:
-      0 0 12px var(--color-electric-500),
-      0 0 30px var(--color-electric-300);
+
+/* =====================================================================
+   THEMES
+   ===================================================================== */
+
+/* ---------- 1. RUNIC STEEL (dark) — default ---------- */
+:root,
+[data-theme="runic-steel"] {
+  color-scheme: dark;
+
+  --duro-font-display: "Grenze Gotisch", "UnifrakturCook", serif;
+  --duro-font-label: "Cinzel", "Trajan Pro", serif;
+  --duro-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.135 0.008 255);
+  --duro-canvas-alt: oklch(0.155 0.01 255);
+  --duro-surface: oklch(0.175 0.011 255);
+  --duro-surface-2: oklch(0.2 0.012 255);
+  --duro-surface-3: oklch(0.245 0.014 255);
+  --duro-line: oklch(0.3 0.014 255);
+  --duro-line-strong: oklch(0.45 0.018 255);
+  --duro-ink: oklch(0.95 0.006 250);
+  --duro-ink-muted: oklch(0.76 0.012 250);
+  --duro-ink-subtle: oklch(0.58 0.014 250);
+
+  --duro-primary: oklch(0.7 0.16 248);
+  --duro-primary-hover: oklch(0.77 0.14 245);
+  --duro-primary-ink: oklch(0.79 0.12 245);
+  --duro-on-primary: oklch(0.14 0.02 255);
+  --duro-accent: oklch(0.86 0.014 250);
+  --duro-accent-ink: oklch(0.88 0.012 250);
+  --duro-on-accent: oklch(0.16 0.01 255);
+
+  --duro-success: oklch(0.74 0.15 160);
+  --duro-warning: oklch(0.8 0.14 80);
+  --duro-danger: oklch(0.66 0.2 25);
+  --duro-info: oklch(0.75 0.12 230);
+
+  --duro-radius-ui: 0.4rem;
+  --duro-radius-card: 0.75rem;
+  --duro-radius-pill: 0.3rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 20px 40px -24px oklch(0 0 0 / 0.9);
+  --duro-shadow-pop: 0 1px 0 0 oklch(1 0 0 / 0.07) inset, 0 24px 60px -18px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.7 0.16 248 / 0.15);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.7 0.16 248 / 0.45), 0 0 28px -4px oklch(0.7 0.16 248 / 0.55);
+  --duro-glow: oklch(0.7 0.16 248);
+
+  --duro-p-h: 248; --duro-p-c: 0.16;
+  --duro-a-h: 250; --duro-a-c: 0.03;
+  --duro-t-h: 255; --duro-t-c: 0.012;
+
+  --duro-logo-mark: url("/images/brand/runic-steel-mark.webp");
+  --duro-hero-art: url("/images/brand/runic-steel-mark.webp");
+  --duro-wordmark: url("/images/brand/runic-steel-word.webp");
+  --duro-ornament: "ᚱ ᚢ ᚾ ᛖ";
+}
+
+/* ---------- 2. RUNIC BRONZE (light) ---------- */
+[data-theme="runic-bronze"] {
+  color-scheme: light;
+
+  --duro-font-display: "Grenze Gotisch", "UnifrakturCook", serif;
+  --duro-font-label: "Cinzel", "Trajan Pro", serif;
+  --duro-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.962 0.014 82);
+  --duro-canvas-alt: oklch(0.94 0.02 80);
+  --duro-surface: oklch(0.985 0.008 85);
+  --duro-surface-2: oklch(0.955 0.016 82);
+  --duro-surface-3: oklch(0.925 0.022 78);
+  --duro-line: oklch(0.86 0.03 72);
+  --duro-line-strong: oklch(0.7 0.06 60);
+  --duro-ink: oklch(0.25 0.035 50);
+  --duro-ink-muted: oklch(0.43 0.04 55);
+  --duro-ink-subtle: oklch(0.58 0.04 60);
+
+  --duro-primary: oklch(0.54 0.115 52);
+  --duro-primary-hover: oklch(0.48 0.11 50);
+  --duro-primary-ink: oklch(0.47 0.11 50);
+  --duro-on-primary: oklch(0.985 0.01 85);
+  --duro-accent: oklch(0.6 0.11 235);
+  --duro-accent-ink: oklch(0.5 0.11 238);
+  --duro-on-accent: oklch(0.99 0.005 240);
+
+  --duro-success: oklch(0.55 0.13 155);
+  --duro-warning: oklch(0.66 0.15 70);
+  --duro-danger: oklch(0.55 0.2 28);
+  --duro-info: oklch(0.55 0.12 235);
+
+  --duro-radius-ui: 0.5rem;
+  --duro-radius-card: 0.9rem;
+  --duro-radius-pill: 999px;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 18px 36px -26px oklch(0.35 0.06 50 / 0.55);
+  --duro-shadow-pop: 0 24px 50px -20px oklch(0.35 0.06 50 / 0.45), 0 0 0 1px oklch(0.7 0.06 60 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.54 0.115 52 / 0.45), 0 10px 30px -10px oklch(0.54 0.115 52 / 0.5);
+  --duro-glow: oklch(0.72 0.12 62);
+
+  --duro-p-h: 52; --duro-p-c: 0.115;
+  --duro-a-h: 235; --duro-a-c: 0.11;
+  --duro-t-h: 75; --duro-t-c: 0.018;
+
+  --duro-logo-mark: url("/images/brand/runic-bronze-mark.webp");
+  --duro-hero-art: url("/images/brand/runic-bronze-mark.webp");
+  --duro-wordmark: url("/images/brand/runic-bronze-word.webp");
+  --duro-ornament: "ᚱ ᚢ ᚾ ᛖ";
+}
+
+/* ---------- 3. NEON CIRCUIT (dark) ---------- */
+[data-theme="neon-circuit"] {
+  color-scheme: dark;
+
+  --duro-font-display: "Orbitron", "Audiowide", sans-serif;
+  --duro-font-label: "Orbitron", sans-serif;
+  --duro-font-sans: "Exo 2", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "Share Tech Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.13 0.045 282);
+  --duro-canvas-alt: oklch(0.155 0.055 282);
+  --duro-surface: oklch(0.17 0.055 283);
+  --duro-surface-2: oklch(0.2 0.065 284);
+  --duro-surface-3: oklch(0.25 0.08 285);
+  --duro-line: oklch(0.33 0.1 286);
+  --duro-line-strong: oklch(0.5 0.16 288);
+  --duro-ink: oklch(0.96 0.02 210);
+  --duro-ink-muted: oklch(0.78 0.05 240);
+  --duro-ink-subtle: oklch(0.6 0.07 265);
+
+  --duro-primary: oklch(0.86 0.14 200);
+  --duro-primary-hover: oklch(0.91 0.11 198);
+  --duro-primary-ink: oklch(0.87 0.13 200);
+  --duro-on-primary: oklch(0.15 0.06 280);
+  --duro-accent: oklch(0.6 0.25 292);
+  --duro-accent-ink: oklch(0.74 0.18 295);
+  --duro-on-accent: oklch(0.98 0.01 290);
+
+  --duro-success: oklch(0.85 0.19 150);
+  --duro-warning: oklch(0.86 0.16 95);
+  --duro-danger: oklch(0.68 0.24 10);
+  --duro-info: oklch(0.86 0.14 200);
+
+  --duro-radius-ui: 0.2rem;
+  --duro-radius-card: 0.35rem;
+  --duro-radius-pill: 0.15rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 0 0 1px oklch(0.6 0.25 292 / 0.18), 0 20px 50px -25px oklch(0.6 0.25 292 / 0.55);
+  --duro-shadow-pop: 0 0 0 1px oklch(0.86 0.14 200 / 0.35), 0 0 40px -8px oklch(0.6 0.25 292 / 0.6);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.86 0.14 200 / 0.7), 0 0 18px oklch(0.86 0.14 200 / 0.55), 0 0 42px oklch(0.6 0.25 292 / 0.45);
+  --duro-glow: oklch(0.86 0.14 200);
+
+  --duro-p-h: 200; --duro-p-c: 0.14;
+  --duro-a-h: 292; --duro-a-c: 0.24;
+  --duro-t-h: 284; --duro-t-c: 0.05;
+
+  --duro-logo-mark: url("/images/brand/neon-circuit-mark.webp");
+  --duro-hero-art: url("/images/brand/neon-circuit-word.webp");
+  --duro-wordmark: url("/images/brand/neon-circuit-word.webp");
+  --duro-ornament: "◇ ─ ◆ ─ ◇";
+}
+
+/* ---------- 4. INK & QUILL (light) ---------- */
+[data-theme="ink-quill"] {
+  color-scheme: light;
+
+  --duro-font-display: "Montserrat", ui-sans-serif, sans-serif;
+  --duro-font-label: "Montserrat", ui-sans-serif, sans-serif;
+  --duro-font-sans: "Lora", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.992 0.002 20);
+  --duro-canvas-alt: oklch(0.968 0.004 20);
+  --duro-surface: oklch(1 0 0);
+  --duro-surface-2: oklch(0.975 0.003 20);
+  --duro-surface-3: oklch(0.94 0.004 20);
+  --duro-line: oklch(0.86 0.004 20);
+  --duro-line-strong: oklch(0.2 0.01 20);
+  --duro-ink: oklch(0.19 0.01 20);
+  --duro-ink-muted: oklch(0.42 0.01 20);
+  --duro-ink-subtle: oklch(0.58 0.008 20);
+
+  --duro-primary: oklch(0.55 0.215 18);
+  --duro-primary-hover: oklch(0.49 0.2 18);
+  --duro-primary-ink: oklch(0.5 0.2 18);
+  --duro-on-primary: oklch(1 0 0);
+  --duro-accent: oklch(0.8 0.006 260);
+  --duro-accent-ink: oklch(0.42 0.01 260);
+  --duro-on-accent: oklch(0.19 0.01 20);
+
+  --duro-success: oklch(0.52 0.13 155);
+  --duro-warning: oklch(0.66 0.15 65);
+  --duro-danger: oklch(0.52 0.21 25);
+  --duro-info: oklch(0.5 0.14 250);
+
+  --duro-radius-ui: 0.55rem;
+  --duro-radius-card: 0.9rem;
+  --duro-radius-pill: 999px;
+  --duro-border: 2px;
+
+  --duro-shadow-card: 5px 5px 0 0 oklch(0.19 0.01 20);
+  --duro-shadow-pop: 6px 6px 0 0 oklch(0.19 0.01 20);
+  --duro-shadow-glow: 4px 4px 0 0 oklch(0.55 0.215 18);
+  --duro-glow: oklch(0.55 0.215 18);
+
+  --duro-p-h: 18; --duro-p-c: 0.2;
+  --duro-a-h: 260; --duro-a-c: 0.01;
+  --duro-t-h: 20; --duro-t-c: 0.004;
+
+  --duro-logo-mark: url("/images/brand/ink-quill-mark.webp");
+  --duro-hero-art: url("/images/brand/ink-quill-word.webp");
+  --duro-wordmark: url("/images/brand/ink-quill-word.webp");
+  --duro-ornament: "❦";
+}
+
+/* ---------- 5. CRIMSON CODEX (dark) ---------- */
+[data-theme="crimson-codex"] {
+  color-scheme: dark;
+
+  --duro-font-display: "Chakra Petch", ui-sans-serif, sans-serif;
+  --duro-font-label: "Chakra Petch", ui-sans-serif, sans-serif;
+  --duro-font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.12 0.003 20);
+  --duro-canvas-alt: oklch(0.145 0.004 20);
+  --duro-surface: oklch(0.165 0.005 20);
+  --duro-surface-2: oklch(0.195 0.006 20);
+  --duro-surface-3: oklch(0.24 0.008 20);
+  --duro-line: oklch(0.29 0.008 20);
+  --duro-line-strong: oklch(0.45 0.01 20);
+  --duro-ink: oklch(0.97 0.002 20);
+  --duro-ink-muted: oklch(0.76 0.006 20);
+  --duro-ink-subtle: oklch(0.56 0.008 20);
+
+  --duro-primary: oklch(0.6 0.225 22);
+  --duro-primary-hover: oklch(0.66 0.22 22);
+  --duro-primary-ink: oklch(0.7 0.19 22);
+  --duro-on-primary: oklch(0.99 0 0);
+  --duro-accent: oklch(0.84 0.005 260);
+  --duro-accent-ink: oklch(0.86 0.005 260);
+  --duro-on-accent: oklch(0.14 0.004 20);
+
+  --duro-success: oklch(0.74 0.15 155);
+  --duro-warning: oklch(0.8 0.14 75);
+  --duro-danger: oklch(0.66 0.23 25);
+  --duro-info: oklch(0.78 0.08 240);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 24px 50px -30px oklch(0 0 0 / 0.95);
+  --duro-shadow-pop: 0 24px 60px -20px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.6 0.225 22 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.6 0.225 22 / 0.7), 0 0 30px -6px oklch(0.6 0.225 22 / 0.6);
+  --duro-glow: oklch(0.6 0.225 22);
+
+  --duro-p-h: 22; --duro-p-c: 0.22;
+  --duro-a-h: 260; --duro-a-c: 0.01;
+  --duro-t-h: 20; --duro-t-c: 0.006;
+
+  --duro-logo-mark: url("/images/brand/crimson-codex-icon.webp");
+  --duro-hero-art: url("/images/brand/crimson-codex-mark.webp");
+  --duro-wordmark: url("/images/brand/crimson-codex-mark.webp");
+  --duro-ornament: "/ / /";
+}
+
+/* =====================================================================
+   BASE
+   ===================================================================== */
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
   }
 
-  .glow-arcane {
-    box-shadow: 0 0 20px var(--color-purplearc-glow);
+  body {
+    background-color: var(--duro-canvas);
+    color: var(--duro-ink);
+    font-family: var(--duro-font-sans);
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  .glow-gold {
-    box-shadow: 0 0 20px var(--color-gold-300);
+  ::selection {
+    background: color-mix(in oklab, var(--duro-primary) 35%, transparent);
+    color: var(--duro-ink);
   }
 
-  .aura-shadow {
-    background: radial-gradient(circle at center, transparent, var(--color-shadow-900) 80%);
+  :focus-visible {
+    outline: 2px solid var(--duro-primary);
+    outline-offset: 2px;
   }
 
-  .bg-aurora-light {
-    background:
-      radial-gradient(circle at 0% 0%, oklch(0.97 0.02 200 / 0.4), transparent 60%),
-      radial-gradient(circle at 100% 0%, oklch(0.95 0.04 95 / 0.35), transparent 65%),
-      radial-gradient(circle at 50% 100%, oklch(0.90 0.01 250 / 0.3), transparent 65%);
+  [x-cloak] {
+    display: none !important;
   }
 
-  .bg-aurora-dark {
-    background:
-      radial-gradient(circle at 0% 0%, oklch(0.70 0.15 215 / 0.35), transparent 60%),
-      radial-gradient(circle at 100% 0%, oklch(0.60 0.20 320 / 0.30), transparent 65%),
-      radial-gradient(circle at 50% 100%, oklch(0.08 0.02 255 / 0.85), oklch(0.05 0.01 255));
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--duro-line-strong) transparent;
+  }
+
+  code, kbd, pre, samp {
+    font-family: var(--duro-font-mono);
   }
 }
 
-/* ============================
-   COMPONENTS: MARKDOWN + RICH EDITOR
-============================ */
+/* =====================================================================
+   THEME TRANSITION (View Transitions API circular reveal)
+   ===================================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* =====================================================================
+   KEYFRAMES
+   ===================================================================== */
+@keyframes duro-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes duro-glow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes duro-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes duro-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes duro-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.55; }
+}
+
+@keyframes duro-scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes duro-sheen {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  60%, 100% { transform: translateX(220%) skewX(-20deg); }
+}
+
+@keyframes duro-toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* =====================================================================
+   COMPONENTS
+   ===================================================================== */
 @layer components {
-  /* Markdown */
-  .markdown-preview h1 { @apply text-lg font-semibold mt-2 mb-1 text-shadow-900 dark:text-neutralfog-100; }
-  .markdown-preview h2 { @apply text-base font-semibold mt-2 mb-1; }
-  .markdown-preview h3 { @apply text-sm font-semibold mt-2 mb-1; }
-  .markdown-preview p  { @apply text-sm leading-relaxed mb-2; }
-  .markdown-preview code { @apply px-1 py-0.5 rounded bg-shadow-900/80 text-[0.75rem] text-neutralfog-100; }
-  .markdown-preview a { @apply underline decoration-electric-500 decoration-2 underline-offset-2; }
+  /* ---------- Page backdrop ---------- */
+  .duro-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background: var(--duro-canvas);
+  }
 
-  /* Rich Preview */
-  .duro-rich-preview strong { @apply font-semibold text-shadow-900 dark:text-neutralfog-100; }
-  .duro-rich-preview em { @apply italic opacity-90; }
-  .duro-rich-preview u { @apply underline decoration-electric-500 underline-offset-2; }
-  .duro-rich-preview p, 
-  .duro-rich-preview div { @apply text-sm leading-relaxed mb-2; }
+  .duro-backdrop::before,
+  .duro-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
 
-  /* TipTap-like Editor */
+  [data-theme="runic-steel"] .duro-backdrop::before,
+  :root:not([data-theme]) .duro-backdrop::before {
+    background:
+      radial-gradient(60rem 40rem at 70% -10%, oklch(0.7 0.16 248 / 0.16), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 110%, oklch(0.6 0.05 250 / 0.12), transparent 60%),
+      repeating-linear-gradient(115deg, oklch(1 0 0 / 0.012) 0 1px, transparent 1px 7px);
+  }
+
+  [data-theme="runic-steel"] .duro-backdrop::after,
+  :root:not([data-theme]) .duro-backdrop::after {
+    background: radial-gradient(ellipse at center, transparent 40%, oklch(0 0 0 / 0.6));
+  }
+
+  [data-theme="runic-bronze"] .duro-backdrop::before {
+    background:
+      radial-gradient(50rem 30rem at 80% -10%, oklch(0.75 0.1 60 / 0.25), transparent 60%),
+      radial-gradient(40rem 30rem at 0% 100%, oklch(0.8 0.06 235 / 0.18), transparent 60%);
+  }
+
+  [data-theme="runic-bronze"] .duro-backdrop::after {
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0 0.15 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  [data-theme="neon-circuit"] .duro-backdrop::before {
+    background-image:
+      linear-gradient(oklch(0.6 0.25 292 / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.6 0.25 292 / 0.12) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 75%);
+  }
+
+  [data-theme="neon-circuit"] .duro-backdrop::after {
+    background:
+      radial-gradient(40rem 28rem at 85% 10%, oklch(0.6 0.25 292 / 0.28), transparent 60%),
+      radial-gradient(36rem 26rem at 5% 30%, oklch(0.86 0.14 200 / 0.14), transparent 60%),
+      radial-gradient(50rem 30rem at 50% 120%, oklch(0.6 0.25 292 / 0.2), transparent 60%);
+  }
+
+  [data-theme="ink-quill"] .duro-backdrop::before {
+    background-image: radial-gradient(oklch(0.19 0.01 20 / 0.09) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+
+  [data-theme="ink-quill"] .duro-backdrop::after {
+    background: radial-gradient(40rem 26rem at 90% 0%, oklch(0.55 0.215 18 / 0.07), transparent 60%);
+  }
+
+  [data-theme="crimson-codex"] .duro-backdrop::before {
+    background:
+      repeating-linear-gradient(-45deg, oklch(1 0 0 / 0.018) 0 2px, transparent 2px 14px),
+      radial-gradient(40rem 26rem at 100% 0%, oklch(0.6 0.225 22 / 0.22), transparent 60%),
+      radial-gradient(36rem 24rem at 0% 100%, oklch(0.6 0.225 22 / 0.12), transparent 60%);
+  }
+
+  [data-theme="crimson-codex"] .duro-backdrop::after {
+    background: radial-gradient(ellipse at center, transparent 45%, oklch(0 0 0 / 0.7));
+  }
+
+  /* ---------- Brand art ---------- */
+  .duro-logo-mark,
+  .duro-hero-art,
+  .duro-wordmark {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  .duro-logo-mark { background-image: var(--duro-logo-mark); }
+  .duro-hero-art { background-image: var(--duro-hero-art); }
+  .duro-wordmark { background-image: var(--duro-wordmark); }
+
+  /* ---------- Typography ---------- */
+  .duro-display {
+    font-family: var(--duro-font-display);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: var(--duro-ink);
+  }
+
+  [data-theme="runic-steel"] .duro-display,
+  :root:not([data-theme]) .duro-display {
+    background: linear-gradient(180deg, #ffffff 0%, #c7ced9 38%, #7f8896 52%, #e9edf3 64%, #9aa3b1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 0 oklch(0 0 0 / 0.65)) drop-shadow(0 0 22px oklch(0.7 0.16 248 / 0.35));
+    letter-spacing: 0.005em;
+  }
+
+  [data-theme="runic-bronze"] .duro-display {
+    background: linear-gradient(180deg, #e8b98d 0%, #b3713f 38%, #6e3b18 55%, #c88a57 70%, #7a4520 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 2px 0 oklch(1 0 0 / 0.8)) drop-shadow(0 4px 10px oklch(0.4 0.08 50 / 0.3));
+  }
+
+  [data-theme="neon-circuit"] .duro-display {
+    color: var(--duro-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 800;
+    text-shadow:
+      0 0 6px oklch(0.86 0.14 200 / 0.8),
+      0 0 22px oklch(0.86 0.14 200 / 0.45),
+      0 0 46px oklch(0.6 0.25 292 / 0.6);
+  }
+
+  [data-theme="ink-quill"] .duro-display {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--duro-surface);
+    -webkit-text-stroke: 2px var(--duro-ink);
+    paint-order: stroke fill;
+    text-shadow: 4px 4px 0 var(--duro-primary);
+  }
+
+  [data-theme="crimson-codex"] .duro-display {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--duro-ink);
+    text-shadow: 0 0 40px oklch(0.6 0.225 22 / 0.35);
+  }
+
+  .duro-heading {
+    font-family: var(--duro-font-display);
+    font-weight: 700;
+    color: var(--duro-ink);
+    letter-spacing: -0.005em;
+  }
+
+  [data-theme="neon-circuit"] .duro-heading,
+  [data-theme="crimson-codex"] .duro-heading {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  [data-theme="neon-circuit"] .duro-heading { font-size: 0.92em; }
+  [data-theme="ink-quill"] .duro-heading { font-weight: 800; letter-spacing: -0.02em; }
+
+  .duro-eyebrow {
+    font-family: var(--duro-font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--duro-primary-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .duro-eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  [data-theme="neon-circuit"] .duro-eyebrow::before { height: 2px; box-shadow: 0 0 8px currentColor; }
+  [data-theme="ink-quill"] .duro-eyebrow::before { height: 3px; border-radius: 99px; }
+  [data-theme="crimson-codex"] .duro-eyebrow::before { width: 0.7rem; height: 0.7rem; background: var(--duro-primary); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: 1; }
+
+  .duro-text-gradient {
+    background: linear-gradient(100deg, var(--duro-primary-ink), var(--duro-accent-ink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .duro-link {
+    color: var(--duro-primary-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in oklab, var(--duro-primary) 45%, transparent);
+    transition: color 0.15s, text-decoration-color 0.15s;
+  }
+
+  .duro-link:hover { text-decoration-color: currentColor; color: var(--duro-primary-hover); }
+
+  /* ---------- Ornamental divider ---------- */
+  .duro-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--duro-ink-subtle);
+    font-family: var(--duro-font-label);
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+  }
+
+  .duro-divider::before,
+  .duro-divider::after {
+    content: "";
+    flex: 1;
+    height: var(--duro-border);
+    background: linear-gradient(90deg, transparent, var(--duro-line-strong), transparent);
+  }
+
+  .duro-divider:empty::before { content: ""; }
+  .duro-divider-ornament::after { order: 2; }
+  .duro-divider-ornament > span::before { content: var(--duro-ornament); color: var(--duro-primary-ink); }
+
+  /* ---------- Buttons ---------- */
+  .duro-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    font-weight: 600;
+    border: var(--duro-border) solid transparent;
+    border-radius: var(--duro-radius-ui);
+    transition: background-color 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.2s, transform 0.12s;
+    isolation: isolate;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .duro-btn:disabled,
+  .duro-btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+  .duro-btn:active:not(:disabled) { transform: translateY(1px); }
+
+  .duro-btn-sm { height: 2rem; padding-inline: 0.8rem; font-size: 0.75rem; }
+  .duro-btn-md { height: 2.5rem; padding-inline: 1.1rem; font-size: 0.875rem; }
+  .duro-btn-lg { height: 3rem; padding-inline: 1.5rem; font-size: 0.95rem; }
+  .duro-btn-xl { height: 3.5rem; padding-inline: 2rem; font-size: 1rem; }
+  .duro-btn-icon.duro-btn-sm { width: 2rem; padding: 0; }
+  .duro-btn-icon.duro-btn-md { width: 2.5rem; padding: 0; }
+  .duro-btn-icon.duro-btn-lg { width: 3rem; padding: 0; }
+
+  .duro-btn-primary {
+    background: var(--duro-primary);
+    color: var(--duro-on-primary);
+    border-color: var(--duro-primary);
+  }
+  .duro-btn-primary:hover:not(:disabled) { background: var(--duro-primary-hover); border-color: var(--duro-primary-hover); box-shadow: var(--duro-shadow-glow); }
+
+  .duro-btn-accent {
+    background: var(--duro-accent);
+    color: var(--duro-on-accent);
+    border-color: var(--duro-accent);
+  }
+  .duro-btn-accent:hover:not(:disabled) { filter: brightness(1.08); }
+
+  .duro-btn-secondary {
+    background: var(--duro-surface-2);
+    color: var(--duro-ink);
+    border-color: var(--duro-line);
+  }
+  .duro-btn-secondary:hover:not(:disabled) { background: var(--duro-surface-3); border-color: var(--duro-line-strong); }
+
+  .duro-btn-outline {
+    background: transparent;
+    color: var(--duro-primary-ink);
+    border-color: color-mix(in oklab, var(--duro-primary) 65%, transparent);
+  }
+  .duro-btn-outline:hover:not(:disabled) { background: color-mix(in oklab, var(--duro-primary) 12%, transparent); border-color: var(--duro-primary); }
+
+  .duro-btn-ghost {
+    background: transparent;
+    color: var(--duro-ink-muted);
+  }
+  .duro-btn-ghost:hover:not(:disabled) { background: color-mix(in oklab, var(--duro-ink) 8%, transparent); color: var(--duro-ink); }
+
+  .duro-btn-danger {
+    background: var(--duro-danger);
+    color: oklch(0.99 0 0);
+    border-color: var(--duro-danger);
+  }
+  .duro-btn-danger:hover:not(:disabled) { filter: brightness(1.08); box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-danger) 25%, transparent); }
+
+  .duro-btn-link {
+    background: transparent;
+    color: var(--duro-primary-ink);
+    padding-inline: 0.25rem;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Runic steel — chromed metal with lightning hover */
+  [data-theme="runic-steel"] .duro-btn-primary,
+  :root:not([data-theme]) .duro-btn-primary {
+    background: linear-gradient(180deg, oklch(0.78 0.14 245), oklch(0.62 0.17 252));
+    box-shadow: 0 1px 0 oklch(1 0 0 / 0.35) inset, 0 -2px 0 oklch(0 0 0 / 0.25) inset, 0 8px 24px -10px oklch(0.7 0.16 248 / 0.8);
+  }
+  [data-theme="runic-steel"] .duro-btn-secondary {
+    background: linear-gradient(180deg, oklch(0.27 0.012 255), oklch(0.2 0.012 255));
+    box-shadow: 0 1px 0 oklch(1 0 0 / 0.1) inset;
+  }
+  [data-theme="runic-steel"] .duro-btn-accent {
+    background: linear-gradient(180deg, #f3f5f8, #aeb6c2 55%, #d9dee5);
+    box-shadow: 0 1px 0 #fff inset, 0 6px 18px -8px oklch(0 0 0 / 0.8);
+  }
+
+  /* Runic bronze — hammered copper */
+  [data-theme="runic-bronze"] .duro-btn-primary {
+    background: linear-gradient(180deg, oklch(0.62 0.12 56), oklch(0.48 0.11 48));
+    border-color: oklch(0.42 0.1 45);
+    box-shadow: 0 1px 0 oklch(1 0.02 80 / 0.4) inset, 0 8px 18px -10px oklch(0.4 0.1 45 / 0.8);
+  }
+  [data-theme="runic-bronze"] .duro-btn-secondary {
+    background: linear-gradient(180deg, oklch(0.99 0.008 85), oklch(0.94 0.02 80));
+  }
+
+  /* Neon circuit — chamfered, glowing, uppercase */
+  [data-theme="neon-circuit"] .duro-btn {
+    font-family: var(--duro-font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  }
+  [data-theme="neon-circuit"] .duro-btn-lg,
+  [data-theme="neon-circuit"] .duro-btn-xl { font-size: 0.8rem; }
+  [data-theme="neon-circuit"] .duro-btn-primary {
+    background: linear-gradient(90deg, oklch(0.86 0.14 200), oklch(0.78 0.15 230));
+    box-shadow: 0 0 24px oklch(0.86 0.14 200 / 0.45);
+  }
+  [data-theme="neon-circuit"] .duro-btn-primary:hover:not(:disabled) { filter: brightness(1.1); box-shadow: 0 0 32px oklch(0.86 0.14 200 / 0.7); }
+  [data-theme="neon-circuit"] .duro-btn-secondary { background: oklch(0.6 0.25 292 / 0.14); border-color: oklch(0.6 0.25 292 / 0.6); }
+  [data-theme="neon-circuit"] .duro-btn-outline { border-color: var(--duro-primary); box-shadow: inset 0 0 14px oklch(0.86 0.14 200 / 0.2); }
+
+  /* Ink & quill — outlined with a hard offset shadow */
+  [data-theme="ink-quill"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-weight: 700;
+    border-color: var(--duro-ink);
+    box-shadow: 3px 3px 0 0 var(--duro-ink);
+  }
+  [data-theme="ink-quill"] .duro-btn:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 0 var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 0 var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-btn-primary:hover:not(:disabled) { background: var(--duro-primary-hover); }
+  [data-theme="ink-quill"] .duro-btn-secondary { background: var(--duro-surface); }
+  [data-theme="ink-quill"] .duro-btn-outline { color: var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-btn-ghost,
+  [data-theme="ink-quill"] .duro-btn-link { border-color: transparent; box-shadow: none; }
+  [data-theme="ink-quill"] .duro-btn-ghost:hover:not(:disabled),
+  [data-theme="ink-quill"] .duro-btn-link:hover:not(:disabled) { box-shadow: none; transform: none; }
+
+  /* Crimson codex — blade-cut corners */
+  [data-theme="crimson-codex"] .duro-btn {
+    font-family: var(--duro-font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%);
+  }
+  [data-theme="crimson-codex"] .duro-btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.25), transparent);
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  [data-theme="crimson-codex"] .duro-btn-primary:hover::after { animation: duro-sheen 0.9s ease; }
+  [data-theme="crimson-codex"] .duro-btn-secondary { background: var(--duro-surface-2); border-left: 3px solid var(--duro-primary); }
+
+  /* ---------- Cards ---------- */
+  .duro-card {
+    position: relative;
+    isolation: isolate;
+    background: var(--duro-surface);
+    color: var(--duro-ink);
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: var(--duro-radius-card);
+    box-shadow: var(--duro-shadow-card);
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  }
+
+  .duro-card-interactive:hover {
+    border-color: color-mix(in oklab, var(--duro-primary) 55%, var(--duro-line));
+    box-shadow: var(--duro-shadow-card), var(--duro-shadow-glow);
+    transform: translateY(-3px);
+  }
+
+  .duro-card-flat { box-shadow: none; }
+  .duro-card-glass {
+    background: color-mix(in oklab, var(--duro-surface) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+
+  [data-theme="runic-steel"] .duro-card,
+  :root:not([data-theme]) .duro-card {
+    background: linear-gradient(180deg, oklch(0.205 0.012 255), var(--duro-surface) 40%);
+  }
+
+  [data-theme="runic-steel"] .duro-card-ornate::before,
+  [data-theme="runic-bronze"] .duro-card-ornate::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 1px solid color-mix(in oklab, var(--duro-line-strong) 45%, transparent);
+    border-radius: calc(var(--duro-radius-card) - 4px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  [data-theme="runic-bronze"] .duro-card {
+    background: linear-gradient(180deg, oklch(0.99 0.006 85), var(--duro-surface));
+  }
+
+  [data-theme="neon-circuit"] .duro-card {
+    background: linear-gradient(180deg, oklch(0.19 0.065 284 / 0.92), oklch(0.16 0.05 283 / 0.92));
+    border-color: oklch(0.6 0.25 292 / 0.35);
+  }
+
+  [data-theme="neon-circuit"] .duro-card::before,
+  [data-theme="neon-circuit"] .duro-card::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--duro-primary);
+    border-style: solid;
+    pointer-events: none;
+    filter: drop-shadow(0 0 4px var(--duro-primary));
+    opacity: 0.85;
+  }
+  [data-theme="neon-circuit"] .duro-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  [data-theme="neon-circuit"] .duro-card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  [data-theme="neon-circuit"] .duro-card-interactive:hover { border-color: oklch(0.86 0.14 200 / 0.6); }
+
+  [data-theme="ink-quill"] .duro-card { border-color: var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-card-flat { border-color: var(--duro-line); border-width: 1px; }
+  [data-theme="ink-quill"] .duro-card-interactive:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 0 var(--duro-ink);
+    border-color: var(--duro-ink);
+  }
+
+  [data-theme="crimson-codex"] .duro-card {
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+    background: linear-gradient(160deg, oklch(0.19 0.006 20), var(--duro-surface) 45%);
+  }
+  [data-theme="crimson-codex"] .duro-card::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 34px;
+    height: 3px;
+    background: var(--duro-primary);
+    box-shadow: 0 0 12px var(--duro-primary);
+    pointer-events: none;
+  }
+  [data-theme="crimson-codex"] .duro-card::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(225deg, var(--duro-primary) 0 30%, transparent 30%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  [data-theme="crimson-codex"] .duro-card-flat::after { display: none; }
+
+  /* ---------- Section panels (canvas-alt bands) ---------- */
+  .duro-band {
+    background: var(--duro-canvas-alt);
+    border-block: var(--duro-border) solid var(--duro-line);
+  }
+
+  [data-theme="ink-quill"] .duro-band { border-color: var(--duro-ink); }
+
+  /* ---------- Form fields ---------- */
+  .duro-label {
+    display: block;
+    font-family: var(--duro-font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--duro-ink-muted);
+  }
+
+  [data-theme="ink-quill"] .duro-label { letter-spacing: 0.06em; color: var(--duro-ink); }
+  [data-theme="neon-circuit"] .duro-label { font-size: 0.62rem; color: var(--duro-primary-ink); }
+
+  .duro-hint { font-size: 0.72rem; color: var(--duro-ink-subtle); }
+  .duro-error { font-size: 0.72rem; color: var(--duro-danger); font-weight: 500; }
+
+  .duro-field {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+    background: var(--duro-surface-2);
+    color: var(--duro-ink);
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: var(--duro-radius-ui);
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+  }
+
+  .duro-field:hover { border-color: var(--duro-line-strong); }
+
+  .duro-field:focus-within,
+  .duro-field.is-open {
+    border-color: var(--duro-primary);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 22%, transparent);
+  }
+
+  .duro-field.is-invalid { border-color: var(--duro-danger); }
+  .duro-field.is-invalid:focus-within { box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-danger) 22%, transparent); }
+
+  .duro-field-input {
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
+    color: inherit;
+  }
+
+  .duro-field-input::placeholder { color: var(--duro-ink-subtle); opacity: 0.8; }
+  .duro-field-input:focus { outline: none; box-shadow: none; }
+  .duro-field-affix { color: var(--duro-ink-subtle); font-size: 0.8rem; display: inline-flex; align-items: center; }
+  .duro-field-affix:first-child { padding-left: 0.8rem; }
+  .duro-field-affix:last-child { padding-right: 0.8rem; }
+
+  /* Standalone control (legacy-styled inputs / selects / textareas) */
+  .duro-control {
+    display: block;
+    width: 100%;
+    background: var(--duro-surface-2);
+    color: var(--duro-ink);
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: var(--duro-radius-ui);
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .duro-control::placeholder { color: var(--duro-ink-subtle); }
+  .duro-control:hover { border-color: var(--duro-line-strong); }
+  .duro-control:focus { outline: none; border-color: var(--duro-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 22%, transparent); }
+
+  [data-theme="ink-quill"] .duro-field,
+  [data-theme="ink-quill"] .duro-control { background: var(--duro-surface); border-color: var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-field:focus-within,
+  [data-theme="ink-quill"] .duro-field.is-open,
+  [data-theme="ink-quill"] .duro-control:focus { box-shadow: 3px 3px 0 0 var(--duro-primary); border-color: var(--duro-ink); }
+
+  [data-theme="neon-circuit"] .duro-field,
+  [data-theme="neon-circuit"] .duro-control { background: oklch(0.14 0.05 282 / 0.85); border-color: oklch(0.6 0.25 292 / 0.4); }
+  [data-theme="neon-circuit"] .duro-field:focus-within,
+  [data-theme="neon-circuit"] .duro-field.is-open,
+  [data-theme="neon-circuit"] .duro-control:focus { box-shadow: 0 0 0 1px var(--duro-primary), 0 0 18px oklch(0.86 0.14 200 / 0.35); }
+
+  [data-theme="crimson-codex"] .duro-field:focus-within,
+  [data-theme="crimson-codex"] .duro-field.is-open,
+  [data-theme="crimson-codex"] .duro-control:focus { box-shadow: inset 3px 0 0 var(--duro-primary); }
+
+  /* Checkbox & radio */
+  .duro-check {
+    appearance: none;
+    flex-shrink: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    display: inline-grid;
+    place-content: center;
+    background: var(--duro-surface-2);
+    border: var(--duro-border) solid var(--duro-line-strong);
+    border-radius: calc(var(--duro-radius-ui) * 0.6);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  .duro-check[type="radio"] { border-radius: 999px; }
+  .duro-check::before {
+    content: "";
+    width: 0.65rem;
+    height: 0.65rem;
+    transform: scale(0);
+    transition: transform 0.15s ease;
+    background: var(--duro-on-primary);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+  .duro-check[type="radio"]::before { clip-path: circle(50%); width: 0.45rem; height: 0.45rem; }
+  .duro-check:checked { background: var(--duro-primary); border-color: var(--duro-primary); }
+  .duro-check:checked::before { transform: scale(1); }
+  .duro-check:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 30%, transparent); }
+  .duro-check:hover:not(:checked) { border-color: var(--duro-primary); }
+  [data-theme="ink-quill"] .duro-check { border-color: var(--duro-ink); }
+  [data-theme="neon-circuit"] .duro-check:checked { box-shadow: 0 0 10px var(--duro-primary); }
+
+  /* Switch */
+  .duro-switch {
+    position: relative;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    width: 2.75rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background: var(--duro-surface-3);
+    border: var(--duro-border) solid var(--duro-line-strong);
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .duro-switch-thumb {
+    position: absolute;
+    left: 3px;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 999px;
+    background: var(--duro-ink-muted);
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s;
+  }
+  .duro-switch[aria-checked="true"] { background: var(--duro-primary); border-color: var(--duro-primary); }
+  .duro-switch[aria-checked="true"] .duro-switch-thumb { transform: translateX(1.2rem); background: var(--duro-on-primary); }
+  [data-theme="neon-circuit"] .duro-switch,
+  [data-theme="neon-circuit"] .duro-switch-thumb { border-radius: 2px; }
+  [data-theme="neon-circuit"] .duro-switch[aria-checked="true"] { box-shadow: 0 0 14px var(--duro-primary); }
+  [data-theme="crimson-codex"] .duro-switch,
+  [data-theme="crimson-codex"] .duro-switch-thumb { border-radius: 0; }
+  [data-theme="ink-quill"] .duro-switch { border-color: var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-switch-thumb { background: var(--duro-ink); }
+
+  /* ---------- Floating panels: dropdowns, popovers, menus ---------- */
+  .duro-panel {
+    background: var(--duro-surface);
+    color: var(--duro-ink);
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: var(--duro-radius-card);
+    box-shadow: var(--duro-shadow-pop);
+  }
+
+  [data-theme="ink-quill"] .duro-panel { border-color: var(--duro-ink); }
+  [data-theme="neon-circuit"] .duro-panel { background: oklch(0.16 0.055 283 / 0.97); border-color: oklch(0.6 0.25 292 / 0.5); backdrop-filter: blur(10px); }
+
+  .duro-menu-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.65rem;
+    border-radius: calc(var(--duro-radius-ui) * 0.8);
+    font-size: 0.85rem;
+    color: var(--duro-ink-muted);
+    text-align: left;
+    transition: background-color 0.12s, color 0.12s;
+  }
+  .duro-menu-item:hover,
+  .duro-menu-item:focus-visible,
+  .duro-menu-item.is-active {
+    outline: none;
+    background: color-mix(in oklab, var(--duro-primary) 13%, transparent);
+    color: var(--duro-ink);
+  }
+
+  /* ---------- Badges ---------- */
+  .duro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    padding: 0.2rem 0.6rem;
+    font-family: var(--duro-font-label);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--duro-radius-pill);
+    border: 1px solid transparent;
+    --badge: var(--duro-primary);
+    color: color-mix(in oklab, var(--badge) 80%, var(--duro-ink));
+    background: color-mix(in oklab, var(--badge) 14%, transparent);
+    border-color: color-mix(in oklab, var(--badge) 40%, transparent);
+  }
+  .duro-badge-primary { --badge: var(--duro-primary); }
+  .duro-badge-accent { --badge: var(--duro-accent); }
+  .duro-badge-neutral { --badge: var(--duro-ink-subtle); }
+  .duro-badge-success { --badge: var(--duro-success); }
+  .duro-badge-warning { --badge: var(--duro-warning); }
+  .duro-badge-danger { --badge: var(--duro-danger); }
+  .duro-badge-info { --badge: var(--duro-info); }
+  .duro-badge-solid { background: var(--badge); color: var(--duro-canvas); border-color: var(--badge); }
+  .duro-badge-dot::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 99px; background: var(--badge); box-shadow: 0 0 6px var(--badge); }
+
+  [data-theme="ink-quill"] .duro-badge { border-color: var(--duro-ink); color: var(--duro-ink); letter-spacing: 0.05em; }
+  [data-theme="ink-quill"] .duro-badge-primary { color: var(--duro-primary-ink); }
+  [data-theme="ink-quill"] .duro-badge-solid { color: var(--duro-surface); }
+  [data-theme="crimson-codex"] .duro-badge { clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-inline: 0.8rem; }
+
+  /* ---------- Alerts ---------- */
+  .duro-alert {
+    --alert: var(--duro-info);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.85rem 1rem;
+    border-radius: var(--duro-radius-ui);
+    border: var(--duro-border) solid color-mix(in oklab, var(--alert) 45%, transparent);
+    background: color-mix(in oklab, var(--alert) 10%, var(--duro-surface));
+    color: var(--duro-ink);
+    font-size: 0.85rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .duro-alert::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--alert);
+  }
+  .duro-alert-info { --alert: var(--duro-info); }
+  .duro-alert-success { --alert: var(--duro-success); }
+  .duro-alert-warning { --alert: var(--duro-warning); }
+  .duro-alert-danger { --alert: var(--duro-danger); }
+  .duro-alert-icon { color: var(--alert); flex-shrink: 0; margin-top: 0.05rem; }
+  [data-theme="ink-quill"] .duro-alert { border-color: var(--duro-ink); box-shadow: 3px 3px 0 0 var(--alert); }
+
+  /* ---------- Tables ---------- */
+  .duro-table-wrap {
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: var(--duro-radius-card);
+    background: var(--duro-surface);
+    overflow: hidden;
+  }
+  [data-theme="ink-quill"] .duro-table-wrap { border-color: var(--duro-ink); box-shadow: var(--duro-shadow-card); }
+  [data-theme="neon-circuit"] .duro-table-wrap { border-color: oklch(0.6 0.25 292 / 0.4); }
+
+  .duro-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
+  .duro-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--duro-surface-2);
+    font-family: var(--duro-font-label);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--duro-ink-subtle);
+    padding: 0.75rem 1rem;
+    border-bottom: var(--duro-border) solid var(--duro-line);
+    white-space: nowrap;
+  }
+  .duro-table tbody td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--duro-line) 70%, transparent);
+    color: var(--duro-ink);
+    vertical-align: middle;
+  }
+  .duro-table tbody tr:last-child td { border-bottom: 0; }
+  .duro-table tbody tr.is-interactive { transition: background-color 0.12s; }
+  .duro-table tbody tr.is-interactive:hover td { background: color-mix(in oklab, var(--duro-primary) 6%, transparent); }
+  .duro-table tbody tr.is-selected td { background: color-mix(in oklab, var(--duro-primary) 10%, transparent); }
+  .duro-table tfoot td { padding: 0.75rem 1rem; background: var(--duro-surface-2); border-top: var(--duro-border) solid var(--duro-line); font-size: 0.78rem; color: var(--duro-ink-muted); }
+  .duro-table-striped tbody tr:nth-child(even) td { background: color-mix(in oklab, var(--duro-ink) 2.5%, transparent); }
+
+  /* ---------- Tabs ---------- */
+  .duro-tabs {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--duro-surface-2);
+    border: var(--duro-border) solid var(--duro-line);
+    border-radius: calc(var(--duro-radius-ui) + 0.25rem);
+  }
+  .duro-tab {
+    position: relative;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--duro-ink-muted);
+    border-radius: var(--duro-radius-ui);
+    transition: color 0.15s, background-color 0.15s;
+    white-space: nowrap;
+  }
+  .duro-tab:hover { color: var(--duro-ink); }
+  .duro-tab[aria-selected="true"] { background: var(--duro-surface); color: var(--duro-ink); box-shadow: 0 1px 3px oklch(0 0 0 / 0.2); }
+  [data-theme="neon-circuit"] .duro-tab[aria-selected="true"] { color: var(--duro-primary); box-shadow: inset 0 -2px 0 var(--duro-primary); background: oklch(0.86 0.14 200 / 0.08); }
+  [data-theme="ink-quill"] .duro-tabs { border-color: var(--duro-ink); }
+  [data-theme="ink-quill"] .duro-tab[aria-selected="true"] { background: var(--duro-ink); color: var(--duro-surface); box-shadow: none; }
+  [data-theme="crimson-codex"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
+
+  .duro-tabs-underline { background: transparent; border: 0; border-bottom: var(--duro-border) solid var(--duro-line); border-radius: 0; padding: 0; gap: 1.25rem; }
+  .duro-tabs-underline .duro-tab { padding: 0.6rem 0.1rem; border-radius: 0; background: transparent !important; box-shadow: none !important; color: var(--duro-ink-muted) !important; }
+  .duro-tabs-underline .duro-tab[aria-selected="true"] { color: var(--duro-ink) !important; }
+  .duro-tabs-underline .duro-tab[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: calc(-1 * var(--duro-border)); height: 2px; background: var(--duro-primary); box-shadow: 0 0 10px var(--duro-glow); }
+
+  /* ---------- Misc primitives ---------- */
+  .duro-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding-inline: 0.35rem;
+    font-family: var(--duro-font-mono);
+    font-size: 0.68rem;
+    color: var(--duro-ink-muted);
+    background: var(--duro-surface-2);
+    border: 1px solid var(--duro-line);
+    border-bottom-width: 2px;
+    border-radius: 0.3rem;
+  }
+
+  .duro-progress {
+    height: 0.5rem;
+    width: 100%;
+    border-radius: 999px;
+    background: var(--duro-surface-3);
+    overflow: hidden;
+  }
+  .duro-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--duro-primary), color-mix(in oklab, var(--duro-primary) 60%, var(--duro-accent)));
+    box-shadow: 0 0 12px color-mix(in oklab, var(--duro-glow) 60%, transparent);
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-theme="crimson-codex"] .duro-progress,
+  [data-theme="neon-circuit"] .duro-progress { border-radius: 0; }
+  [data-theme="ink-quill"] .duro-progress { border: 2px solid var(--duro-ink); height: 0.75rem; background: var(--duro-surface); }
+
+  .duro-skeleton {
+    border-radius: var(--duro-radius-ui);
+    background: linear-gradient(90deg, var(--duro-surface-2) 25%, var(--duro-surface-3) 37%, var(--duro-surface-2) 63%);
+    background-size: 400% 100%;
+    animation: duro-shimmer 1.6s ease infinite;
+  }
+
+  .duro-avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 999px;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--duro-primary) 35%, var(--duro-surface-3)), var(--duro-surface-3));
+    color: var(--duro-ink);
+    font-family: var(--duro-font-label);
+    font-weight: 700;
+    border: 2px solid var(--duro-surface);
+    box-shadow: 0 0 0 1px var(--duro-line);
+  }
+  [data-theme="crimson-codex"] .duro-avatar,
+  [data-theme="neon-circuit"] .duro-avatar { border-radius: var(--duro-radius-ui); }
+  [data-theme="ink-quill"] .duro-avatar { box-shadow: 0 0 0 2px var(--duro-ink); }
+
+  .duro-icon-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: var(--duro-radius-ui);
+    color: var(--duro-primary-ink);
+    background: color-mix(in oklab, var(--duro-primary) 13%, transparent);
+    border: 1px solid color-mix(in oklab, var(--duro-primary) 35%, transparent);
+  }
+  [data-theme="runic-steel"] .duro-icon-tile { box-shadow: 0 0 18px -4px oklch(0.7 0.16 248 / 0.55) inset; }
+  [data-theme="neon-circuit"] .duro-icon-tile { box-shadow: 0 0 16px oklch(0.86 0.14 200 / 0.35); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
+  [data-theme="ink-quill"] .duro-icon-tile { border: 2px solid var(--duro-ink); background: color-mix(in oklab, var(--duro-primary) 10%, var(--duro-surface)); box-shadow: 2px 2px 0 var(--duro-ink); }
+  [data-theme="crimson-codex"] .duro-icon-tile { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
+
+  .duro-tooltip {
+    position: fixed;
+    z-index: 80;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--duro-ink);
+    background: var(--duro-surface-3);
+    border: 1px solid var(--duro-line-strong);
+    border-radius: calc(var(--duro-radius-ui) * 0.8);
+    box-shadow: var(--duro-shadow-pop);
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .duro-glow-orb {
+    position: absolute;
+    z-index: -1;
+    border-radius: 999px;
+    filter: blur(60px);
+    background: var(--duro-glow);
+    opacity: 0.22;
+    pointer-events: none;
+    animation: duro-glow 6s ease-in-out infinite;
+  }
+  [data-theme="ink-quill"] .duro-glow-orb { display: none; }
+
+  .duro-marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+
+  .duro-grid-lines {
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--duro-line) 60%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--duro-line) 60%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .duro-code {
+    font-family: var(--duro-font-mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    background: oklch(0.16 0.012 260);
+    color: oklch(0.9 0.01 250);
+    border-radius: var(--duro-radius-ui);
+    border: 1px solid oklch(0.28 0.014 260);
+  }
+  [data-theme="neon-circuit"] .duro-code { background: oklch(0.11 0.04 282); border-color: oklch(0.6 0.25 292 / 0.35); }
+  [data-theme="crimson-codex"] .duro-code { background: oklch(0.09 0.003 20); }
+  [data-theme="ink-quill"] .duro-code { background: oklch(0.19 0.01 20); border: 2px solid var(--duro-ink); }
+
+  /* Neon sign flicker for decorative text */
+  [data-theme="neon-circuit"] .duro-flicker { animation: duro-flicker 6s infinite; }
+
+  /* Reveal on scroll */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+  /* Legacy editor styles (markdown / rich editor components) */
+  .markdown-preview h1 { font-size: 1.125rem; font-weight: 700; margin: 0.5rem 0 0.25rem; }
+  .markdown-preview h2 { font-size: 1rem; font-weight: 700; margin: 0.5rem 0 0.25rem; }
+  .markdown-preview h3 { font-size: 0.875rem; font-weight: 700; margin: 0.5rem 0 0.25rem; }
+  .markdown-preview p { font-size: 0.875rem; line-height: 1.65; margin-bottom: 0.5rem; }
+  .markdown-preview code { padding: 0.1rem 0.3rem; border-radius: 0.25rem; background: var(--duro-surface-3); font-size: 0.75rem; }
+  .markdown-preview a { text-decoration: underline; text-decoration-color: var(--duro-primary); text-underline-offset: 2px; }
+
+  .duro-rich-preview strong { font-weight: 600; }
+  .duro-rich-preview em { font-style: italic; opacity: 0.9; }
+  .duro-rich-preview u { text-decoration: underline; text-decoration-color: var(--duro-primary); text-underline-offset: 2px; }
+  .duro-rich-preview p,
+  .duro-rich-preview div { font-size: 0.875rem; line-height: 1.65; margin-bottom: 0.5rem; }
+
   .duro-editor-content {
-    @apply w-full rounded-lg px-3 py-2 text-sm leading-relaxed
-           bg-transparent text-shadow-900
-           outline-none focus:outline-none focus:ring-0
-           dark:text-neutralfog-100;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    background: transparent;
+    color: var(--duro-ink);
+    outline: none;
     min-height: var(--duro-editor-min-h, 140px);
     white-space: pre-wrap;
   }
-
-  .duro-editor-content[contenteditable="true"]:empty::before {
-    content: attr(data-placeholder);
-    @apply text-neutral-400 dark:text-neutralfog-400/70;
-  }
+  .duro-editor-content[contenteditable="true"]:empty::before { content: attr(data-placeholder); color: var(--duro-ink-subtle); }
+  .duro-editor-content h1 { font-size: 1.25rem; font-weight: 700; }
+  .duro-editor-content h2 { font-size: 1.1rem; font-weight: 700; }
+  .duro-editor-content blockquote { border-left: 3px solid var(--duro-primary); padding-left: 0.75rem; color: var(--duro-ink-muted); }
+  .duro-editor-content ul { list-style: disc; padding-left: 1.25rem; }
+  .duro-editor-content ol { list-style: decimal; padding-left: 1.25rem; }
+  .duro-editor-content pre { font-family: var(--duro-font-mono); background: var(--duro-surface-3); padding: 0.5rem; border-radius: 0.3rem; }
 
   .duro-editor-btn {
-    @apply inline-flex items-center justify-center h-6 px-2 rounded-lg
-           border border-transparent text-[11px]
-           text-neutral-600 dark:text-neutralfog-300
-           hover:bg-electric-500/10 hover:text-electric-700
-           dark:hover:bg-electric-500/20 dark:hover:text-electric-200
-           transition;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.6rem;
+    padding-inline: 0.5rem;
+    border-radius: calc(var(--duro-radius-ui) * 0.8);
+    border: 1px solid transparent;
+    font-size: 0.7rem;
+    color: var(--duro-ink-muted);
+    transition: background-color 0.12s, color 0.12s;
+  }
+  .duro-editor-btn:hover { background: color-mix(in oklab, var(--duro-primary) 12%, transparent); color: var(--duro-ink); }
+  .duro-editor-btn-active { background: color-mix(in oklab, var(--duro-primary) 16%, transparent); color: var(--duro-primary-ink); border-color: color-mix(in oklab, var(--duro-primary) 50%, transparent); }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+/* =====================================================================
+   UTILITIES
+   ===================================================================== */
+@layer utilities {
+  .glow-electric { box-shadow: var(--duro-shadow-glow); }
+  .glow-arcane { box-shadow: var(--duro-shadow-pop); }
+  .glow-gold { box-shadow: 0 0 14px color-mix(in oklab, var(--duro-accent) 60%, transparent); }
+  .text-glow { text-shadow: 0 0 18px color-mix(in oklab, var(--duro-glow) 70%, transparent); }
+
+  .bg-aurora-light,
+  .bg-aurora-dark {
+    background:
+      radial-gradient(circle at 0% 0%, color-mix(in oklab, var(--duro-primary) 18%, transparent), transparent 60%),
+      radial-gradient(circle at 100% 0%, color-mix(in oklab, var(--duro-accent) 16%, transparent), transparent 65%);
   }
 
-  .duro-editor-btn-active {
-    @apply bg-electric-500/15 text-electric-700 dark:text-electric-200
-           border-electric-500/60;
-  }
-  /* Hide scrollbars but keep scrolling */
-  .no-scrollbar::-webkit-scrollbar {
-      display: none;
+  .aura-shadow { background: radial-gradient(circle at center, transparent, var(--duro-canvas) 80%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 
-  .no-scrollbar {
-      -ms-overflow-style: none;  /* IE & Edge */
-      scrollbar-width: none;     /* Firefox */
-  }
-
+  [data-reveal] { opacity: 1; transform: none; }
 }

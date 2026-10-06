@@ -9,21 +9,21 @@
 >
     {{-- Label --}}
     @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <label class="duro-label">
             {{ $label }}
         </label>
     @endif
 
     {{-- Shell --}}
-    <div class="rounded-xl border bg-neutralfog-100 border-neutralfog-300 
-                dark:bg-shadow-950/70 dark:border-shadow-800 w-full">
+    <div class="rounded-ui border bg-surface-2 border-line
+ w-full">
 
         {{-- Toolbar (fixed width, scrollable buttons) --}}
         <div
             class="flex flex-nowrap items-center gap-1 px-2 py-1.5
-                   border-b border-neutralfog-300/80 dark:border-shadow-800/80
+ border-b border-line/80
                    text-[11px] w-full whitespace-nowrap overflow-x-auto
-                   scrollbar-thin scrollbar-thumb-shadow-800 scrollbar-track-shadow-900/40"
+                  "
         >
             {{-- Left group: marks --}}
             <button type="button"
@@ -48,7 +48,7 @@
             ><span class="underline">U</span></button>
 
             {{-- Middle divider --}}
-            <div class="h-4 w-px mx-1 bg-neutralfog-300 dark:bg-shadow-800/80 shrink-0"></div>
+            <div class="h-4 w-px mx-1 bg-surface-3 shrink-0"></div>
 
             {{-- Headings --}}
             <button type="button"
@@ -97,7 +97,7 @@
             >&lt;/&gt;</button>
 
             {{-- Right side label --}}
-            <span class="ml-auto text-[10px] opacity-60 text-neutral-500 dark:text-neutralfog-400 shrink-0">
+            <span class="ml-auto text-[10px] opacity-60 text-ink-subtle shrink-0">
                 Duro TipTap-style
             </span>
         </div>
@@ -126,6 +126,6 @@
 
     {{-- Hint --}}
     @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+        <p class="text-[11px] text-ink-subtle ">{{ $hint }}</p>
     @endif
 </div>

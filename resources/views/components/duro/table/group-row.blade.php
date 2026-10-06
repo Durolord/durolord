@@ -1,14 +1,18 @@
 @props([
     'label',
-    'colspan' => 1,
+    'colspan' => 99,
+    'count' => null,
 ])
 
 <tr>
-    <td colspan="{{ $colspan }}" class="bg-neutralfog-200/80 dark:bg-shadow-900/80 px-4 py-2">
-        <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[0.16em] uppercase text-neutral-600 dark:text-neutralfog-300">
-            <span class="h-px flex-1 bg-neutralfog-300 dark:bg-shadow-700"></span>
+    <td colspan="{{ $colspan }}" class="!bg-surface-2 !py-2">
+        <div class="flex items-center gap-3 font-label text-[0.65rem] font-bold uppercase tracking-[0.18em] text-ink-muted">
             <span>{{ $label }}</span>
-            <span class="h-px flex-1 bg-neutralfog-300 dark:bg-shadow-700"></span>
+            @if (! is_null($count))
+                <span class="duro-badge duro-badge-neutral !py-0">{{ $count }}</span>
+            @endif
+            <span class="h-px flex-1 bg-line"></span>
         </div>
     </td>
 </tr>
+{{ $slot }}

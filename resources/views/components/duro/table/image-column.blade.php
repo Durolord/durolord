@@ -1,16 +1,19 @@
 @props([
     'src' => null,
-    'alt' => '',
-    'rounded' => true,
+    'name' => '',
+    'description' => null,
+    'status' => null,
+    'initials' => null,
 ])
 
-<x-duro.table.cell {{ $attributes->class('w-14') }}>
-    <div class="h-10 w-10 overflow-hidden bg-shadow-900/40 flex items-center justify-center
-                @if($rounded) rounded-full @else rounded-lg @endif">
-        @if($src)
-            <img src="{{ $src }}" alt="{{ $alt }}" class="h-full w-full object-cover">
-        @else
-            <span class="text-[10px] uppercase tracking-[0.16em] text-neutralfog-400">N/A</span>
-        @endif
+<x-duro.table.cell {{ $attributes }}>
+    <div class="flex items-center gap-3">
+        <x-duro.avatar :name="$name ?: (string) $initials" :src="$src" size="sm" :status="$status" />
+        <div class="min-w-0">
+            <p class="truncate font-medium text-ink">{{ $name ?: $slot }}</p>
+            @if ($description)
+                <p class="truncate text-xs text-ink-subtle">{{ $description }}</p>
+            @endif
+        </div>
     </div>
 </x-duro.table.cell>

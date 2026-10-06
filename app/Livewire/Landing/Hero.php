@@ -2,26 +2,36 @@
 
 namespace App\Livewire\Landing;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 
 class Hero extends Component
 {
-    public string $cta = 'Enter the Realm';
-    public int $clicks = 0;
-
-    public function incrementClicks(): void
+    public function render(): View
     {
-        $this->clicks++;
-        $this->cta = $this->clicks > 0
-            ? 'Welcome back, Weaver'
-            : 'Enter the Realm';
+        return view('livewire.landing.hero', [
+            'portfolio' => config('portfolio'),
+            'themes' => config('duro.themes'),
+            'componentCount' => $this->componentCount(),
+        ])->layout('components.layouts.site', [
+            'title' => config('portfolio.name').' — '.config('portfolio.role'),
+        ]);
     }
 
-    public function render()
+    /**
+     * Count the Blade components that make up the Duro UI kit (icons excluded).
+     */
+    protected function componentCount(): int
     {
-        return view('livewire.landing.hero')
-            ->layout('layouts.app', [
-                'title' => 'Durolord — Maker of Digital Realms',
-            ]);
+        $path = resource_path('views/components/duro');
+
+        if (! File::isDirectory($path)) {
+            return 0;
+        }
+
+        return collect(File::allFiles($path))
+            ->reject(fn ($file) => str_starts_with($file->getRelativePath(), 'icons'))
+            ->count();
     }
 }

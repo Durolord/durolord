@@ -9,14 +9,18 @@ use App\Livewire\Landing\Showcase;
 use App\Livewire\Services\Create as ServicesCreate;
 use App\Livewire\Services\Edit as ServicesEdit;
 use App\Livewire\Services\Index as ServicesIndex;
+use App\Livewire\Showcase\Elements;
 use App\Livewire\Showcase\FormComponents;
 use App\Livewire\Showcase\TableComponents;
+use App\Models\ContactInquiry;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Hero::class)->name('home');
 Route::get('/showcase', Showcase::class)->name('showcase');
 Route::get('/form-components', FormComponents::class)->name('form-components');
 Route::get('/table-components', TableComponents::class)->name('table-components');
+Route::get('/elements', Elements::class)->name('elements');
 
 Route::middleware(['auth'])
     ->group(function () {
@@ -37,6 +41,11 @@ Route::middleware(['auth'])
 Route::middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('/dashboard', function () {
-            return view('dashboard');
+            return view('dashboard', [
+                'serviceCount' => Service::count(),
+                'inquiryCount' => ContactInquiry::count(),
+                'unreadInquiryCount' => ContactInquiry::unread()->count(),
+                'recentInquiries' => ContactInquiry::latest()->limit(5)->get(),
+            ]);
         })->name('dashboard');
     });

@@ -1,9 +1,5 @@
 @props(['placeholder' => 'Search…'])
 
-<x-duro.input
-    {{ $attributes }}
-    :label="false"
-    :hint="null"
-    name="filter"
-    :placeholder="$placeholder"
-/>
+<div class="min-w-56 flex-1">
+    <x-duro.input :label="false" icon="search" :placeholder="$placeholder" {{ $attributes }} />
+</div>

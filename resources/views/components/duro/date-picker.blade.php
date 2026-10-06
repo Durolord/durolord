@@ -7,7 +7,8 @@
 ])
 
 @php
-    $fieldName = $name ?? $model;
+    $boundModel = $model ?? $attributes->wire('model')->value();
+    $fieldName = $name ?? $boundModel;
 @endphp
 
 <div
@@ -33,7 +34,7 @@
             this.month = now.getMonth();
 
             // Initial value if present
-            const initial = this.$refs.hidden.value;
+            const initial = @if ($boundModel) ($wire.get(@js($boundModel)) ?? '') @else this.$refs.hidden.value @endif;
             if (initial) {
                 const parts = initial.split('-');
                 if (parts.length === 3) {
@@ -141,10 +142,7 @@
             this.$refs.hidden.value = iso;
             this.open = false;
             this.$dispatch('input', iso);
-
-            @if($model)
-                Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), iso);
-            @endif
+            this.$refs.hidden.dispatchEvent(new Event('input'));
         },
 
         select(day) {
@@ -160,16 +158,14 @@
 
             this.open = false;
             this.$dispatch('input', iso);
-
-            @if($model)
-                Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), iso);
-            @endif
+            this.$refs.hidden.dispatchEvent(new Event('input'));
         },
 
         clear() {
             this.selected = '';
             this.displayLabel = '';
             this.$refs.hidden.value = '';
+            this.$refs.hidden.dispatchEvent(new Event('input'));
             this.$dispatch('input','');
         },
 
@@ -191,7 +187,7 @@
 >
     {{-- Label --}}
     @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <label class="duro-label">
             {{ $label }}
         </label>
     @endif
@@ -201,21 +197,21 @@
         <button
             type="button"
             x-on:click="open = true"
-            class="flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-sm
-                   bg-neutralfog-100 border-neutralfog-300 text-shadow-900
-                   hover:border-electric-400 hover:ring-1 hover:ring-electric-400
-                   dark:bg-shadow-950/70 dark:border-shadow-800 dark:text-neutralfog-100 transition pr-8"
+            class="flex w-full items-center gap-2 rounded-ui border px-3 py-2 text-sm
+ bg-surface-2 border-line text-ink
+                   hover:border-primary hover:ring-1 hover:ring-primary
+                      transition pr-8"
         >
             <div class="flex items-center gap-2 min-w-0">
                 <span class="inline-flex h-5 w-5 items-center justify-center rounded-full
-                             bg-electric-500/10 text-electric-700
-                             dark:bg-electric-500/20 dark:text-electric-300 text-[11px]">
+ bg-primary/10 text-primary-ink
+                               text-[11px]">
                     📅
                 </span>
 
                 <span x-show="displayLabel" x-text="displayLabel" class="truncate"></span>
 
-                <span x-show="!displayLabel" class="truncate text-neutral-400 dark:text-neutralfog-400/80">
+                <span x-show="!displayLabel" class="truncate text-ink-subtle ">
                     {{ $placeholder }}
                 </span>
             </div>
@@ -226,7 +222,7 @@
             x-show="displayLabel"
             x-on:click.stop="clear()"
             class="absolute inset-y-0 right-2 my-auto flex h-5 w-5 items-center justify-center
-                   text-[11px] text-neutral-500 hover:text-red-500 dark:text-neutralfog-400"
+ text-[11px] text-ink-subtle hover:text-danger "
         >
             ✕
         </button>
@@ -239,24 +235,24 @@
         x-cloak
         class="fixed z-50 top-20 left-1/2 -translate-x-1/2 w-full max-w-xs sm:max-w-sm px-4 sm:px-0"
     >
-        <div class="w-full rounded-xl border bg-neutralfog-100 border-neutralfog-300 shadow-2xl
-                    dark:bg-shadow-950 dark:border-shadow-800 glow-arcane">
+        <div class="w-full rounded-ui border bg-surface-2 border-line shadow-2xl
+ glow-arcane">
 
             {{-- HEADER WITH CLICKABLE YEAR --}}
-            <div class="px-3 py-2 border-b border-neutralfog-300/80 dark:border-shadow-800/80 flex items-center justify-between">
+            <div class="px-3 py-2 border-b border-line/80 flex items-center justify-between">
 
                 <div class="flex items-center gap-2">
                     <button
                         x-on:click="prevMonth()"
-                        class="h-6 w-6 rounded-full text-[11px] text-neutral-600 hover:bg-neutralfog-200 dark:text-neutralfog-300 dark:hover:bg-shadow-800"
+                        class="h-6 w-6 rounded-full text-[11px] text-ink-muted hover:bg-surface-2 "
                     >‹</button>
 
-                    <div class="text-xs font-semibold text-shadow-900 dark:text-neutralfog-100">
+                    <div class="text-xs font-semibold text-ink ">
                         <span x-text="monthNames[month]"></span>
 
                         {{-- CLICK TO OPEN YEAR PICKER --}}
                         <span
-                            class="ml-1 underline decoration-dotted cursor-pointer text-electric-700 dark:text-electric-300"
+                            class="ml-1 underline decoration-dotted cursor-pointer text-primary-ink "
                             x-text="year"
                             x-on:click.stop="showYearPicker = true"
                         ></span>
@@ -264,14 +260,14 @@
 
                     <button
                         x-on:click="nextMonth()"
-                        class="h-6 w-6 rounded-full text-[11px] text-neutral-600 hover:bg-neutralfog-200 dark:text-neutralfog-300 dark:hover:bg-shadow-800"
+                        class="h-6 w-6 rounded-full text-[11px] text-ink-muted hover:bg-surface-2 "
                     >›</button>
                 </div>
 
                 <button
-                    class="text-[10px] px-2 py-1 rounded-full border border-electric-500/60
-                           bg-electric-500/5 text-electric-700 hover:bg-electric-500/15
-                           dark:text-electric-300 dark:border-electric-400/70"
+                    class="text-[10px] px-2 py-1 rounded-full border border-primary/60
+ bg-primary/5 text-primary-ink hover:bg-primary/15
+                            "
                     x-on:click="goToday()"
                 >
                     Today
@@ -280,7 +276,7 @@
 
             {{-- WEEKDAYS --}}
             <div class="grid grid-cols-7 gap-1 px-3 pt-2 text-[10px] uppercase tracking-[0.12em]
-                        text-neutral-500 dark:text-neutralfog-400">
+ text-ink-subtle ">
                 <template x-for="day in weekdayNames" :key="day">
                     <div class="text-center" x-text="day"></div>
                 </template>
@@ -291,15 +287,15 @@
                 <template x-for="day in calendar()" :key="day.iso">
                     <button
                         x-on:click="select(day)"
-                        class="relative flex h-8 w-8 items-center justify-center rounded-lg transition border border-transparent
-                               focus:outline-none focus-visible:ring-1 focus-visible:ring-electric-400"
+                        class="relative flex h-8 w-8 items-center justify-center rounded-ui transition border border-transparent
+ focus:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                         :class="[
-                            day.inMonth ? 'text-shadow-900 dark:text-neutralfog-100' : 'text-neutral-400 dark:text-neutralfog-500/80',
+ day.inMonth ? 'text-ink ' : 'text-ink-subtle ',
                             isSameDate(day.iso, selected)
-                                ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 shadow-sm'
+                                ? 'bg-primary text-on-primary   shadow-sm'
                                 : '',
                             !isSameDate(day.iso, selected) && day.iso === formatISO(today)
-                                ? 'ring-1 ring-electric-400/60'
+                                ? 'ring-1 ring-primary/60'
                                 : ''
                         ]"
                     >
@@ -312,14 +308,14 @@
             <div class="flex items-center justify-between px-3 pb-3 text-[11px]">
                 <button
                     x-on:click="clear(); open = false;"
-                    class="text-neutral-500 hover:text-red-500 dark:text-neutralfog-400"
+                    class="text-ink-subtle hover:text-danger "
                 >Clear</button>
 
                 <button
                     x-on:click="open = false"
-                    class="px-2.5 py-1.5 rounded-full border border-neutralfog-300 text-neutral-600
-                           hover:text-shadow-900 hover:border-shadow-700
-                           dark:border-shadow-700 dark:text-neutralfog-300 dark:hover:text-neutralfog-100"
+                    class="px-2.5 py-1.5 rounded-full border border-line text-ink-muted
+ hover:text-ink hover:border-line
+                             "
                 >Close</button>
             </div>
         </div>
@@ -332,30 +328,30 @@
         x-cloak
         class="fixed z-50 top-24 left-1/2 -translate-x-1/2 w-full max-w-[16rem] px-4 sm:px-0"
     >
-        <div class="w-full rounded-xl border bg-neutralfog-100 border-neutralfog-300 shadow-2xl
-                    dark:bg-shadow-950 dark:border-shadow-800 glow-arcane">
+        <div class="w-full rounded-ui border bg-surface-2 border-line shadow-2xl
+ glow-arcane">
 
             {{-- HEADER --}}
-            <div class="px-3 py-2 border-b border-neutralfog-300/80 dark:border-shadow-800/80 flex items-center justify-between">
+            <div class="px-3 py-2 border-b border-line/80 flex items-center justify-between">
 
                 <button
                     x-on:click="year -= 10"
-                    class="text-[10px] px-1.5 py-1 rounded-full border border-neutralfog-300
-                           hover:border-electric-400 hover:bg-electric-500/10
-                           dark:border-shadow-700 dark:hover:border-electric-400
-                           dark:hover:bg-electric-400/20"
+                    class="text-[10px] px-1.5 py-1 rounded-full border border-line
+ hover:border-primary hover:bg-primary/10
+
+                           "
                 >–10</button>
 
-                <div class="text-xs font-semibold text-shadow-900 dark:text-neutralfog-100">
+                <div class="text-xs font-semibold text-ink ">
                     Select Year
                 </div>
 
                 <button
                     x-on:click="year += 10"
-                    class="text-[10px] px-1.5 py-1 rounded-full border border-neutralfog-300
-                           hover:border-electric-400 hover:bg-electric-500/10
-                           dark:border-shadow-700 dark:hover:border-electric-400
-                           dark:hover:bg-electric-400/20"
+                    class="text-[10px] px-1.5 py-1 rounded-full border border-line
+ hover:border-primary hover:bg-primary/10
+
+                           "
                 >+10</button>
             </div>
 
@@ -364,8 +360,8 @@
 
                 {{-- Highlight slot --}}
                 <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2
-                            h-10 rounded-lg border border-electric-500/50
-                            bg-electric-500/5 dark:bg-electric-500/10"></div>
+ h-10 rounded-ui border border-primary/50
+                            bg-primary/5 "></div>
 
                 {{-- Scrollable wheel --}}
                 <div class="h-48 overflow-y-auto no-scrollbar py-8">
@@ -374,14 +370,14 @@
                         <button
                             type="button"
                             x-on:click="setYear(y)"
-                            class="w-full h-10 flex items-center justify-center mb-1 rounded-lg text-sm
-                                   border border-transparent transition"
+                            class="w-full h-10 flex items-center justify-center mb-1 rounded-ui text-sm
+ border border-transparent transition"
                             :class="[
-                                y === year
-                                    ? 'bg-electric-500 text-white dark:bg-electric-400 dark:text-shadow-950 border-electric-500 shadow-sm'
+ y === year
+                                    ? 'bg-primary text-on-primary   border-primary shadow-sm'
                                     : (y === today.getFullYear()
-                                        ? 'text-electric-600 dark:text-electric-300 font-semibold'
-                                        : 'text-neutral-700 dark:text-neutralfog-200 hover:bg-electric-500/5 hover:border-electric-400/70')
+                                        ? 'text-primary-ink  font-semibold'
+                                        : 'text-ink-muted  hover:bg-primary/5 hover:border-primary/70')
                             ]"
                             x-text="y"
                         ></button>
@@ -393,14 +389,14 @@
             <div class="flex items-center justify-between px-3 pb-3 text-[11px]">
                 <button
                     x-on:click="showYearPicker = false"
-                    class="text-neutral-500 hover:text-red-500 dark:text-neutralfog-400"
+                    class="text-ink-subtle hover:text-danger "
                 >Cancel</button>
 
                 <button
                     x-on:click="showYearPicker = false"
-                    class="px-2.5 py-1.5 rounded-full border border-neutralfog-300 text-neutral-600
-                           hover:text-shadow-900 hover:border-shadow-700
-                           dark:border-shadow-700 dark:text-neutralfog-300 dark:hover:text-neutralfog-100"
+                    class="px-2.5 py-1.5 rounded-full border border-line text-ink-muted
+ hover:text-ink hover:border-line
+                             "
                 >Done</button>
             </div>
         </div>
@@ -411,10 +407,11 @@
         type="hidden"
         x-ref="hidden"
         @if($fieldName) name="{{ $fieldName }}" @endif
-        {{ $attributes->whereDoesntStartWith('wire:')->whereDoesntStartWith('value') }}
+        {{ $attributes->except(['class', 'value']) }}
+        @if (! $boundModel && $attributes->get('value')) value="{{ $attributes->get('value') }}" @endif
     >
 
     @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+        <p class="text-[11px] text-ink-subtle ">{{ $hint }}</p>
     @endif
 </div>

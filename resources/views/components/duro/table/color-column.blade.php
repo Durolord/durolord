@@ -1,17 +1,14 @@
 @props([
-    'label' => null,
+    'color' => null,
     'value' => null,
+    'label' => null,
 ])
 
-<x-duro.table.cell>
-    <div class="inline-flex items-center gap-2 rounded-full border border-neutralfog-300/80 px-2.5 py-1
-                bg-neutralfog-100/70 dark:bg-shadow-900/70 dark:border-shadow-800">
-        <span
-            class="h-3 w-3 rounded-full border border-shadow-900/40"
-            style="background: {{ $value ?? '#ffffff' }}"
-        ></span>
-        <span class="text-[11px] text-neutral-700 dark:text-neutralfog-200">
-            {{ $label ?? $value ?? $slot }}
-        </span>
-    </div>
+@php($swatch = $color ?? $value ?? 'transparent')
+
+<x-duro.table.cell {{ $attributes }}>
+    <span class="inline-flex items-center gap-2 rounded-pill border border-line bg-surface-2 py-1 pl-1 pr-2.5">
+        <span class="size-4 rounded-full ring-1 ring-ink/20" style="background: {{ $swatch }}"></span>
+        <span class="text-xs text-ink-muted">{{ $label ?? (trim($slot) !== '' ? $slot : $swatch) }}</span>
+    </span>
 </x-duro.table.cell>

@@ -1,72 +1,60 @@
+@props([
+    'title' => null,
+    'subtitle' => null,
+])
+
 <!DOCTYPE html>
-<html
-    lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    class="h-full"
-    x-data="layoutState()"
-    x-bind:class="theme === 'dark' ? 'dark h-full' : 'h-full'"
->
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <title>{{ $title ?? 'Durolord - Digital Realms' }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
+    @include('partials.head', ['title' => $title ? $title.' · '.config('portfolio.name') : null])
 </head>
-<body
-    class="min-h-screen bg-gradient-to-b from-shadow-950 via-shadow-900 to-shadow-950 text-neutralfog-100 antialiased flex items-center justify-center p-4"
->
+<body class="min-h-screen font-sans antialiased" x-data="layoutState()">
+    <div class="duro-backdrop" aria-hidden="true"></div>
 
-    {{-- MYSTICAL AURORA --}}
-    <div class="absolute inset-0 pointer-events-none mix-blend-screen opacity-70">
-        <div
-            class="w-full h-full
-            bg-[radial-gradient(circle_at_top,_oklch(0.82_0.19_85/_0.25),_transparent_65%),_
-                 radial-gradient(circle_at_20%_80%,_oklch(0.70_0.15_215/_0.3),_transparent_60%),_
-                 radial-gradient(circle_at_80%_60%,_oklch(0.75_0.22_320/_0.25),_transparent_60%)]">
+    <div class="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
+        {{-- BRAND PANEL --}}
+        <aside class="relative isolate hidden overflow-hidden border-r border-line lg:flex lg:flex-col lg:justify-between lg:p-12">
+            <div class="duro-grid-lines absolute inset-0 opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"></div>
+            <div class="duro-glow-orb left-1/2 top-1/2 size-96 -translate-x-1/2 -translate-y-1/2"></div>
+
+            <a href="{{ route('home') }}" class="relative z-10 w-max">
+                <x-duro.logo size="sm" />
+            </a>
+
+            <div class="relative z-10 flex flex-col items-center gap-10 text-center">
+                <div class="duro-hero-art aspect-square w-full max-w-sm animate-float" role="img" aria-label="{{ config('portfolio.name') }} emblem"></div>
+                <div class="max-w-md space-y-3">
+                    <p class="duro-display text-4xl">{{ $title ?? config('portfolio.name') }}</p>
+                    @if ($subtitle)
+                        <p class="text-sm leading-relaxed text-ink-muted">{{ $subtitle }}</p>
+                    @endif
+                </div>
+            </div>
+
+            <p class="relative z-10 text-xs text-ink-subtle">© {{ date('Y') }} {{ config('portfolio.name') }} · {{ config('portfolio.role') }}</p>
+        </aside>
+
+        {{-- CONTENT --}}
+        <div class="flex flex-col">
+            <div class="flex items-center justify-between p-4 sm:p-6">
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm text-ink-muted transition hover:text-ink">
+                    <x-duro.icon name="arrow-left" /> Back to portfolio
+                </a>
+                <x-duro.theme-switcher />
+            </div>
+
+            <main class="flex flex-1 items-center justify-center px-4 pb-12 sm:px-6">
+                <div class="w-full max-w-md">
+                    <a href="{{ route('home') }}" class="mb-8 flex justify-center lg:hidden">
+                        <x-duro.logo size="md" />
+                    </a>
+                    {{ $slot }}
+                </div>
+            </main>
         </div>
     </div>
 
-    {{-- MAIN PAGE WRAPPER --}}
-    <main class="relative z-10 w-full max-w-4xl mx-auto">
-
-        {{-- GLASS CONTAINER --}}
-        <div class="bg-shadow-950/80 border border-silver-500/20 shadow-xl shadow-black/60
-                    rounded-2xl backdrop-blur-lg p-8 space-y-6">
-
-            {{-- TOP BAR WITH ONLY A THEME TOGGLE BUTTON --}}
-            <div class="flex items-center justify-end">
-
-                <button
-                    type="button"
-                    x-on:click="cycleTheme()"
-                    class="inline-flex items-center justify-center w-9 h-9 rounded-full border
-                           border-neutral-700 bg-shadow-900/80 text-xs text-neutralfog-300
-                           hover:border-electric-400 hover:text-electric-200 transition"
-                    :aria-label="`Theme: ${theme}`"
-                >
-                    {{-- Light --}}
-                    <span x-show="theme === 'light'" x-transition.opacity>☀️</span>
-
-                    {{-- Dark --}}
-                    <span x-show="theme === 'dark'" x-transition.opacity>🌙</span>
-
-                    {{-- System --}}
-                    <span x-show="theme === 'system'" x-transition.opacity>🖥️</span>
-                </button>
-            </div>
-
-            {{-- PAGE CONTENT --}}
-            <div class="mt-2">
-                {{ $slot }}
-            </div>
-        </div>
-
-        {{-- FOOTER --}}
-        <p class="mt-6 text-xs text-center text-neutral-400">
-            DUROLORD · Forged in Light and Darkness · {{ date('Y') }}
-        </p>
-    </main>
+    <x-duro.toasts />
 
     @livewireScripts
 </body>

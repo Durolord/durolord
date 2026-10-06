@@ -23,15 +23,15 @@
 @endphp
 
 <x-layouts.app title="Profile">
-    <section class="container mx-auto px-4 py-10 space-y-6">
+    <section class="space-y-6">
         <div class="flex flex-col gap-2">
             <x-duro.badge variant="electric" class="w-max">
                 Profile
             </x-duro.badge>
-            <h1 class="text-2xl font-semibold text-shadow-900 dark:text-neutralfog-50">
+            <h1 class="duro-heading text-3xl">
                 Profile, password, and two-factor protection
             </h1>
-            <p class="text-sm text-neutral-600 dark:text-neutralfog-300">
+            <p class="text-sm text-ink-muted">
                 Keep your realm identity current, lock down your password, safeguard access with two-factor authentication, and manage your active sessions.
             </p>
         </div>
@@ -41,10 +41,10 @@
             <x-duro.card class="space-y-4">
                 <div class="flex items-center justify-between gap-2">
                     <div>
-                        <h2 class="text-lg font-semibold text-shadow-900 dark:text-neutralfog-100">
+                        <h2 class="text-lg font-semibold text-ink">
                             Profile information
                         </h2>
-                        <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                        <p class="text-sm text-ink-muted">
                             Update your display name and contact email.
                         </p>
                     </div>
@@ -99,10 +99,10 @@
             <x-duro.card class="space-y-4">
                 <div class="flex items-center justify-between gap-2">
                     <div>
-                        <h2 class="text-lg font-semibold text-shadow-900 dark:text-neutralfog-100">
+                        <h2 class="text-lg font-semibold text-ink">
                             Password
                         </h2>
-                        <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                        <p class="text-sm text-ink-muted">
                             Choose a strong passphrase to protect your realm.
                         </p>
                     </div>
@@ -165,10 +165,10 @@
         <x-duro.card class="space-y-4">
             <div class="flex items-center justify-between gap-2">
                 <div>
-                    <h2 class="text-lg font-semibold text-shadow-900 dark:text-neutralfog-100">
+                    <h2 class="text-lg font-semibold text-ink">
                         Active sessions
                     </h2>
-                    <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                    <p class="text-sm text-ink-muted">
                         View devices logged in to your account and sign out everywhere else.
                     </p>
                 </div>
@@ -197,31 +197,31 @@
             @endif
 
             @if ($sessions->isNotEmpty())
-                <div class="space-y-3 rounded-xl border border-neutralfog-300/70 bg-white/60 p-4 dark:border-neutralfog-200/70 dark:bg-shadow-900/40">
+                <div class="space-y-3 rounded-ui border border-line/70 bg-surface/60 p-4">
                     @foreach ($sessions as $session)
                         @php
                             $iconClasses = $session['is_current_device']
-                                ? 'text-electric-700 dark:text-electric-300'
-                                : 'text-neutral-400 dark:text-neutralfog-500';
+                                ? 'text-primary-ink '
+                                : 'text-ink-subtle ';
                         @endphp
-                        <div class="flex items-start justify-between gap-3 border-b border-neutralfog-300/60 pb-3 last:border-0 last:pb-0 dark:border-neutralfog-200/40">
+                        <div class="flex items-start justify-between gap-3 border-b border-line/60 pb-3 last:border-0 last:pb-0">
                             <div class="flex gap-3">
                                 <div class="mt-0.5">
                                     <x-duro.icons.desktop class="h-5 w-5 {{ $iconClasses }}" />
                                 </div>
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2">
-                                        <span class="text-sm font-semibold text-shadow-900 dark:text-neutralfog-100">
+                                        <span class="text-sm font-semibold text-ink">
                                             {{ $session['is_current_device'] ? 'This device' : 'Other device' }}
                                         </span>
-                                        <span class="rounded-full bg-electric-500/10 px-2 py-0.5 text-[11px] font-semibold text-electric-700 dark:bg-electric-500/15 dark:text-electric-300">
+                                        <span class="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary-ink">
                                             {{ $session['ip_address'] ?: 'Unknown IP' }}
                                         </span>
                                     </div>
-                                    <p class="text-xs text-neutral-600 dark:text-neutralfog-400">
+                                    <p class="text-xs text-ink-muted">
                                         {{ Str::limit($session['user_agent'] ?: 'Browser unknown', 80) }}
                                     </p>
-                                    <p class="text-[11px] text-neutral-500 dark:text-neutralfog-500">
+                                    <p class="text-[11px] text-ink-subtle">
                                         Last active {{ $session['last_active']->diffForHumans() }}
                                     </p>
                                 </div>
@@ -239,7 +239,7 @@
                 @csrf
                 @method('DELETE')
 
-                <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                <p class="text-sm text-ink-muted">
                     Enter your password to end all other active sessions. Your current session stays signed in.
                 </p>
 
@@ -263,10 +263,10 @@
         <x-duro.card class="space-y-6">
             <div class="flex items-center justify-between gap-2">
                 <div>
-                    <h2 class="text-lg font-semibold text-shadow-900 dark:text-neutralfog-100">
+                    <h2 class="text-lg font-semibold text-ink">
                         Two-factor authentication
                     </h2>
-                    <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                    <p class="text-sm text-ink-muted">
                         Add a second layer using your authenticator app and recovery codes.
                     </p>
                 </div>
@@ -308,7 +308,7 @@
 
             @if (! $twoFactorEnabled)
                 <div class="flex items-center justify-between gap-3 flex-wrap">
-                    <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                    <p class="text-sm text-ink-muted">
                         Use your authenticator app to scan a QR code and start protecting sign-ins.
                     </p>
                     <form method="POST" action="{{ route('two-factor.enable') }}">
@@ -321,7 +321,7 @@
             @else
                 <div class="grid gap-6 lg:grid-cols-2">
                     <div class="space-y-4">
-                        <h3 class="text-sm font-semibold uppercase tracking-[0.08em] text-neutral-600 dark:text-neutralfog-400">
+                        <h3 class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-muted">
                             Authenticator setup
                         </h3>
 
@@ -330,7 +330,7 @@
                                 $qrCodeSvg = $user->twoFactorQrCodeSvg();
                             @endphp
 
-                            <div class="rounded-xl border border-neutralfog-300/70 bg-white p-4 shadow-sm dark:border-neutralfog-200/70 dark:bg-neutralfog-50">
+                            <div class="rounded-ui border border-line/70 bg-surface p-4 shadow-sm">
                                 <div
                                     class="flex justify-center"
                                     role="img"
@@ -341,20 +341,20 @@
                                 <p class="sr-only">
                                     Scan this QR code with your authenticator app to link your account.
                                 </p>
-                                <p class="mt-3 text-xs text-neutral-700 dark:text-shadow-900">
+                                <p class="mt-3 text-xs text-ink-muted">
                                     Scan this with your authenticator app. If you cannot scan, use the manual key shown in your app.
                                 </p>
                             </div>
 
                             @if ($setupKey)
-                                <div class="flex flex-col gap-2 rounded-lg border border-electric-500/30 bg-electric-500/5 p-3 text-xs font-mono text-shadow-900 dark:border-electric-500/40 dark:bg-electric-500/10 dark:text-neutralfog-50">
-                                    <span class="text-[11px] uppercase tracking-[0.08em] text-neutral-600 dark:text-neutralfog-300">
+                                <div class="flex flex-col gap-2 rounded-ui border border-primary/30 bg-primary/5 p-3 text-xs font-mono text-ink">
+                                    <span class="text-[11px] uppercase tracking-[0.08em] text-ink-muted">
                                         Setup key (Fortify TOTP)
                                     </span>
                                     <span class="text-base font-semibold">
                                         {{ $setupKey }}
                                     </span>
-                                    <span class="text-[11px] text-neutral-600 dark:text-neutralfog-400">
+                                    <span class="text-[11px] text-ink-muted">
                                         Enter this key manually in your authenticator if scanning is unavailable.
                                     </span>
                                 </div>
@@ -363,7 +363,7 @@
 
                         @if ($requiresConfirmation && ! $twoFactorConfirmed)
                             <div class="space-y-3">
-                                <p class="text-sm text-neutral-700 dark:text-neutralfog-300">
+                                <p class="text-sm text-ink-muted">
                                     Enter the 6-digit code from your authenticator to confirm.
                                 </p>
 
@@ -397,20 +397,20 @@
                     </div>
 
                     <div class="space-y-4">
-                        <h3 class="text-sm font-semibold uppercase tracking-[0.08em] text-neutral-600 dark:text-neutralfog-400">
+                        <h3 class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-muted">
                             Recovery codes
                         </h3>
 
                         @if (! empty($recoveryCodes))
                             <div class="grid grid-cols-2 gap-3">
                                 @foreach ($recoveryCodes as $code)
-                                    <div class="rounded-lg border border-neutralfog-300/70 bg-neutralfog-50/70 px-3 py-2 text-xs font-semibold text-shadow-900 dark:border-shadow-800/70 dark:bg-shadow-900/60 dark:text-neutralfog-100">
+                                    <div class="rounded-ui border border-line/70 bg-surface-2/70 px-3 py-2 text-xs font-semibold text-ink">
                                         {{ $code }}
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <p class="text-sm text-neutral-600 dark:text-neutralfog-400">
+                            <p class="text-sm text-ink-muted">
                                 Generate recovery codes to keep access if you lose your device.
                             </p>
                         @endif

@@ -1,52 +1,35 @@
 @props([
-    'label'   => null,
-    'options' => [], // ['value' => 'Label']
-    'value'   => null,
-    'name'    => null,
+    'label' => null,
+    'options' => [],
+    'value' => null,
+    'icons' => [],
 ])
 
 <div
-    x-data="{
-        selected: @js($value ?? null),
-        set(val) {
-            this.selected = val;
-            $dispatch('input', val); // allows wire:model / x-model on parent
-        },
-        isActive(val) {
-            return String(this.selected) === String(val);
-        },
-    }"
-    class="space-y-1.5"
+    x-data="{ selected: @js($value === null ? null : (string) $value) }"
+    x-modelable="selected"
+    {{ $attributes->whereStartsWith('wire:model') }}
+    {{ $attributes->whereDoesntStartWith('wire:model')->class(['space-y-1.5']) }}
 >
-    @if($label)
-        <p class="text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
-            {{ $label }}
-        </p>
+    @if ($label)
+        <p class="duro-label">{{ $label }}</p>
     @endif
 
-    <div class="inline-flex flex-wrap gap-1.5">
-        @foreach($options as $optionValue => $text)
+    <div class="duro-tabs" role="radiogroup">
+        @foreach ($options as $optionValue => $text)
             <button
                 type="button"
-                class="px-3 py-1.5 rounded-full border text-xs transition
-                       border-neutralfog-300 text-neutral-700 bg-neutralfog-100
-                       hover:border-electric-400 hover:text-electric-700
-                       dark:border-shadow-700 dark:bg-shadow-950 dark:text-neutralfog-200
-                       dark:hover:border-electric-400 dark:hover:text-electric-300"
-                :class="isActive(@js($optionValue))
-                    ? 'border-electric-500 bg-electric-500/10 text-electric-700 dark:bg-electric-500/20 dark:text-electric-300'
-                    : ''"
-                x-on:click="set(@js($optionValue))"
+                role="radio"
+                class="duro-tab inline-flex items-center gap-1.5"
+                x-on:click="selected = @js((string) $optionValue)"
+                :aria-selected="(String(selected) === @js((string) $optionValue)).toString()"
+                :aria-checked="(String(selected) === @js((string) $optionValue)).toString()"
             >
+                @isset($icons[$optionValue])
+                    <x-duro.icon :name="$icons[$optionValue]" class="size-3.5" />
+                @endisset
                 {{ $text }}
             </button>
         @endforeach
     </div>
-
-    {{-- Hidden field so plain forms still work --}}
-    <input
-        type="hidden"
-        name="{{ $name }}"
-        x-model="selected"
-    >
 </div>
