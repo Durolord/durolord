@@ -41,6 +41,9 @@ class Showcase extends Component
     {
         return view('livewire.landing.showcase', [
             'categories' => $this->categories(),
+            'families' => config('duro.families'),
+            'themes' => config('duro.themes'),
+            'traits' => config('duro.traits'),
         ])->layout('components.layouts.kit', [
             'title' => 'UI Kit',
         ]);

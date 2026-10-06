@@ -125,7 +125,7 @@
                 </button>
 
                 <div class="ml-auto flex items-center gap-2">
-                    <x-duro.theme-switcher class="hidden sm:block" />
+                    <x-duro.theme-switcher class="hidden sm:flex" />
                     <x-duro.theme-switcher compact class="sm:hidden" />
 
                     @auth

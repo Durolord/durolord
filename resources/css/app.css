@@ -123,6 +123,11 @@
    THEMES
    ===================================================================== */
 
+/* Every theme scope starts with an unfiltered logo; themes that reuse artwork made for the opposite mode invert it. */
+[data-theme] {
+  --duro-logo-filter: none;
+}
+
 /* ---------- 1. RUNIC STEEL (dark) — default ---------- */
 :root,
 [data-theme="runic-steel"] {
@@ -572,9 +577,9 @@
     background-size: contain;
   }
 
-  .duro-logo-mark { background-image: var(--duro-logo-mark); }
-  .duro-hero-art { background-image: var(--duro-hero-art); }
-  .duro-wordmark { background-image: var(--duro-wordmark); }
+  .duro-logo-mark { background-image: var(--duro-logo-mark); filter: var(--duro-logo-filter, none); }
+  .duro-hero-art { background-image: var(--duro-hero-art); filter: var(--duro-logo-filter, none); }
+  .duro-wordmark { background-image: var(--duro-wordmark); filter: var(--duro-logo-filter, none); }
 
   /* ---------- Typography ---------- */
   .duro-display {
@@ -614,7 +619,7 @@
       0 0 46px color-mix(in oklab, var(--duro-accent) 60%, transparent);
   }
 
-  [data-theme="ink-quill"] .duro-display {
+  [data-family="quill"] .duro-display {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.01em;
@@ -624,7 +629,7 @@
     text-shadow: 4px 4px 0 var(--duro-primary);
   }
 
-  [data-theme="crimson-codex"] .duro-display {
+  [data-family="codex"] .duro-display {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -640,13 +645,13 @@
   }
 
   [data-family="neon"] .duro-heading,
-  [data-theme="crimson-codex"] .duro-heading {
+  [data-family="codex"] .duro-heading {
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
 
   [data-family="neon"] .duro-heading { font-size: 0.92em; }
-  [data-theme="ink-quill"] .duro-heading { font-weight: 800; letter-spacing: -0.02em; }
+  [data-family="quill"] .duro-heading { font-weight: 800; letter-spacing: -0.02em; }
 
   .duro-eyebrow {
     font-family: var(--duro-font-label);
@@ -669,8 +674,8 @@
   }
 
   [data-family="neon"] .duro-eyebrow::before { height: 2px; box-shadow: 0 0 8px currentColor; }
-  [data-theme="ink-quill"] .duro-eyebrow::before { height: 3px; border-radius: 99px; }
-  [data-theme="crimson-codex"] .duro-eyebrow::before { width: 0.7rem; height: 0.7rem; background: var(--duro-primary); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: 1; }
+  [data-family="quill"] .duro-eyebrow::before { height: 3px; border-radius: 99px; }
+  [data-family="codex"] .duro-eyebrow::before { width: 0.7rem; height: 0.7rem; background: var(--duro-primary); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: 1; }
 
   .duro-text-gradient {
     background: linear-gradient(100deg, var(--duro-primary-ink), var(--duro-accent-ink));
@@ -835,31 +840,31 @@
   [data-family="neon"] .duro-btn-outline { border-color: var(--duro-primary); box-shadow: inset 0 0 14px color-mix(in oklab, var(--duro-primary) 20%, transparent); }
 
   /* Ink & quill — outlined with a hard offset shadow */
-  [data-theme="ink-quill"] .duro-btn {
+  [data-family="quill"] .duro-btn {
     font-family: var(--duro-font-label);
     font-weight: 700;
     border-color: var(--duro-ink);
     box-shadow: 3px 3px 0 0 var(--duro-ink);
   }
-  [data-theme="ink-quill"] .duro-btn:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 0 var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 0 var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-btn-primary:hover:not(:disabled) { background: var(--duro-primary-hover); }
-  [data-theme="ink-quill"] .duro-btn-secondary { background: var(--duro-surface); }
-  [data-theme="ink-quill"] .duro-btn-outline { color: var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-btn-ghost,
-  [data-theme="ink-quill"] .duro-btn-link { border-color: transparent; box-shadow: none; }
-  [data-theme="ink-quill"] .duro-btn-ghost:hover:not(:disabled),
-  [data-theme="ink-quill"] .duro-btn-link:hover:not(:disabled) { box-shadow: none; transform: none; }
+  [data-family="quill"] .duro-btn:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 0 var(--duro-ink); }
+  [data-family="quill"] .duro-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 0 var(--duro-ink); }
+  [data-family="quill"] .duro-btn-primary:hover:not(:disabled) { background: var(--duro-primary-hover); }
+  [data-family="quill"] .duro-btn-secondary { background: var(--duro-surface); }
+  [data-family="quill"] .duro-btn-outline { color: var(--duro-ink); }
+  [data-family="quill"] .duro-btn-ghost,
+  [data-family="quill"] .duro-btn-link { border-color: transparent; box-shadow: none; }
+  [data-family="quill"] .duro-btn-ghost:hover:not(:disabled),
+  [data-family="quill"] .duro-btn-link:hover:not(:disabled) { box-shadow: none; transform: none; }
 
   /* Crimson codex — blade-cut corners */
-  [data-theme="crimson-codex"] .duro-btn {
+  [data-family="codex"] .duro-btn {
     font-family: var(--duro-font-label);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 700;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%);
   }
-  [data-theme="crimson-codex"] .duro-btn-primary::after {
+  [data-family="codex"] .duro-btn-primary::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -867,8 +872,8 @@
     background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.25), transparent);
     transform: translateX(-120%) skewX(-20deg);
   }
-  [data-theme="crimson-codex"] .duro-btn-primary:hover::after { animation: duro-sheen 0.9s ease; }
-  [data-theme="crimson-codex"] .duro-btn-secondary { background: var(--duro-surface-2); border-left: 3px solid var(--duro-primary); }
+  [data-family="codex"] .duro-btn-primary:hover::after { animation: duro-sheen 0.9s ease; }
+  [data-family="codex"] .duro-btn-secondary { background: var(--duro-surface-2); border-left: 3px solid var(--duro-primary); }
 
   /* ---------- Cards ---------- */
   .duro-card {
@@ -935,19 +940,19 @@
   [data-family="neon"] .duro-card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
   [data-family="neon"] .duro-card-interactive:hover { border-color: color-mix(in oklab, var(--duro-primary) 60%, transparent); }
 
-  [data-theme="ink-quill"] .duro-card { border-color: var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-card-flat { border-color: var(--duro-line); border-width: 1px; }
-  [data-theme="ink-quill"] .duro-card-interactive:hover {
+  [data-family="quill"] .duro-card { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-card-flat { border-color: var(--duro-line); border-width: 1px; }
+  [data-family="quill"] .duro-card-interactive:hover {
     transform: translate(-3px, -3px);
     box-shadow: 8px 8px 0 0 var(--duro-ink);
     border-color: var(--duro-ink);
   }
 
-  [data-theme="crimson-codex"] .duro-card {
+  [data-family="codex"] .duro-card {
     clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
-    background: linear-gradient(160deg, oklch(0.19 0.006 20), var(--duro-surface) 45%);
+    background: linear-gradient(160deg, var(--duro-surface-2), var(--duro-surface) 45%);
   }
-  [data-theme="crimson-codex"] .duro-card::before {
+  [data-family="codex"] .duro-card::before {
     content: "";
     position: absolute;
     left: -1px;
@@ -958,7 +963,7 @@
     box-shadow: 0 0 12px var(--duro-primary);
     pointer-events: none;
   }
-  [data-theme="crimson-codex"] .duro-card::after {
+  [data-family="codex"] .duro-card::after {
     content: "";
     position: absolute;
     right: 0;
@@ -969,7 +974,7 @@
     opacity: 0.9;
     pointer-events: none;
   }
-  [data-theme="crimson-codex"] .duro-card-flat::after { display: none; }
+  [data-family="codex"] .duro-card-flat::after { display: none; }
 
   /* ---------- Section panels (canvas-alt bands) ---------- */
   .duro-band {
@@ -977,7 +982,7 @@
     border-block: var(--duro-border) solid var(--duro-line);
   }
 
-  [data-theme="ink-quill"] .duro-band { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-band { border-color: var(--duro-ink); }
 
   /* ---------- Form fields ---------- */
   .duro-label {
@@ -990,7 +995,7 @@
     color: var(--duro-ink-muted);
   }
 
-  [data-theme="ink-quill"] .duro-label { letter-spacing: 0.06em; color: var(--duro-ink); }
+  [data-family="quill"] .duro-label { letter-spacing: 0.06em; color: var(--duro-ink); }
   [data-family="neon"] .duro-label { font-size: 0.62rem; color: var(--duro-primary-ink); }
 
   .duro-hint { font-size: 0.72rem; color: var(--duro-ink-subtle); }
@@ -1053,11 +1058,11 @@
   .duro-control:hover { border-color: var(--duro-line-strong); }
   .duro-control:focus { outline: none; border-color: var(--duro-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 22%, transparent); }
 
-  [data-theme="ink-quill"] .duro-field,
-  [data-theme="ink-quill"] .duro-control { background: var(--duro-surface); border-color: var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-field:focus-within,
-  [data-theme="ink-quill"] .duro-field.is-open,
-  [data-theme="ink-quill"] .duro-control:focus { box-shadow: 3px 3px 0 0 var(--duro-primary); border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-field,
+  [data-family="quill"] .duro-control { background: var(--duro-surface); border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-field:focus-within,
+  [data-family="quill"] .duro-field.is-open,
+  [data-family="quill"] .duro-control:focus { box-shadow: 3px 3px 0 0 var(--duro-primary); border-color: var(--duro-ink); }
 
   [data-family="neon"] .duro-field,
   [data-family="neon"] .duro-control { background: color-mix(in oklab, var(--duro-surface-2) 85%, transparent); border-color: color-mix(in oklab, var(--duro-accent) 40%, transparent); }
@@ -1065,9 +1070,9 @@
   [data-family="neon"] .duro-field.is-open,
   [data-family="neon"] .duro-control:focus { box-shadow: 0 0 0 1px var(--duro-primary), 0 0 18px color-mix(in oklab, var(--duro-primary) 35%, transparent); }
 
-  [data-theme="crimson-codex"] .duro-field:focus-within,
-  [data-theme="crimson-codex"] .duro-field.is-open,
-  [data-theme="crimson-codex"] .duro-control:focus { box-shadow: inset 3px 0 0 var(--duro-primary); }
+  [data-family="codex"] .duro-field:focus-within,
+  [data-family="codex"] .duro-field.is-open,
+  [data-family="codex"] .duro-control:focus { box-shadow: inset 3px 0 0 var(--duro-primary); }
 
   /* Checkbox & radio */
   .duro-check {
@@ -1098,7 +1103,7 @@
   .duro-check:checked::before { transform: scale(1); }
   .duro-check:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 30%, transparent); }
   .duro-check:hover:not(:checked) { border-color: var(--duro-primary); }
-  [data-theme="ink-quill"] .duro-check { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-check { border-color: var(--duro-ink); }
   [data-family="neon"] .duro-check:checked { box-shadow: 0 0 10px var(--duro-primary); }
 
   /* Switch */
@@ -1129,10 +1134,10 @@
   [data-family="neon"] .duro-switch,
   [data-family="neon"] .duro-switch-thumb { border-radius: 2px; }
   [data-family="neon"] .duro-switch[aria-checked="true"] { box-shadow: 0 0 14px var(--duro-primary); }
-  [data-theme="crimson-codex"] .duro-switch,
-  [data-theme="crimson-codex"] .duro-switch-thumb { border-radius: 0; }
-  [data-theme="ink-quill"] .duro-switch { border-color: var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-switch-thumb { background: var(--duro-ink); }
+  [data-family="codex"] .duro-switch,
+  [data-family="codex"] .duro-switch-thumb { border-radius: 0; }
+  [data-family="quill"] .duro-switch { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-switch-thumb { background: var(--duro-ink); }
 
   /* ---------- Floating panels: dropdowns, popovers, menus ---------- */
   .duro-panel {
@@ -1143,7 +1148,7 @@
     box-shadow: var(--duro-shadow-pop);
   }
 
-  [data-theme="ink-quill"] .duro-panel { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-panel { border-color: var(--duro-ink); }
   [data-family="neon"] .duro-panel { background: color-mix(in oklab, var(--duro-surface) 97%, transparent); border-color: color-mix(in oklab, var(--duro-accent) 50%, transparent); backdrop-filter: blur(10px); }
 
   .duro-menu-item {
@@ -1195,10 +1200,10 @@
   .duro-badge-solid { background: var(--badge); color: var(--duro-canvas); border-color: var(--badge); }
   .duro-badge-dot::before { content: ""; width: 0.4rem; height: 0.4rem; border-radius: 99px; background: var(--badge); box-shadow: 0 0 6px var(--badge); }
 
-  [data-theme="ink-quill"] .duro-badge { border-color: var(--duro-ink); color: var(--duro-ink); letter-spacing: 0.05em; }
-  [data-theme="ink-quill"] .duro-badge-primary { color: var(--duro-primary-ink); }
-  [data-theme="ink-quill"] .duro-badge-solid { color: var(--duro-surface); }
-  [data-theme="crimson-codex"] .duro-badge { clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-inline: 0.8rem; }
+  [data-family="quill"] .duro-badge { border-color: var(--duro-ink); color: var(--duro-ink); letter-spacing: 0.05em; }
+  [data-family="quill"] .duro-badge-primary { color: var(--duro-primary-ink); }
+  [data-family="quill"] .duro-badge-solid { color: var(--duro-surface); }
+  [data-family="codex"] .duro-badge { clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-inline: 0.8rem; }
 
   /* ---------- Alerts ---------- */
   .duro-alert {
@@ -1229,7 +1234,7 @@
   .duro-alert-warning { --alert: var(--duro-warning); }
   .duro-alert-danger { --alert: var(--duro-danger); }
   .duro-alert-icon { color: var(--alert); flex-shrink: 0; margin-top: 0.05rem; }
-  [data-theme="ink-quill"] .duro-alert { border-color: var(--duro-ink); box-shadow: 3px 3px 0 0 var(--alert); }
+  [data-family="quill"] .duro-alert { border-color: var(--duro-ink); box-shadow: 3px 3px 0 0 var(--alert); }
 
   /* ---------- Tables ---------- */
   .duro-table-wrap {
@@ -1238,7 +1243,7 @@
     background: var(--duro-surface);
     overflow: hidden;
   }
-  [data-theme="ink-quill"] .duro-table-wrap { border-color: var(--duro-ink); box-shadow: var(--duro-shadow-card); }
+  [data-family="quill"] .duro-table-wrap { border-color: var(--duro-ink); box-shadow: var(--duro-shadow-card); }
   [data-family="neon"] .duro-table-wrap { border-color: color-mix(in oklab, var(--duro-accent) 40%, transparent); }
 
   .duro-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
@@ -1292,9 +1297,9 @@
   .duro-tab:hover { color: var(--duro-ink); }
   .duro-tab[aria-selected="true"] { background: var(--duro-surface); color: var(--duro-ink); box-shadow: 0 1px 3px oklch(0 0 0 / 0.2); }
   [data-family="neon"] .duro-tab[aria-selected="true"] { color: var(--duro-primary); box-shadow: inset 0 -2px 0 var(--duro-primary); background: color-mix(in oklab, var(--duro-primary) 8%, transparent); }
-  [data-theme="ink-quill"] .duro-tabs { border-color: var(--duro-ink); }
-  [data-theme="ink-quill"] .duro-tab[aria-selected="true"] { background: var(--duro-ink); color: var(--duro-surface); box-shadow: none; }
-  [data-theme="crimson-codex"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
+  [data-family="quill"] .duro-tabs { border-color: var(--duro-ink); }
+  [data-family="quill"] .duro-tab[aria-selected="true"] { background: var(--duro-ink); color: var(--duro-surface); box-shadow: none; }
+  [data-family="codex"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
 
   .duro-tabs-underline { background: transparent; border: 0; border-bottom: var(--duro-border) solid var(--duro-line); border-radius: 0; padding: 0; gap: 1.25rem; }
   .duro-tabs-underline .duro-tab { padding: 0.6rem 0.1rem; border-radius: 0; background: transparent !important; box-shadow: none !important; color: var(--duro-ink-muted) !important; }
@@ -1332,9 +1337,9 @@
     box-shadow: 0 0 12px color-mix(in oklab, var(--duro-glow) 60%, transparent);
     transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  [data-theme="crimson-codex"] .duro-progress,
+  [data-family="codex"] .duro-progress,
   [data-family="neon"] .duro-progress { border-radius: 0; }
-  [data-theme="ink-quill"] .duro-progress { border: 2px solid var(--duro-ink); height: 0.75rem; background: var(--duro-surface); }
+  [data-family="quill"] .duro-progress { border: 2px solid var(--duro-ink); height: 0.75rem; background: var(--duro-surface); }
 
   .duro-skeleton {
     border-radius: var(--duro-radius-ui);
@@ -1358,9 +1363,9 @@
     border: 2px solid var(--duro-surface);
     box-shadow: 0 0 0 1px var(--duro-line);
   }
-  [data-theme="crimson-codex"] .duro-avatar,
+  [data-family="codex"] .duro-avatar,
   [data-family="neon"] .duro-avatar { border-radius: var(--duro-radius-ui); }
-  [data-theme="ink-quill"] .duro-avatar { box-shadow: 0 0 0 2px var(--duro-ink); }
+  [data-family="quill"] .duro-avatar { box-shadow: 0 0 0 2px var(--duro-ink); }
 
   .duro-icon-tile {
     display: inline-flex;
@@ -1374,8 +1379,8 @@
   }
   [data-theme="runic-steel"] .duro-icon-tile { box-shadow: 0 0 18px -4px oklch(0.7 0.16 248 / 0.55) inset; }
   [data-family="neon"] .duro-icon-tile { box-shadow: 0 0 16px color-mix(in oklab, var(--duro-primary) 35%, transparent); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
-  [data-theme="ink-quill"] .duro-icon-tile { border: 2px solid var(--duro-ink); background: color-mix(in oklab, var(--duro-primary) 10%, var(--duro-surface)); box-shadow: 2px 2px 0 var(--duro-ink); }
-  [data-theme="crimson-codex"] .duro-icon-tile { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
+  [data-family="quill"] .duro-icon-tile { border: 2px solid var(--duro-ink); background: color-mix(in oklab, var(--duro-primary) 10%, var(--duro-surface)); box-shadow: 2px 2px 0 var(--duro-ink); }
+  [data-family="codex"] .duro-icon-tile { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
 
   .duro-tooltip {
     position: fixed;
@@ -1403,7 +1408,7 @@
     pointer-events: none;
     animation: duro-glow 6s ease-in-out infinite;
   }
-  [data-theme="ink-quill"] .duro-glow-orb { display: none; }
+  [data-family="quill"] .duro-glow-orb { display: none; }
 
   .duro-marquee-mask {
     mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
@@ -1426,8 +1431,8 @@
     border: 1px solid oklch(0.28 0.014 260);
   }
   [data-family="neon"] .duro-code { background: oklch(0.11 0.04 282); border-color: color-mix(in oklab, var(--duro-accent) 35%, transparent); }
-  [data-theme="crimson-codex"] .duro-code { background: oklch(0.09 0.003 20); }
-  [data-theme="ink-quill"] .duro-code { background: oklch(0.19 0.01 20); border: 2px solid var(--duro-ink); }
+  [data-family="codex"] .duro-code { background: oklch(0.09 0.003 20); }
+  [data-family="quill"] .duro-code { background: oklch(0.19 0.01 20); border: 2px solid var(--duro-ink); }
 
   /* Neon sign flicker for decorative text */
   [data-family="neon"] .duro-flicker { animation: duro-flicker 6s infinite; }
@@ -2528,5 +2533,132 @@
 
 @layer components {
   [data-theme="spider-sense"] .duro-logo-text { -webkit-text-stroke-width: 1px; text-shadow: 2px 2px 0 var(--duro-accent); }
-  [data-theme="ink-quill"] .duro-logo-text { -webkit-text-stroke-width: 1.5px; text-shadow: 2px 2px 0 var(--duro-primary); }
+  [data-family="quill"] .duro-logo-text { -webkit-text-stroke-width: 1.5px; text-shadow: 2px 2px 0 var(--duro-primary); }
+}
+
+
+/* ---------- Ink & Quill — Midnight Ink (dark pair) ---------- */
+[data-theme="midnight-ink"] {
+  color-scheme: dark;
+  --duro-font-display: "Montserrat", ui-sans-serif, sans-serif;
+  --duro-font-label: "Montserrat", ui-sans-serif, sans-serif;
+  --duro-font-sans: "Lora", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.165 0.014 265);
+  --duro-canvas-alt: oklch(0.19 0.016 265);
+  --duro-surface: oklch(0.205 0.016 265);
+  --duro-surface-2: oklch(0.235 0.018 265);
+  --duro-surface-3: oklch(0.275 0.02 265);
+  --duro-line: oklch(0.34 0.018 265);
+  --duro-line-strong: oklch(0.94 0.008 85);
+  --duro-ink: oklch(0.95 0.008 85);
+  --duro-ink-muted: oklch(0.77 0.01 85);
+  --duro-ink-subtle: oklch(0.6 0.012 265);
+
+  --duro-primary: oklch(0.62 0.21 18);
+  --duro-primary-hover: oklch(0.68 0.2 18);
+  --duro-primary-ink: oklch(0.72 0.17 18);
+  --duro-on-primary: oklch(1 0 0);
+  --duro-accent: oklch(0.8 0.006 260);
+  --duro-accent-ink: oklch(0.84 0.006 260);
+  --duro-on-accent: oklch(0.17 0.014 265);
+
+  --duro-success: oklch(0.74 0.14 155);
+  --duro-warning: oklch(0.8 0.14 75);
+  --duro-danger: oklch(0.66 0.21 25);
+  --duro-info: oklch(0.74 0.11 245);
+
+  --duro-radius-ui: 0.55rem;
+  --duro-radius-card: 0.9rem;
+  --duro-radius-pill: 999px;
+  --duro-border: 2px;
+
+  --duro-shadow-card: 5px 5px 0 0 oklch(0.95 0.008 85);
+  --duro-shadow-pop: 6px 6px 0 0 oklch(0.95 0.008 85);
+  --duro-shadow-glow: 4px 4px 0 0 oklch(0.62 0.21 18);
+  --duro-glow: oklch(0.62 0.21 18);
+
+  --duro-p-h: 18; --duro-p-c: 0.2;
+  --duro-a-h: 260; --duro-a-c: 0.01;
+  --duro-t-h: 265; --duro-t-c: 0.014;
+
+  --duro-logo-mark: url("/images/brand/ink-quill-mark.webp");
+  --duro-hero-art: url("/images/brand/ink-quill-word.webp");
+  --duro-wordmark: url("/images/brand/ink-quill-word.webp");
+  --duro-logo-filter: invert(1) hue-rotate(180deg) saturate(1.2);
+  --duro-ornament: "❦";
+}
+
+/* ---------- Crimson Codex — Crimson Folio (light pair) ---------- */
+[data-theme="crimson-folio"] {
+  color-scheme: light;
+  --duro-font-display: "Chakra Petch", ui-sans-serif, sans-serif;
+  --duro-font-label: "Chakra Petch", ui-sans-serif, sans-serif;
+  --duro-font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.962 0.003 20);
+  --duro-canvas-alt: oklch(0.94 0.004 20);
+  --duro-surface: oklch(0.99 0.002 20);
+  --duro-surface-2: oklch(0.955 0.004 20);
+  --duro-surface-3: oklch(0.92 0.005 20);
+  --duro-line: oklch(0.85 0.006 20);
+  --duro-line-strong: oklch(0.32 0.006 20);
+  --duro-ink: oklch(0.16 0.005 20);
+  --duro-ink-muted: oklch(0.4 0.006 20);
+  --duro-ink-subtle: oklch(0.56 0.006 20);
+
+  --duro-primary: oklch(0.55 0.22 22);
+  --duro-primary-hover: oklch(0.49 0.21 22);
+  --duro-primary-ink: oklch(0.5 0.21 22);
+  --duro-on-primary: oklch(0.99 0 0);
+  --duro-accent: oklch(0.3 0.006 260);
+  --duro-accent-ink: oklch(0.3 0.006 260);
+  --duro-on-accent: oklch(0.99 0 0);
+
+  --duro-success: oklch(0.52 0.13 155);
+  --duro-warning: oklch(0.66 0.15 70);
+  --duro-danger: oklch(0.52 0.21 25);
+  --duro-info: oklch(0.5 0.12 245);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 18px 36px -26px oklch(0 0 0 / 0.35);
+  --duro-shadow-pop: 0 22px 50px -20px oklch(0 0 0 / 0.3), 0 0 0 1px oklch(0.55 0.22 22 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.55 0.22 22 / 0.7), 0 10px 26px -10px oklch(0.55 0.22 22 / 0.55);
+  --duro-glow: oklch(0.55 0.22 22);
+
+  --duro-p-h: 22; --duro-p-c: 0.22;
+  --duro-a-h: 260; --duro-a-c: 0.006;
+  --duro-t-h: 20; --duro-t-c: 0.004;
+
+  --duro-logo-mark: url("/images/brand/crimson-codex-icon.webp");
+  --duro-hero-art: url("/images/brand/crimson-codex-mark.webp");
+  --duro-wordmark: url("/images/brand/crimson-codex-mark.webp");
+  --duro-logo-filter: invert(1) hue-rotate(180deg) saturate(1.3);
+  --duro-ornament: "/ / /";
+}
+
+@layer components {
+  [data-theme="midnight-ink"] .duro-backdrop::before {
+    background-image: radial-gradient(oklch(0.95 0.008 85 / 0.07) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+  [data-theme="midnight-ink"] .duro-backdrop::after {
+    background: radial-gradient(40rem 26rem at 90% 0%, oklch(0.62 0.21 18 / 0.14), transparent 60%);
+  }
+  [data-theme="midnight-ink"] .duro-glow-orb { display: none; }
+
+  [data-theme="crimson-folio"] .duro-backdrop::before {
+    background:
+      repeating-linear-gradient(-45deg, oklch(0 0 0 / 0.025) 0 2px, transparent 2px 14px),
+      radial-gradient(40rem 26rem at 100% 0%, oklch(0.55 0.22 22 / 0.12), transparent 60%),
+      radial-gradient(36rem 24rem at 0% 100%, oklch(0.55 0.22 22 / 0.07), transparent 60%);
+  }
+  [data-theme="crimson-folio"] .duro-display { text-shadow: 0 0 30px oklch(0.55 0.22 22 / 0.18); }
 }
