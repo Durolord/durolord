@@ -3,12 +3,13 @@
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     class="h-full"
     x-data="layoutState()"
-    x-bind:class="theme === 'dark' ? 'dark h-full' : 'h-full'"
 >
 <head>
     <meta charset="utf-8">
     <title>{{ $title ?? 'Durolord - Digital Realms' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @include('partials.theme-bootstrap')
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -37,23 +38,7 @@
             {{-- TOP BAR WITH ONLY A THEME TOGGLE BUTTON --}}
             <div class="flex items-center justify-end">
 
-                <button
-                    type="button"
-                    x-on:click="cycleTheme()"
-                    class="inline-flex items-center justify-center w-9 h-9 rounded-full border
-                           border-neutral-700 bg-shadow-900/80 text-xs text-neutralfog-300
-                           hover:border-electric-400 hover:text-electric-200 transition"
-                    :aria-label="`Theme: ${theme}`"
-                >
-                    {{-- Light --}}
-                    <span x-show="theme === 'light'" x-transition.opacity>☀️</span>
-
-                    {{-- Dark --}}
-                    <span x-show="theme === 'dark'" x-transition.opacity>🌙</span>
-
-                    {{-- System --}}
-                    <span x-show="theme === 'system'" x-transition.opacity>🖥️</span>
-                </button>
+                <x-duro.theme-switcher />
             </div>
 
             {{-- PAGE CONTENT --}}

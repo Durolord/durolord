@@ -2,211 +2,131 @@
     'label' => null,
     'hint' => null,
     'placeholder' => 'Select options',
-    'options' => [],          // ['value' => 'Label']
+    'options' => [],
     'name' => null,
-    'model' => null,          // Livewire model name
+    'model' => null,
 ])
 
 @php
-    $fieldName = $name ?? $model;
+    $wireModel = $attributes->wire('model');
+    $boundModel = $model ?? $wireModel->value();
+    $isLive = $wireModel->hasModifier('live');
+    $fieldName = $name ?? $boundModel;
+    $errorKey = $boundModel ?? ($fieldName ? rtrim($fieldName, '[]') : null);
+    $hasError = $errorKey && ($errors->has($errorKey) || $errors->has($errorKey.'.*'));
+
+    $initial = $attributes->get('value');
+    $initial = is_array($initial) ? $initial : array_filter(explode(',', (string) $initial));
+    $normalizedOptions = collect($options)
+        ->map(fn ($optionLabel, $value) => ['value' => (string) $value, 'label' => (string) $optionLabel])
+        ->values();
 @endphp
 
 <div
     x-data="{
         open: false,
         search: '',
-        values: @js(
-            collect(explode(',', (string)($attributes->get('value') ?? '')))
-                ->filter()
-                ->values()
-        ),
-        options: @js(
-            collect($options)->map(fn ($label, $value) => ['value' => $value, 'label' => $label])->values()
-        ),
-
+        values: @if ($boundModel) $wire.$entangle(@js($boundModel), @js($isLive)) @else @js(array_values(array_map('strval', $initial))) @endif,
+        options: @js($normalizedOptions),
         init() {
-            document.addEventListener('click', (e) => {
-                if (!this.$el.contains(e.target)) this.open = false;
-            });
-
-            this.syncHidden();
+            if (! Array.isArray(this.values)) { this.values = this.values ? [this.values] : []; }
         },
-
-        filteredOptions() {
+        get filtered() {
             const q = this.search.toLowerCase();
-            if (!q) return this.options;
-            return this.options.filter(o => o.label.toLowerCase().includes(q));
+            return q ? this.options.filter(o => o.label.toLowerCase().includes(q)) : this.options;
         },
-
+        get selected() {
+            const values = (this.values ?? []).map(String);
+            return this.options.filter(o => values.includes(o.value));
+        },
         isSelected(value) {
-            return this.values.includes(String(value));
+            return (this.values ?? []).map(String).includes(String(value));
         },
-
         toggleOption(option) {
-            const v = String(option.value);
-            if (this.isSelected(v)) {
-                this.values = this.values.filter(x => x !== v);
-            } else {
-                this.values.push(v);
-            }
-            this.syncHidden();
+            const current = (this.values ?? []).map(String);
+            this.values = this.isSelected(option.value)
+                ? current.filter(v => v !== option.value)
+                : [...current, option.value];
+            this.$dispatch('input', this.values);
         },
-
-        removeValue(value) {
-            this.values = this.values.filter(v => v !== String(value));
-            this.syncHidden();
-        },
-
-        clearAll() {
+        clear() {
             this.values = [];
-            this.syncHidden();
-        },
-
-        syncHidden() {
-            const payload = this.values.join(',');
-            this.$refs.hidden.value = payload;
-            this.$dispatch('input', payload);
-
-            @if($model)
-                if (window.Livewire) {
-                    Livewire.find(@js($attributes->get('wire:id') ?? null))?.set(@js($model), this.values);
-                }
-            @endif
-        },
-
-        selectedLabels() {
-            return this.options.filter(o => this.values.includes(String(o.value)));
+            this.$dispatch('input', this.values);
         },
     }"
-    class="space-y-1.5 w-full"
+    x-on:keydown.escape.stop="open = false"
+    x-on:click.outside="open = false"
+    class="w-full space-y-1.5"
 >
-    @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
-            {{ $label }}
-        </label>
+    @if ($label)
+        <label class="duro-label">{{ $label }}</label>
     @endif
 
-    <div class="relative w-full">
-        {{-- Trigger --}}
-        <button
-            type="button"
-            x-on:click="open = !open"
-            class="flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-sm
-                   bg-neutralfog-100 border-neutralfog-300 text-shadow-900
-                   hover:border-electric-400 hover:ring-1 hover:ring-electric-400
-                   dark:bg-shadow-950/70 dark:border-shadow-800 dark:text-neutralfog-100 transition"
-        >
-            <div class="flex-1 min-w-0 flex flex-wrap gap-1 items-center">
-                <template x-if="selectedLabels().length">
-                    <template x-for="item in selectedLabels()" :key="item.value">
-                        <span
-                            class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px]
-                                   bg-electric-500/10 text-electric-700 border border-electric-500/40
-                                   dark:bg-electric-500/15 dark:text-electric-300 dark:border-electric-400/60"
-                        >
-                            <span x-text="item.label" class="truncate max-w-[7rem]"></span>
-                            <button
-                                type="button"
-                                x-on:click.stop="removeValue(item.value)"
-                                class="text-[10px] leading-none"
-                            >
-                                ✕
-                            </button>
-                        </span>
-                    </template>
-                </template>
-
-                <span
-                    x-show="!selectedLabels().length"
-                    class="truncate text-neutral-400 dark:text-neutralfog-400/80"
-                >
-                    {{ $placeholder }}
-                </span>
-            </div>
-
-            <div class="flex items-center gap-2 text-[11px] text-neutral-500 dark:text-neutralfog-400">
-                <span x-show="selectedLabels().length" x-text="selectedLabels().length"></span>
-                <span class="text-[10px]">▾</span>
-            </div>
-        </button>
-
-        {{-- Dropdown --}}
+    <div class="relative">
         <div
-            x-show="open"
-            x-transition.origin.top
-            x-cloak
-            class="absolute z-40 mt-1 w-full rounded-xl border bg-neutralfog-100 border-neutralfog-300 shadow-xl
-                   dark:bg-shadow-950/95 dark:border-shadow-800 glow-arcane"
+            role="button"
+            tabindex="0"
+            x-on:click="open = ! open; $nextTick(() => open && $refs.search.focus())"
+            x-on:keydown.enter.prevent="open = ! open"
+            :class="{ 'is-open': open }"
+            @class(['duro-field min-h-[2.65rem] cursor-pointer px-2 py-1.5 text-sm', 'is-invalid' => $hasError])
         >
-            {{-- Search + clear --}}
-            <div class="flex items-center gap-2 border-b border-neutralfog-300/80 dark:border-shadow-800/80 px-2 py-1.5">
-                <input
-                    type="text"
-                    x-model="search"
-                    placeholder="Search..."
-                    class="w-full rounded-lg border-0 bg-neutralfog-100/80 px-2 py-1 text-xs text-shadow-900
-                           placeholder:text-neutral-400 focus:outline-none focus:ring-0
-                           dark:bg-shadow-900/80 dark:text-neutralfog-100 dark:placeholder:text-neutralfog-400"
-                >
-                <button
-                    type="button"
-                    x-on:click="clearAll()"
-                    class="text-[10px] text-neutral-500 hover:text-red-500 dark:text-neutralfog-400 whitespace-nowrap"
-                >
-                    Clear all
-                </button>
+            <div class="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+                <template x-for="item in selected" :key="item.value">
+                    <span class="duro-badge duro-badge-primary normal-case tracking-normal">
+                        <span x-text="item.label" class="max-w-[9rem] truncate"></span>
+                        <button type="button" x-on:click.stop="toggleOption(item)" class="opacity-70 hover:opacity-100" :aria-label="'Remove ' + item.label">
+                            <x-duro.icon name="x" class="size-3" />
+                        </button>
+                    </span>
+                </template>
+                <span x-show="! selected.length" class="px-1 text-ink-subtle">{{ $placeholder }}</span>
+            </div>
+            <button type="button" x-show="selected.length" x-on:click.stop="clear()" class="text-ink-subtle hover:text-ink" aria-label="Clear selection">
+                <x-duro.icon name="x-circle" />
+            </button>
+            <x-duro.icon name="chevron-down" class="mr-1 text-ink-subtle transition-transform" x-bind:class="open && 'rotate-180'" />
+        </div>
+
+        <div
+            x-cloak
+            x-show="open"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 -translate-y-1"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-end="opacity-0"
+            class="duro-panel absolute z-50 mt-2 w-full overflow-hidden p-1.5"
+        >
+            <div class="mb-1.5 flex items-center gap-2 border-b border-line px-2 pb-2 pt-1 text-ink-subtle">
+                <x-duro.icon name="search" class="size-3.5" />
+                <input type="text" x-ref="search" x-model="search" placeholder="Search…" class="w-full border-0 bg-transparent p-0 text-sm text-ink placeholder:text-ink-subtle focus:outline-none focus:ring-0">
             </div>
 
-            {{-- Options --}}
-            <ul class="max-h-56 overflow-y-auto py-1 text-sm">
-                <template x-for="option in filteredOptions()" :key="option.value">
+            <ul class="max-h-60 overflow-y-auto">
+                <template x-for="option in filtered" :key="option.value">
                     <li>
-                        <button
-                            type="button"
-                            x-on:click="toggleOption(option)"
-                            class="flex w-full items-center gap-2 px-3 py-1.5 text-left
-                                   hover:bg-electric-500/10 hover:text-electric-700
-                                   dark:hover:bg-electric-500/15 dark:hover:text-electric-300"
-                            :class="isSelected(option.value)
-                                ? 'bg-electric-500/5 text-electric-700 dark:text-electric-300'
-                                : 'text-neutral-700 dark:text-neutralfog-200'"
-                        >
-                            {{-- Checkbox with ✔ only when selected --}}
-                            <span
-                                class="inline-flex h-4 w-4 items-center justify-center rounded border text-[10px] mr-1"
-                                :class="isSelected(option.value)
-                                    ? 'border-electric-500 bg-electric-500/80 text-white'
-                                    : 'border-neutralfog-400 dark:border-shadow-600 bg-transparent'"
-                            >
-                                <span x-show="isSelected(option.value)" x-cloak>✔</span>
+                        <button type="button" x-on:click="toggleOption(option)" class="duro-menu-item" :class="{ 'is-active': isSelected(option.value) }">
+                            <span class="duro-check pointer-events-none" :class="isSelected(option.value) && '!bg-primary !border-primary'">
+                                <x-duro.icon name="check" class="size-3 text-on-primary" x-show="isSelected(option.value)" stroke="3" />
                             </span>
-
-                            <span
-                                x-text="option.label"
-                                class="flex-1 whitespace-normal break-words"
-                            ></span>
+                            <span x-text="option.label" class="truncate"></span>
                         </button>
                     </li>
                 </template>
-
-                <li x-show="filteredOptions().length === 0">
-                    <div class="px-3 py-2 text-xs text-neutral-500 dark:text-neutralfog-400">
-                        No results found.
-                    </div>
-                </li>
+                <li x-show="filtered.length === 0" class="px-3 py-4 text-center text-xs text-ink-subtle">No results found.</li>
             </ul>
         </div>
 
-        {{-- Hidden --}}
-        <input
-            type="hidden"
-            x-ref="hidden"
-            @if($fieldName) name="{{ $fieldName }}" @endif
-            {{ $attributes->whereDoesntStartWith('wire:')->whereDoesntStartWith('value') }}
-        >
+        @if ($fieldName && ! $boundModel)
+            <template x-for="value in values" :key="value">
+                <input type="hidden" name="{{ rtrim($fieldName, '[]') }}[]" :value="value">
+            </template>
+        @endif
     </div>
 
-    @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+    @if ($hasError)
+        <p class="duro-error">{{ $errors->first($errorKey) ?: $errors->first($errorKey.'.*') }}</p>
+    @elseif ($hint)
+        <p class="duro-hint">{{ $hint }}</p>
     @endif
 </div>

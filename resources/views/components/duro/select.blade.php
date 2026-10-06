@@ -2,163 +2,142 @@
     'label' => null,
     'hint' => null,
     'placeholder' => 'Select an option',
-    'options' => [],          // ['value' => 'Label']
+    'options' => [],
     'name' => null,
-    'model' => null,          // Livewire: field name, e.g. "role"
+    'model' => null,
+    'searchable' => true,
+    'icon' => null,
 ])
 
 @php
-    $boundModel = $model ?? optional($attributes->wire('model'))->value();
+    $wireModel = $attributes->wire('model');
+    $boundModel = $model ?? $wireModel->value();
+    $isLive = $wireModel->hasModifier('live');
     $fieldName = $name ?? $boundModel;
-    $initialValue = $fieldName
-        ? old($fieldName, $attributes->get('value'))
-        : $attributes->get('value');
+    $initialValue = $fieldName ? old($fieldName, $attributes->get('value')) : $attributes->get('value');
+    $hasError = $fieldName && $errors->has($fieldName);
+    $normalizedOptions = collect($options)
+        ->map(fn ($optionLabel, $value) => ['value' => (string) $value, 'label' => (string) $optionLabel])
+        ->values();
 @endphp
 
 <div
     x-data="{
         open: false,
         search: '',
-        value: @if($boundModel) @entangle($boundModel)->defer @else @js($initialValue ?? '') @endif,
-        selectedLabel: '',
-        init() {
-            this.syncLabel(this.value ?? '');
-
-            this.$watch('value', (value) => this.syncLabel(value ?? ''));
-
-            // Close on outside click
-            document.addEventListener('click', (e) => {
-                if (!this.$el.contains(e.target)) {
-                    this.open = false;
-                }
-            });
-        },
-        options: @js(
-            collect($options)->map(fn ($label, $value) => ['value' => (string) $value, 'label' => $label])->values()
-        ),
-        filteredOptions() {
-            if (!this.search) return this.options;
+        active: -1,
+        value: @if ($boundModel) $wire.$entangle(@js($boundModel), @js($isLive)) @else @js((string) ($initialValue ?? '')) @endif,
+        options: @js($normalizedOptions),
+        get filtered() {
             const q = this.search.toLowerCase();
-            return this.options.filter(o => o.label.toLowerCase().includes(q));
+            return q ? this.options.filter(o => o.label.toLowerCase().includes(q)) : this.options;
         },
-        selectOption(option) {
+        get selectedLabel() {
+            const found = this.options.find(o => o.value == this.value);
+            return found ? found.label : '';
+        },
+        toggle() {
+            this.open = ! this.open;
+            if (this.open) {
+                this.active = this.filtered.findIndex(o => o.value == this.value);
+                this.$nextTick(() => this.$refs.search?.focus());
+            }
+        },
+        choose(option) {
             this.value = option.value;
-            this.selectedLabel = option.label;
             this.open = false;
             this.search = '';
-
             this.$dispatch('input', option.value);
         },
-        clear() {
-            this.value = null;
-            this.selectedLabel = '';
-            this.$dispatch('input', '');
+        move(step) {
+            if (! this.open) { this.toggle(); return; }
+            const total = this.filtered.length;
+            if (total) { this.active = (this.active + step + total) % total; }
         },
-        syncLabel(value) {
-            const found = this.options.find(o => o.value == value);
-            this.selectedLabel = found ? found.label : '';
-        }
     }"
-    class="space-y-1.5 w-full"
+    x-on:keydown.escape.stop="open = false"
+    x-on:click.outside="open = false"
+    class="w-full space-y-1.5"
 >
-    @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
-            {{ $label }}
-        </label>
+    @if ($label)
+        <label class="duro-label" x-on:click="toggle()">{{ $label }}</label>
     @endif
 
-    <div class="relative w-full"> {{-- 🔥 full width wrapper --}}
-        {{-- Trigger --}}
+    <div class="relative">
         <button
             type="button"
-            x-on:click="open = !open"
-            class="flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2 text-sm
-                   bg-neutralfog-100 border-neutralfog-300 text-shadow-900
-                   hover:border-electric-400 hover:ring-1 hover:ring-electric-400
-                   dark:bg-shadow-950/70 dark:border-shadow-800 dark:text-neutralfog-100
-                   transition"
+            x-on:click="toggle()"
+            x-on:keydown.down.prevent="move(1)"
+            x-on:keydown.up.prevent="move(-1)"
+            x-on:keydown.enter.prevent="open && filtered[active] ? choose(filtered[active]) : toggle()"
+            :class="{ 'is-open': open }"
+            @class(['duro-field px-3 py-2.5 text-left text-sm', 'is-invalid' => $hasError])
+            aria-haspopup="listbox"
+            :aria-expanded="open.toString()"
         >
-            <div class="flex-1 text-left min-w-0">
-                <span
-                    x-show="selectedLabel"
-                    x-text="selectedLabel"
-                    class="block whitespace-normal break-words"
-                ></span>
-                <span
-                    x-show="!selectedLabel"
-                    class="block whitespace-normal break-words text-neutral-400 dark:text-neutralfog-400/80"
-                >
-                    {{ $placeholder }}
-                </span>
-            </div>
+            @if ($icon)
+                <x-duro.icon :name="$icon" class="text-ink-subtle" />
+            @endif
+            <span class="min-w-0 flex-1 truncate">
+                <span x-show="selectedLabel" x-text="selectedLabel"></span>
+                <span x-show="! selectedLabel" class="text-ink-subtle">{{ $placeholder }}</span>
+            </span>
+            <x-duro.icon name="chevron-down" class="text-ink-subtle transition-transform duration-200" x-bind:class="open && 'rotate-180'" />
         </button>
 
-        {{-- Dropdown --}}
         <div
+            x-cloak
             x-show="open"
-            x-transition.origin.top
-            class="absolute z-40 mt-1 w-full rounded-xl border bg-neutralfog-100 border-neutralfog-300 shadow-xl
-                   dark:bg-shadow-950/95 dark:border-shadow-800 glow-arcane"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 -translate-y-1 scale-[0.98]"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-end="opacity-0"
+            class="duro-panel absolute z-50 mt-2 w-full min-w-48 overflow-hidden p-1.5"
         >
-            {{-- Search --}}
-            <div class="border-b border-neutralfog-300/80 dark:border-shadow-800/80 px-2 py-1.5">
-                <input
-                    type="text"
-                    x-model="search"
-                    placeholder="Search..."
-                    class="w-full rounded-lg border-0 bg-neutralfog-100/80 px-2 py-1 text-xs text-shadow-900
-                           placeholder:text-neutral-400 focus:outline-none focus:ring-0
-                           dark:bg-shadow-900/80 dark:text-neutralfog-100 dark:placeholder:text-neutralfog-400"
-                >
-            </div>
+            @if ($searchable)
+                <div class="mb-1.5 flex items-center gap-2 border-b border-line px-2 pb-2 pt-1 text-ink-subtle">
+                    <x-duro.icon name="search" class="size-3.5" />
+                    <input
+                        type="text"
+                        x-ref="search"
+                        x-model="search"
+                        x-on:keydown.down.prevent="move(1)"
+                        x-on:keydown.up.prevent="move(-1)"
+                        x-on:keydown.enter.prevent="filtered[active] && choose(filtered[active])"
+                        placeholder="Search…"
+                        class="w-full border-0 bg-transparent p-0 text-sm text-ink placeholder:text-ink-subtle focus:outline-none focus:ring-0"
+                    >
+                </div>
+            @endif
 
-            {{-- Options --}}
-            <ul class="max-h-52 overflow-y-auto py-1 text-sm">
-                <template x-for="option in filteredOptions()" :key="option.value">
+            <ul class="max-h-60 overflow-y-auto" role="listbox">
+                <template x-for="(option, index) in filtered" :key="option.value">
                     <li>
                         <button
                             type="button"
-                            x-on:click="selectOption(option)"
-                            class="flex w-full items-start justify-between gap-2 px-3 py-1.5 text-left
-                                   hover:bg-electric-500/10 hover:text-electric-700
-                                   dark:hover:bg-electric-500/15 dark:hover:text-electric-300"
-                            :class="value === option.value
-                                ? 'text-electric-700 dark:text-electric-300 bg-electric-500/5'
-                                : 'text-neutral-700 dark:text-neutralfog-200'"
+                            role="option"
+                            x-on:click="choose(option)"
+                            x-on:mouseenter="active = index"
+                            :aria-selected="(value == option.value).toString()"
+                            :class="{ 'is-active': active === index }"
+                            class="duro-menu-item justify-between"
                         >
-                            <span
-                                x-text="option.label"
-                                class="block flex-1 whitespace-normal break-words text-left"
-                            ></span>
-                            <span
-                                x-show="value === option.value"
-                                class="ml-2 text-[10px] text-electric-600 dark:text-electric-300 shrink-0"
-                            >
-                                ●
-                            </span>
+                            <span x-text="option.label" class="truncate"></span>
+                            <x-duro.icon name="check" class="text-primary-ink" x-show="value == option.value" />
                         </button>
                     </li>
                 </template>
-
-                <li x-show="filteredOptions().length === 0">
-                    <div class="px-3 py-2 text-xs text-neutral-500 dark:text-neutralfog-400">
-                        No results found.
-                    </div>
-                </li>
+                <li x-show="filtered.length === 0" class="px-3 py-4 text-center text-xs text-ink-subtle">No results found.</li>
             </ul>
         </div>
 
-        {{-- Hidden input --}}
-        <input
-            type="hidden"
-            x-ref="hidden"
-            x-model="value"
-            @if($fieldName) name="{{ $fieldName }}" @endif
-            {{ $attributes->whereDoesntStartWith('wire:')->whereDoesntStartWith('value') }}
-        >
+        <input type="hidden" x-model="value" @if ($fieldName) name="{{ $fieldName }}" @endif>
     </div>
 
-    @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+    @if ($hasError)
+        <p class="duro-error">{{ $errors->first($fieldName) }}</p>
+    @elseif ($hint)
+        <p class="duro-hint">{{ $hint }}</p>
     @endif
 </div>

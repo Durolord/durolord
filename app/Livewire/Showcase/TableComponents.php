@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Showcase;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class TableComponents extends Component
@@ -26,6 +29,99 @@ class TableComponents extends Component
         'paused' => 'Paused',
         'archived' => 'Archived',
     ];
+
+    public string $search = '';
+
+    public string $role = '';
+
+    public string $status = '';
+
+    public string $sortBy = 'name';
+
+    public string $sortDirection = 'asc';
+
+    /** @var array<int, string> */
+    public array $selected = [];
+
+    /** @var array<string, string> */
+    public array $statusColors = [
+        'active' => 'success',
+        'invited' => 'info',
+        'paused' => 'warning',
+        'archived' => 'neutral',
+    ];
+
+    public function sort(string $column): void
+    {
+        if (! in_array($column, ['name', 'role', 'status', 'team'], true)) {
+            return;
+        }
+
+        if ($this->sortBy === $column) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+
+            return;
+        }
+
+        $this->sortBy = $column;
+        $this->sortDirection = 'asc';
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset(['search', 'role', 'status']);
+    }
+
+    public function archiveSelected(): void
+    {
+        $count = count($this->selected);
+
+        $this->rows = collect($this->rows)
+            ->map(fn (array $row) => in_array((string) $row['id'], $this->selected, true) ? [...$row, 'status' => 'archived'] : $row)
+            ->all();
+
+        $this->selected = [];
+
+        $this->dispatch('duro-toast', title: "Archived {$count} ".str('member')->plural($count), body: 'They can be restored from the archive at any time.', variant: 'success');
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    #[Computed]
+    public function filteredRows(): Collection
+    {
+        $search = mb_strtolower(trim($this->search));
+
+        $rows = collect($this->rows)
+            ->when($search !== '', fn (Collection $rows) => $rows->filter(
+                fn (array $row) => str_contains(mb_strtolower($row['name'].' '.$row['email'].' '.$row['team']), $search)
+            ))
+            ->when($this->role !== '', fn (Collection $rows) => $rows->where('role', $this->roles[$this->role] ?? $this->role))
+            ->when($this->status !== '', fn (Collection $rows) => $rows->where('status', $this->status));
+
+        return $rows
+            ->sortBy($this->sortBy, SORT_NATURAL | SORT_FLAG_CASE, $this->sortDirection === 'desc')
+            ->values();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    #[Computed]
+    public function visibleIds(): array
+    {
+        return $this->filteredRows->pluck('id')->map(fn ($id) => (string) $id)->all();
+    }
+
+    /**
+     * @return Collection<string, Collection<int, array<string, mixed>>>
+     */
+    #[Computed]
+    public function groupedRows(): Collection
+    {
+        return collect($this->rows)->groupBy('team');
+    }
 
     public function mount(): void
     {
@@ -111,11 +207,11 @@ class TableComponents extends Component
         ];
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.showcase.table-components')
-            ->layout('layouts.app', [
-                'title' => 'Table Components — Durolord UI',
+            ->layout('components.layouts.kit', [
+                'title' => 'Tables',
             ]);
     }
 }

@@ -13,7 +13,7 @@
     class="space-y-1.5"
 >
     @if($label)
-        <p class="text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <p class="duro-label">
             {{ $label }}
         </p>
     @endif
@@ -22,7 +22,7 @@
         @foreach($blocks as $type => $title)
             <button
                 type="button"
-                class="px-2 py-1 rounded-full border border-neutralfog-300 text-neutral-700 bg-neutralfog-100 hover:border-electric-400 hover:text-electric-700 dark:border-shadow-700 dark:bg-shadow-950 dark:text-neutralfog-200 dark:hover:border-electric-400 dark:hover:text-electric-300"
+                class="px-2 py-1 rounded-full border border-line text-ink-muted bg-surface-2 hover:border-primary hover:text-primary-ink "
                 x-on:click="add('{{ $type }}')"
             >
                 + {{ $title }}
@@ -32,10 +32,10 @@
 
     <div class="space-y-3">
         <template x-for="(item, i) in items" :key="i">
-            <div class="rounded-xl border bg-neutralfog-100 border-neutralfog-300 p-3 dark:bg-shadow-950/70 dark:border-shadow-800">
+            <div class="rounded-ui border bg-surface-2 border-line p-3 ">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-[11px] text-neutral-500 dark:text-neutralfog-400" x-text="item.type"></span>
-                    <button type="button" class="text-[11px] text-red-500" x-on:click="remove(i)">Remove</button>
+                    <span class="text-[11px] text-ink-subtle " x-text="item.type"></span>
+                    <button type="button" class="text-[11px] text-danger" x-on:click="remove(i)">Remove</button>
                 </div>
 
                 <div class="space-y-2">
@@ -46,6 +46,6 @@
     </div>
 
     @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+        <p class="text-[11px] text-ink-subtle ">{{ $hint }}</p>
     @endif
 </div>

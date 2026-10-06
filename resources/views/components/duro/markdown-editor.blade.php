@@ -9,28 +9,28 @@
 >
     {{-- Label --}}
     @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <label class="duro-label">
             {{ $label }}
         </label>
     @endif
 
     {{-- Shell --}}
-    <div class="rounded-xl border bg-neutralfog-100 border-neutralfog-300 
-                dark:bg-shadow-950/70 dark:border-shadow-800 w-full">
+    <div class="rounded-ui border bg-surface-2 border-line
+ w-full">
 
         {{-- Tabs --}}
         <div
             class="flex flex-nowrap items-center text-[11px]
-                   border-b border-neutralfog-300/80 dark:border-shadow-800/80
+ border-b border-line/80
                    w-full whitespace-nowrap overflow-x-auto
-                   scrollbar-thin scrollbar-thumb-shadow-800 scrollbar-track-shadow-900/40"
+                  "
         >
             <button
                 type="button"
                 class="px-3 py-1.5 border-b -mb-px transition-colors shrink-0"
                 :class="tab === 'write'
-                    ? 'text-electric-700 dark:text-electric-300 border-electric-500'
-                    : 'text-neutral-500 dark:text-neutralfog-400 border-transparent'"
+ ? 'text-primary-ink  border-primary'
+                    : 'text-ink-subtle  border-transparent'"
                 x-on:click="tab = 'write'"
             >
                 Write
@@ -40,8 +40,8 @@
                 type="button"
                 class="px-3 py-1.5 border-b -mb-px transition-colors shrink-0"
                 :class="tab === 'preview'
-                    ? 'text-electric-700 dark:text-electric-300 border-electric-500'
-                    : 'text-neutral-500 dark:text-neutralfog-400 border-transparent'"
+ ? 'text-primary-ink  border-primary'
+                    : 'text-ink-subtle  border-transparent'"
                 x-on:click="tab = 'preview'"
             >
                 Preview
@@ -57,10 +57,10 @@
                 x-ref="input"
                 {{ $attributes->merge([
                     'class' =>
-                        'block w-full rounded-lg border-0 px-3 py-2 text-sm
-                         bg-transparent text-shadow-900 placeholder:text-neutral-400
+                        'block w-full rounded-ui border-0 px-3 py-2 text-sm
+                         bg-transparent text-ink placeholder:text-ink-subtle
                          focus:outline-none focus:ring-0
-                         dark:text-neutralfog-100 dark:placeholder:text-neutralfog-300/70',
+                          ',
                 ]) }}
             ></textarea>
 
@@ -68,7 +68,7 @@
             <div
                 x-show="tab === 'preview'"
                 x-cloak
-                class="markdown-preview prose prose-sm max-w-none text-neutral-800 dark:prose-invert dark:text-neutralfog-100"
+                class="markdown-preview prose prose-sm max-w-none text-ink dark:prose-invert "
                 x-html="html"
             ></div>
         </div>
@@ -76,6 +76,6 @@
 
     {{-- Hint --}}
     @if($hint)
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">{{ $hint }}</p>
+        <p class="text-[11px] text-ink-subtle ">{{ $hint }}</p>
     @endif
 </div>

@@ -1,4 +1,4 @@
-<thead class="bg-neutralfog-200/70 dark:bg-shadow-900/80">
+<thead {{ $attributes }}>
     <tr>
         {{ $slot }}
     </tr>

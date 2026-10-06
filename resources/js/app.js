@@ -1,199 +1,447 @@
 import './bootstrap';
 
-// IMPORTANT:
-// Do NOT import Alpine here. Livewire (or your bundle) should provide it.
-// We only configure it when Alpine is ready.
+/**
+ * Duro UI runtime.
+ *
+ * Alpine is provided by Livewire, so we only register stores, data
+ * components and directives once Alpine boots.
+ */
+const duroThemes = () => window.__duro?.themes ?? {};
+
+const duroFamilies = () => window.__duro?.families ?? {};
+
+const systemMode = () => (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+const storage = {
+    get(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    },
+    set(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            // Storage can be unavailable (private mode); the theme still applies for this page.
+        }
+    },
+};
+
+const applyThemeToDocument = (id) => {
+    const theme = duroThemes()[id] ?? {};
+    const root = document.documentElement;
+    const isDark = theme.mode !== 'light';
+
+    root.dataset.theme = id;
+    root.dataset.family = theme.family;
+    root.classList.toggle('dark', isDark);
+    root.style.colorScheme = isDark ? 'dark' : 'light';
+
+    const meta = document.querySelector('meta[name="theme-color"]');
+
+    if (meta && theme.swatches) {
+        meta.setAttribute('content', theme.swatches[0]);
+    }
+};
+
+const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const revealObserver = 'IntersectionObserver' in window
+    ? new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 })
+    : null;
+
+const observeReveals = () => {
+    document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach((el) => {
+        if (! revealObserver) {
+            el.classList.add('is-revealed');
+
+            return;
+        }
+
+        revealObserver.observe(el);
+    });
+};
+
+document.addEventListener('DOMContentLoaded', observeReveals);
+document.addEventListener('livewire:navigated', observeReveals);
+
 document.addEventListener('alpine:init', () => {
-    // ========== LAYOUT STATE (theme + sidebar) ==========
-    Alpine.data('layoutState', () => ({
-        theme: 'system',   // 'light' | 'dark' | 'system'
-        dark: false,
-        sidebarCollapsed: false,
+    // ========== THEME STORE ==========
+    Alpine.store('theme', {
+        family: document.documentElement.dataset.family,
+        mode: ['light', 'dark', 'system'].includes(storage.get('duro-mode')) ? storage.get('duro-mode') : 'system',
+        current: document.documentElement.dataset.theme,
 
         init() {
-            const saved = localStorage.getItem('duro-theme');
-            this.theme = saved ? saved : 'system';
-            this.applyTheme();
-
-            const media = window.matchMedia('(prefers-color-scheme: dark)');
-            media.addEventListener('change', (e) => {
-                if (this.theme === 'system') {
-                    this.dark = e.matches;
-                    this.updateDom();
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+                if (this.mode === 'system') {
+                    this.apply();
                 }
             });
         },
 
-        cycleTheme() {
-            const order = ['light', 'dark', 'system'];
-            let idx = order.indexOf(this.theme);
-            if (idx === -1) idx = 0;
-            const next = order[(idx + 1) % order.length];
-            this.setTheme(next);
+        get all() {
+            return duroThemes();
         },
 
-        setTheme(mode) {
-            this.theme = mode;
-            localStorage.setItem('duro-theme', mode);
-            this.applyTheme();
+        get families() {
+            return duroFamilies();
         },
 
-        applyTheme() {
-            if (this.theme === 'system') {
-                this.dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            } else {
-                this.dark = (this.theme === 'dark');
+        get meta() {
+            return duroThemes()[this.current] ?? {};
+        },
+
+        get familyMeta() {
+            return duroFamilies()[this.family] ?? {};
+        },
+
+        get resolvedMode() {
+            return this.mode === 'system' ? systemMode() : this.mode;
+        },
+
+        get isDark() {
+            return this.meta.mode !== 'light';
+        },
+
+        apply(event = null) {
+            const family = duroFamilies()[this.family] ? this.family : (window.__duro?.defaultFamily ?? 'runic');
+            const id = duroFamilies()[family][this.resolvedMode];
+
+            storage.set('duro-family', family);
+            storage.set('duro-mode', this.mode);
+
+            if (id === this.current) {
+                return;
             }
-            this.updateDom();
+
+            const commit = () => {
+                this.family = family;
+                this.current = id;
+                applyThemeToDocument(id);
+                window.dispatchEvent(new CustomEvent('duro-theme-changed', { detail: { theme: id, family, mode: this.mode } }));
+            };
+
+            if (! document.startViewTransition || prefersReducedMotion()) {
+                commit();
+
+                return;
+            }
+
+            const x = event?.clientX ?? window.innerWidth / 2;
+            const y = event?.clientY ?? 0;
+            const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+            document.startViewTransition(commit).ready.then(() => {
+                document.documentElement.animate(
+                    { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                    { duration: 650, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+                );
+            });
         },
 
-        updateDom() {
-            document.documentElement.classList.toggle('dark', this.dark);
-            document.body.classList.toggle('bg-aurora-dark', this.dark);
-            document.body.classList.toggle('bg-aurora-light', !this.dark);
+        // Select an exact theme: adopts its family and mode.
+        set(id, event = null) {
+            const theme = duroThemes()[id];
+
+            if (! theme) {
+                return;
+            }
+
+            this.family = theme.family;
+            this.mode = theme.mode;
+            this.apply(event);
+        },
+
+        setFamily(family, event = null) {
+            if (! duroFamilies()[family]) {
+                return;
+            }
+
+            this.family = family;
+            this.apply(event);
+        },
+
+        setMode(mode, event = null) {
+            this.mode = mode;
+            this.apply(event);
+        },
+
+        toggleMode(event = null) {
+            this.setMode(this.resolvedMode === 'dark' ? 'light' : 'dark', event);
+        },
+
+        next(event = null) {
+            const ids = Object.keys(duroFamilies());
+
+            this.setFamily(ids[(ids.indexOf(this.family) + 1) % ids.length], event);
+        },
+    });
+
+    // ========== TOASTS ==========
+    Alpine.store('toasts', {
+        items: [],
+        counter: 0,
+
+        push({ title = '', body = '', variant = 'info', timeout = 4500 } = {}) {
+            const id = ++this.counter;
+
+            this.items.push({ id, title, body, variant });
+
+            if (timeout) {
+                setTimeout(() => this.dismiss(id), timeout);
+            }
+        },
+
+        dismiss(id) {
+            this.items = this.items.filter((item) => item.id !== id);
+        },
+    });
+
+    window.duroToast = (payload) => Alpine.store('toasts').push(payload);
+
+    window.addEventListener('duro-toast', (event) => {
+        const detail = Array.isArray(event.detail) ? event.detail[0] : event.detail;
+
+        Alpine.store('toasts').push(detail ?? {});
+    });
+
+    // ========== LAYOUT STATE (sidebar, mobile nav, command palette) ==========
+    Alpine.data('layoutState', () => ({
+        sidebarCollapsed: false,
+        mobileNav: false,
+        palette: false,
+        scrolled: false,
+
+        init() {
+            try {
+                this.sidebarCollapsed = localStorage.getItem('duro-sidebar') === 'collapsed';
+            } catch (e) {
+                this.sidebarCollapsed = false;
+            }
+
+            const onScroll = () => {
+                this.scrolled = window.scrollY > 12;
+            };
+
+            onScroll();
+            window.addEventListener('scroll', onScroll, { passive: true });
+
+            window.addEventListener('keydown', (event) => {
+                if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+                    event.preventDefault();
+                    this.palette = ! this.palette;
+                }
+            });
+        },
+
+        get theme() {
+            return Alpine.store('theme').current;
+        },
+
+        cycleTheme(event = null) {
+            Alpine.store('theme').next(event);
+        },
+
+        setTheme(id, event = null) {
+            Alpine.store('theme').set(id, event);
         },
 
         toggleSidebar() {
-            this.sidebarCollapsed = !this.sidebarCollapsed;
+            this.sidebarCollapsed = ! this.sidebarCollapsed;
+
+            try {
+                localStorage.setItem('duro-sidebar', this.sidebarCollapsed ? 'collapsed' : 'expanded');
+            } catch (e) {
+                // Ignore unavailable storage.
+            }
         },
     }));
 
-    // ========== ANIMATED TOOLTIP (default: BOTTOM, with auto-hide) ==========
-    Alpine.directive('tooltip', (el, { expression, modifiers }, { evaluate }) => {
+    // ========== COMMAND PALETTE ==========
+    Alpine.data('commandPalette', (commands = []) => ({
+        query: '',
+        active: 0,
+        commands,
+
+        get results() {
+            const q = this.query.trim().toLowerCase();
+
+            if (! q) {
+                return this.commands;
+            }
+
+            return this.commands.filter((command) => `${command.label} ${command.group} ${command.keywords ?? ''}`.toLowerCase().includes(q));
+        },
+
+        move(step) {
+            const total = this.results.length;
+
+            if (! total) {
+                return;
+            }
+
+            this.active = (this.active + step + total) % total;
+            this.$nextTick(() => this.$refs.list?.querySelector('[data-active="true"]')?.scrollIntoView({ block: 'nearest' }));
+        },
+
+        run(command, event = null) {
+            if (! command) {
+                return;
+            }
+
+            if (command.action === 'toggle-mode') {
+                Alpine.store('theme').toggleMode(event);
+            } else if (command.theme) {
+                Alpine.store('theme').set(command.theme, event);
+            } else if (command.href) {
+                window.location.href = command.href;
+            }
+
+            this.query = '';
+            this.active = 0;
+            this.$dispatch('close-palette');
+        },
+    }));
+
+    // ========== COUNT-UP NUMBERS ==========
+    Alpine.data('countUp', (target = 0, duration = 1400) => ({
+        value: 0,
+
+        start() {
+            if (prefersReducedMotion()) {
+                this.value = target;
+
+                return;
+            }
+
+            const started = performance.now();
+            const tick = (now) => {
+                const progress = Math.min((now - started) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+
+                this.value = Math.round(target * eased);
+
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                }
+            };
+
+            requestAnimationFrame(tick);
+        },
+    }));
+
+    // ========== TOOLTIP DIRECTIVE (x-tooltip, x-tooltip.top, .left, .right) ==========
+    Alpine.directive('tooltip', (el, { expression, modifiers }, { evaluate, cleanup }) => {
         let tooltip = null;
-        let hideTimeout = null;      // for fade-out animation
-        let autoHideTimeout = null;  // hard time limit
+        let hideTimeout = null;
 
-        const placement = modifiers.includes('top')
-            ? 'top'
-            : modifiers.includes('left')
-            ? 'left'
-            : modifiers.includes('right')
-            ? 'right'
-            : 'bottom'; // default: below element
+        const placement = ['top', 'left', 'right'].find((side) => modifiers.includes(side)) ?? 'bottom';
 
-        const cleanup = () => {
-            if (hideTimeout) {
-                clearTimeout(hideTimeout);
-                hideTimeout = null;
-            }
-            if (autoHideTimeout) {
-                clearTimeout(autoHideTimeout);
-                autoHideTimeout = null;
-            }
-            if (tooltip) {
-                tooltip.remove();
-                tooltip = null;
-            }
+        const remove = () => {
+            clearTimeout(hideTimeout);
+            tooltip?.remove();
+            tooltip = null;
         };
 
         const hide = () => {
-            if (!tooltip) return;
+            if (! tooltip) {
+                return;
+            }
 
-            // fade + scale out
             tooltip.style.opacity = '0';
-            tooltip.style.transform = tooltip.dataset.baseTransform.replace('scale(1)', 'scale(0.95)');
-
-            hideTimeout = setTimeout(() => {
-                cleanup();
-            }, 150);
+            hideTimeout = setTimeout(remove, 150);
         };
 
         const show = () => {
-            // if something was already visible, clean it up first
-            cleanup();
+            remove();
 
             let message = '';
 
-            if (expression) {
-                try {
-                    message = evaluate(expression);
-                } catch (e) {
-                    message = expression;
-                }
-            } else {
-                message = el.getAttribute('x-tooltip') || '';
+            try {
+                message = expression ? evaluate(expression) : '';
+            } catch (e) {
+                message = expression;
             }
 
-            if (!message) return;
+            if (! message) {
+                return;
+            }
 
             tooltip = document.createElement('div');
+            tooltip.className = 'duro-tooltip';
+            tooltip.setAttribute('role', 'tooltip');
             tooltip.textContent = message;
-
-            tooltip.className = `
-                fixed z-50 px-2.5 py-1.5 text-xs rounded-lg
-                bg-shadow-900/90 text-neutralfog-200 border border-electric-500/40
-                dark:bg-shadow-900/95 dark:text-neutralfog-200 dark:border-electric-500/40
-                shadow-lg backdrop-blur-sm pointer-events-none
-                transition-all duration-150 ease-out
-            `;
-
             tooltip.style.opacity = '0';
-
             document.body.appendChild(tooltip);
 
             const rect = el.getBoundingClientRect();
-            const top = rect.top + window.scrollY;
-            const left = rect.left + window.scrollX;
-            const centerX = left + rect.width / 2;
-            const centerY = top + rect.height / 2;
+            const gap = 8;
+            const positions = {
+                top: [rect.left + rect.width / 2, rect.top - gap, 'translate(-50%, -100%)'],
+                bottom: [rect.left + rect.width / 2, rect.bottom + gap, 'translate(-50%, 0)'],
+                left: [rect.left - gap, rect.top + rect.height / 2, 'translate(-100%, -50%)'],
+                right: [rect.right + gap, rect.top + rect.height / 2, 'translate(0, -50%)'],
+            };
+            const [left, top, transform] = positions[placement];
 
-            let baseTransform = '';
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+            tooltip.style.transform = `${transform} scale(0.96)`;
 
-            switch (placement) {
-                case 'top':
-                    tooltip.style.left = `${centerX}px`;
-                    tooltip.style.top = `${top - 8}px`;
-                    baseTransform = 'translate(-50%, -100%)';
-                    break;
-
-                case 'bottom':
-                    tooltip.style.left = `${centerX}px`;
-                    tooltip.style.top = `${top + rect.height + 8}px`;
-                    baseTransform = 'translate(-50%, 0)';
-                    break;
-
-                case 'left':
-                    tooltip.style.left = `${left - 8}px`;
-                    tooltip.style.top = `${centerY}px`;
-                    baseTransform = 'translate(-100%, -50%)';
-                    break;
-
-                case 'right':
-                    tooltip.style.left = `${left + rect.width + 8}px`;
-                    tooltip.style.top = `${centerY}px`;
-                    baseTransform = 'translate(0, -50%)';
-                    break;
-            }
-
-            // store base transform for later
-            tooltip.dataset.baseTransform = baseTransform + ' scale(1)';
-
-            // start slightly scaled down
-            tooltip.style.transform = baseTransform + ' scale(0.95)';
-
-            // animate in
             requestAnimationFrame(() => {
-                tooltip.style.opacity = '1';
-                tooltip.style.transform = baseTransform + ' scale(1)';
-            });
+                if (! tooltip) {
+                    return;
+                }
 
-            // hard time limit: auto-hide after 2.5 seconds
-            autoHideTimeout = setTimeout(() => {
-                hide();
-            }, 2500);
+                tooltip.style.opacity = '1';
+                tooltip.style.transform = `${transform} scale(1)`;
+            });
         };
 
         el.addEventListener('mouseenter', show);
         el.addEventListener('mouseleave', hide);
         el.addEventListener('focus', show);
         el.addEventListener('blur', hide);
+        el.addEventListener('click', hide);
+
+        cleanup(() => {
+            remove();
+            el.removeEventListener('mouseenter', show);
+            el.removeEventListener('mouseleave', hide);
+            el.removeEventListener('focus', show);
+            el.removeEventListener('blur', hide);
+            el.removeEventListener('click', hide);
+        });
+    });
+
+    // ========== COPY TO CLIPBOARD (x-copy="text") ==========
+    Alpine.directive('copy', (el, { expression }, { evaluate }) => {
+        el.addEventListener('click', async () => {
+            const text = evaluate(expression);
+
+            try {
+                await navigator.clipboard.writeText(text);
+                window.duroToast({ title: 'Copied to clipboard', variant: 'success', timeout: 2000 });
+            } catch (e) {
+                window.duroToast({ title: 'Copy failed', body: 'Your browser blocked clipboard access.', variant: 'danger' });
+            }
+        });
     });
 
         // ========== SIMPLE MARKDOWN RENDERER ==========
     window.duroMarkdown = function (src) {
         if (!src || !src.trim()) {
-            return '<p class="text-[11px] text-neutral-500 dark:text-neutralfog-400/80">Nothing to preview yet.</p>';
+            return '<p class="text-[11px] text-ink-subtle">Nothing to preview yet.</p>';
         }
 
         // Basic escaping
@@ -220,7 +468,7 @@ document.addEventListener('alpine:init', () => {
         // Links
         html = html.replace(
             /\[(.*?)\]\((.*?)\)/gim,
-            '<a href="$2" class="text-electric-600 dark:text-electric-400 underline">$1</a>'
+            '<a href="$2" class="duro-link">$1</a>'
         );
 
         // Paragraphs & line breaks

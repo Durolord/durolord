@@ -114,28 +114,28 @@
 >
     {{-- Label --}}
     @if($label)
-        <label class="block text-xs font-medium tracking-[0.14em] uppercase text-neutral-700 dark:text-neutralfog-300">
+        <label class="duro-label">
             {{ $label }}
         </label>
     @endif
 
     {{-- Dropzone --}}
     <label
-        class="relative flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed
-               border-neutralfog-300 bg-neutralfog-100/60 px-4 py-6 text-center cursor-pointer
-               text-xs text-neutral-600 hover:border-electric-400 hover:bg-neutralfog-100
-               dark:border-shadow-700 dark:bg-shadow-950/60 dark:text-neutralfog-300
-               dark:hover:border-electric-400/80 transition-colors duration-150"
-        :class="isDragging ? 'border-electric-500 bg-neutralfog-100 dark:border-electric-400/90' : ''"
+        class="relative flex flex-col items-center justify-center gap-2 rounded-ui border-2 border-dashed
+ border-line bg-surface-2/60 px-4 py-6 text-center cursor-pointer
+               text-xs text-ink-muted hover:border-primary hover:bg-surface-2
+
+                transition-colors duration-150"
+        :class="isDragging ? 'border-primary bg-surface-2 ' : ''"
         x-on:dragover.prevent
         x-on:dragenter.prevent="isDragging = true"
         x-on:dragleave.prevent="isDragging = false"
         x-on:drop="handleDrop($event)"
     >
-        <span class="text-[11px] uppercase tracking-[0.16em] text-neutral-500 dark:text-neutralfog-400">
+        <span class="text-[11px] uppercase tracking-[0.16em] text-ink-subtle ">
             Drop files here or click to upload
         </span>
-        <span class="text-[11px] text-neutral-500 dark:text-neutralfog-400">
+        <span class="text-[11px] text-ink-subtle ">
             {{ $hint ?? 'Max 10MB per file' }}
         </span>
 
@@ -152,7 +152,7 @@
     @if($wireModelField)
         @error($wireModelField)
             <div class="inline-flex items-center gap-2 mt-1 rounded-full bg-crimson-50 px-3 py-1.5
-                        text-[11px] text-crimson-700 border border-crimson-100
+ text-[11px] text-crimson-700 border border-crimson-100
                         dark:bg-crimson-900/20 dark:text-crimson-200 dark:border-crimson-800/80">
                 <span class="inline-block h-1.5 w-1.5 rounded-full bg-crimson-500 dark:bg-crimson-300"></span>
                 <span>{{ $message }}</span>
@@ -162,13 +162,13 @@
 
     {{-- Overall upload progress --}}
     <div x-show="uploading" x-transition.opacity class="mt-2 space-y-1">
-        <div class="h-1.5 rounded-full bg-neutralfog-200/70 dark:bg-shadow-900 overflow-hidden">
+        <div class="h-1.5 rounded-full bg-surface-2/70 overflow-hidden">
             <div
-                class="h-1.5 bg-electric-500 dark:bg-electric-400 rounded-full transition-all duration-150"
+                class="h-1.5 bg-primary rounded-full transition-all duration-150"
                 :style="`width: ${overallProgress}%;`"
             ></div>
         </div>
-        <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">
+        <p class="text-[11px] text-ink-subtle ">
             Uploading… <span x-text="overallProgress"></span>%
         </p>
     </div>
@@ -177,16 +177,16 @@
     <div class="mt-4 space-y-2">
         <template x-for="file in files" :key="file.id">
             <div
-                class="flex items-center gap-3 p-2.5 rounded-lg border border-neutralfog-300/80 bg-neutralfog-100/70
-                       dark:border-shadow-800 dark:bg-shadow-950/80
-                       shadow-sm hover:shadow-md transition-shadow duration-150"
+                class="flex items-center gap-3 p-2.5 rounded-ui border border-line/80 bg-surface-2/70
+
+ shadow-sm hover:shadow-md transition-shadow duration-150"
                 x-transition.opacity.scale.duration.150ms
             >
                 {{-- Thumbnail / icon --}}
                 <div class="relative">
                     {{-- Image preview --}}
                     <template x-if="file.isImage">
-                        <div class="h-12 w-12 rounded-md overflow-hidden bg-shadow-900/40">
+                        <div class="h-12 w-12 rounded-md overflow-hidden bg-surface-3/40">
                             <img :src="file.previewUrl" alt=""
                                  class="h-full w-full object-cover">
                         </div>
@@ -195,9 +195,9 @@
                     {{-- PDF thumbnail --}}
                     <template x-if="file.isPdf">
                         <div class="h-12 w-12 flex flex-col items-center justify-center rounded-md
-                                    bg-electric-500/10 border border-electric-500/40
-                                    text-[10px] font-semibold text-electric-700
-                                    dark:bg-electric-400/10 dark:text-electric-300">
+ bg-primary/10 border border-primary/40
+                                    text-[10px] font-semibold text-primary-ink
+                                     ">
                             <span class="leading-none">PDF</span>
                             <span class="text-[9px] font-normal mt-0.5">Document</span>
                         </div>
@@ -206,8 +206,8 @@
                     {{-- Generic file icon --}}
                     <template x-if="!file.isImage && !file.isPdf">
                         <div class="h-12 w-12 flex items-center justify-center rounded-md
-                                    bg-neutralfog-200/80 dark:bg-shadow-800
-                                    text-[10px] uppercase text-neutral-600 dark:text-neutralfog-300">
+ bg-surface-2/80
+                                    text-[10px] uppercase text-ink-muted ">
                             <span x-text="(file.type.split('/')[1] || 'file').slice(0,4)"></span>
                         </div>
                     </template>
@@ -215,14 +215,14 @@
 
                 {{-- File info + individual progress --}}
                 <div class="flex-1 min-w-0 space-y-1">
-                    <p class="truncate text-xs font-medium text-neutral-800 dark:text-neutralfog-100" x-text="file.name"></p>
-                    <p class="text-[11px] text-neutral-500 dark:text-neutralfog-400">
+                    <p class="truncate text-xs font-medium text-ink " x-text="file.name"></p>
+                    <p class="text-[11px] text-ink-subtle ">
                         <span x-text="formatSize(file.size)"></span>
                     </p>
 
-                    <div class="h-1.5 rounded-full bg-neutralfog-200/70 dark:bg-shadow-900 overflow-hidden">
+                    <div class="h-1.5 rounded-full bg-surface-2/70 overflow-hidden">
                         <div
-                            class="h-1.5 bg-electric-500 dark:bg-electric-400 rounded-full transition-all duration-150"
+                            class="h-1.5 bg-primary rounded-full transition-all duration-150"
                             :style="`width: ${file.progress}%;`"
                         ></div>
                     </div>
@@ -232,7 +232,7 @@
                 <button
                     type="button"
                     class="text-[11px] px-2 py-1 rounded-md text-crimson-600 dark:text-crimson-300
-                           hover:bg-crimson-50 dark:hover:bg-crimson-900/30 transition-colors duration-150"
+ hover:bg-crimson-50 dark:hover:bg-crimson-900/30 transition-colors duration-150"
                     x-on:click="removeFile(file.id)"
                 >
                     Remove

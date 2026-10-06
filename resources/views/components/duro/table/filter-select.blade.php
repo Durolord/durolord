@@ -1,16 +1,9 @@
 @props([
     'label' => null,
     'options' => [],
+    'placeholder' => 'All',
 ])
 
-<div class="inline-flex items-center gap-1.5 text-[11px]">
-    @if($label)
-        <span class="text-neutral-600 dark:text-neutralfog-300">{{ $label }}</span>
-    @endif
-
-    <x-duro.select
-        {{ $attributes }}
-        :options="$options"
-        :placeholder="'All'"
-    />
+<div class="min-w-44">
+    <x-duro.select :label="$label" :options="$options" :placeholder="$placeholder" :searchable="false" {{ $attributes }} />
 </div>

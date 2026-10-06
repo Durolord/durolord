@@ -1,6 +1,3 @@
-<x-duro.table.cell {{ $attributes->class('w-10 text-center') }}>
-    <x-duro.checkbox
-        {{ $attributes->whereStartsWith('wire:model') }}
-        :label="false"
-    />
+<x-duro.table.cell {{ $attributes->only('class')->class('w-10') }}>
+    <input type="checkbox" class="duro-check" aria-label="Select row" {{ $attributes->except('class') }}>
 </x-duro.table.cell>

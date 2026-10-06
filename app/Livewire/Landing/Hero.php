@@ -7,6 +7,7 @@ use Livewire\Component;
 class Hero extends Component
 {
     public string $cta = 'Enter the Realm';
+
     public int $clicks = 0;
 
     public function incrementClicks(): void
