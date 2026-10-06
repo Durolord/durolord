@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="aura"><stop offset="0" stop-color="#f2d27a" stop-opacity=".55"/><stop offset="1" stop-color="#f2d27a" stop-opacity="0"/></radialGradient></defs>
+<circle cx="256" cy="210" r="210" fill="url(#aura)"/>
+<circle cx="256" cy="230" r="218" fill="none" stroke="#a8801f" stroke-width="1.5" opacity=".55"/>
+<circle cx="256" cy="230" r="232" fill="none" stroke="#a8801f" stroke-width="1" opacity=".3" stroke-dasharray="2 10"/>
+<g fill="none" stroke="#a8801f" stroke-linecap="round">
+  <g stroke-width="2.5"><path d="M256 268 Q186.7 240.3 85.7 196.1"/><path d="M256 268 Q189.8 227.2 106.6 168.6"/><path d="M256 268 Q195.4 215.0 131.3 148.0"/><path d="M256 268 Q203.2 204.1 126.2 107.2"/><path d="M256 268 Q212.9 194.8 158.7 95.5"/><path d="M256 268 Q224.2 187.6 190.6 91.7"/><path d="M256 268 Q236.7 182.7 208.6 54.7"/><path d="M256 268 Q249.9 180.3 242.2 62.6"/><path d="M256 268 Q263.3 180.4 271.1 76.8"/><path d="M256 268 Q276.5 183.1 306.3 55.5"/><path d="M256 268 Q288.9 188.2 330.2 80.5"/><path d="M256 268 Q300.1 195.6 346.6 108.1"/><path d="M256 268 Q309.6 205.0 387.8 109.4"/><path d="M256 268 Q317.2 216.1 394.2 143.4"/><path d="M256 268 Q322.6 228.4 393.0 175.5"/></g>
+  <path d="M256 470 C250 420 262 330 256 262" stroke-width="12"/>
+  <path d="M256 462 C228 470 200 480 168 482 M256 462 C284 470 312 480 344 482 M252 448 C232 452 214 462 196 474 M260 448 C280 452 298 462 316 474" stroke-width="4"/>
+</g>
+<g fill="#a8801f"><circle cx="81.7" cy="195.5" r="3"/><circle cx="102.8" cy="167.3" r="5"/><circle cx="127.8" cy="146.0" r="3"/><circle cx="123.2" cy="104.5" r="5"/><circle cx="156.3" cy="92.3" r="3"/><circle cx="188.8" cy="88.1" r="5"/><circle cx="207.5" cy="50.8" r="3"/><circle cx="241.9" cy="58.6" r="5"/><circle cx="271.5" cy="72.8" r="3"/><circle cx="307.5" cy="51.7" r="5"/><circle cx="332.1" cy="77.0" r="3"/><circle cx="349.1" cy="105.0" r="5"/><circle cx="390.8" cy="106.9" r="3"/><circle cx="397.7" cy="141.5" r="5"/><circle cx="396.8" cy="174.3" r="3"/></g>
+<path d="M256 16 L263 40 L287 47 L263 54 L256 78 L249 54 L225 47 L249 40Z" fill="#a8801f"/></svg>

@@ -5,7 +5,7 @@
         <div class="grid items-center gap-10 lg:grid-cols-[1.4fr_1fr]">
             <div class="space-y-6">
                 <x-duro.badge variant="primary" icon="sparkles">Duro UI · v1.0</x-duro.badge>
-                <h1 class="duro-display text-4xl sm:text-5xl lg:text-6xl">A component kit with five souls.</h1>
+                <h1 class="duro-display text-4xl sm:text-5xl lg:text-6xl">A component kit with many souls.</h1>
                 <p class="max-w-xl text-base leading-relaxed text-ink-muted">
                     Every component below is plain Blade + Alpine, styled by design tokens and ready for Livewire. Switch realms with the picker in the top bar and watch shapes, type and ornaments change — not just colours.
                 </p>
@@ -24,7 +24,7 @@
     {{-- Principles --}}
     <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ([
-            ['icon' => 'palette', 'title' => 'Token driven', 'body' => 'One set of semantic tokens powers five complete themes.'],
+            ['icon' => 'palette', 'title' => 'Token driven', 'body' => 'One set of semantic tokens powers sixteen light and dark themes.'],
             ['icon' => 'bolt', 'title' => 'Livewire ready', 'body' => 'wire:model works on every field, including custom pickers.'],
             ['icon' => 'shield', 'title' => 'Accessible', 'body' => 'Keyboard navigation, focus traps, ARIA roles and reduced motion.'],
             ['icon' => 'code', 'title' => 'Zero build deps', 'body' => 'Blade, Alpine and Tailwind v4 — nothing else to install.'],

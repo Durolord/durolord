@@ -13,6 +13,7 @@ class Hero extends Component
         return view('livewire.landing.hero', [
             'portfolio' => config('portfolio'),
             'themes' => config('duro.themes'),
+            'families' => config('duro.families'),
             'componentCount' => $this->componentCount(),
         ])->layout('components.layouts.site', [
             'title' => config('portfolio.name').' — '.config('portfolio.role'),

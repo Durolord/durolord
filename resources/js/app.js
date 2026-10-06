@@ -6,14 +6,27 @@ import './bootstrap';
  * Alpine is provided by Livewire, so we only register stores, data
  * components and directives once Alpine boots.
  */
-const THEME_KEY = 'duro-theme';
-
 const duroThemes = () => window.__duro?.themes ?? {};
 
-const resolveTheme = (id) => {
-    const themes = duroThemes();
+const duroFamilies = () => window.__duro?.families ?? {};
 
-    return themes[id] ? id : (window.__duro?.fallback ?? 'runic-steel');
+const systemMode = () => (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+
+const storage = {
+    get(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    },
+    set(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            // Storage can be unavailable (private mode); the theme still applies for this page.
+        }
+    },
 };
 
 const applyThemeToDocument = (id) => {
@@ -22,6 +35,7 @@ const applyThemeToDocument = (id) => {
     const isDark = theme.mode !== 'light';
 
     root.dataset.theme = id;
+    root.dataset.family = theme.family;
     root.classList.toggle('dark', isDark);
     root.style.colorScheme = isDark ? 'dark' : 'light';
 
@@ -63,38 +77,58 @@ document.addEventListener('livewire:navigated', observeReveals);
 document.addEventListener('alpine:init', () => {
     // ========== THEME STORE ==========
     Alpine.store('theme', {
-        current: resolveTheme(document.documentElement.dataset.theme),
+        family: document.documentElement.dataset.family,
+        mode: ['light', 'dark', 'system'].includes(storage.get('duro-mode')) ? storage.get('duro-mode') : 'system',
+        current: document.documentElement.dataset.theme,
+
+        init() {
+            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+                if (this.mode === 'system') {
+                    this.apply();
+                }
+            });
+        },
 
         get all() {
             return duroThemes();
+        },
+
+        get families() {
+            return duroFamilies();
         },
 
         get meta() {
             return duroThemes()[this.current] ?? {};
         },
 
+        get familyMeta() {
+            return duroFamilies()[this.family] ?? {};
+        },
+
+        get resolvedMode() {
+            return this.mode === 'system' ? systemMode() : this.mode;
+        },
+
         get isDark() {
             return this.meta.mode !== 'light';
         },
 
-        set(id, event = null) {
-            id = resolveTheme(id);
+        apply(event = null) {
+            const family = duroFamilies()[this.family] ? this.family : (window.__duro?.defaultFamily ?? 'runic');
+            const id = duroFamilies()[family][this.resolvedMode];
+
+            storage.set('duro-family', family);
+            storage.set('duro-mode', this.mode);
 
             if (id === this.current) {
                 return;
             }
 
             const commit = () => {
+                this.family = family;
                 this.current = id;
                 applyThemeToDocument(id);
-
-                try {
-                    localStorage.setItem(THEME_KEY, id);
-                } catch (e) {
-                    // Storage can be unavailable (private mode); the theme still applies for this page.
-                }
-
-                window.dispatchEvent(new CustomEvent('duro-theme-changed', { detail: { theme: id } }));
+                window.dispatchEvent(new CustomEvent('duro-theme-changed', { detail: { theme: id, family, mode: this.mode } }));
             };
 
             if (! document.startViewTransition || prefersReducedMotion()) {
@@ -107,9 +141,7 @@ document.addEventListener('alpine:init', () => {
             const y = event?.clientY ?? 0;
             const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
 
-            const transition = document.startViewTransition(commit);
-
-            transition.ready.then(() => {
+            document.startViewTransition(commit).ready.then(() => {
                 document.documentElement.animate(
                     { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
                     { duration: 650, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
@@ -117,11 +149,41 @@ document.addEventListener('alpine:init', () => {
             });
         },
 
-        next(event = null) {
-            const ids = Object.keys(duroThemes());
-            const index = ids.indexOf(this.current);
+        // Select an exact theme: adopts its family and mode.
+        set(id, event = null) {
+            const theme = duroThemes()[id];
 
-            this.set(ids[(index + 1) % ids.length], event);
+            if (! theme) {
+                return;
+            }
+
+            this.family = theme.family;
+            this.mode = theme.mode;
+            this.apply(event);
+        },
+
+        setFamily(family, event = null) {
+            if (! duroFamilies()[family]) {
+                return;
+            }
+
+            this.family = family;
+            this.apply(event);
+        },
+
+        setMode(mode, event = null) {
+            this.mode = mode;
+            this.apply(event);
+        },
+
+        toggleMode(event = null) {
+            this.setMode(this.resolvedMode === 'dark' ? 'light' : 'dark', event);
+        },
+
+        next(event = null) {
+            const ids = Object.keys(duroFamilies());
+
+            this.setFamily(ids[(ids.indexOf(this.family) + 1) % ids.length], event);
         },
     });
 
@@ -237,7 +299,9 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
 
-            if (command.theme) {
+            if (command.action === 'toggle-mode') {
+                Alpine.store('theme').toggleMode(event);
+            } else if (command.theme) {
                 Alpine.store('theme').set(command.theme, event);
             } else if (command.href) {
                 window.location.href = command.href;

@@ -23,6 +23,10 @@ class PortfolioPagesTest extends TestCase
             ->assertSee('Selected work')
             ->assertSeeLivewire('landing.contact');
 
+        foreach (config('duro.families') as $family) {
+            $response->assertSee($family['name']);
+        }
+
         foreach (config('duro.themes') as $theme) {
             $response->assertSee($theme['name']);
         }
@@ -35,6 +39,35 @@ class PortfolioPagesTest extends TestCase
             $this->assertFileExists(public_path($theme['mark']));
             $this->assertFileExists(public_path($theme['wordmark']));
             $this->assertCount(3, $theme['swatches']);
+        }
+    }
+
+    public function test_every_family_pairs_a_light_and_a_dark_theme(): void
+    {
+        $themes = config('duro.themes');
+
+        $this->assertArrayHasKey(config('duro.default_family'), config('duro.families'));
+
+        foreach (config('duro.families') as $key => $family) {
+            foreach (['light', 'dark'] as $mode) {
+                $themeKey = $family[$mode];
+
+                $this->assertArrayHasKey($themeKey, $themes, "Family [{$key}] references missing theme [{$themeKey}].");
+                $this->assertSame($mode, $themes[$themeKey]['mode'], "Theme [{$themeKey}] should be a {$mode} theme.");
+                $this->assertSame($key, $themes[$themeKey]['family'], "Theme [{$themeKey}] should belong to family [{$key}].");
+            }
+        }
+
+        $this->assertSame('runic-bronze', config('duro.families.runic.light'));
+        $this->assertSame('runic-steel', config('duro.families.runic.dark'));
+    }
+
+    public function test_every_theme_has_styles(): void
+    {
+        $css = file_get_contents(resource_path('css/app.css'));
+
+        foreach (array_keys(config('duro.themes')) as $key) {
+            $this->assertStringContainsString("[data-theme=\"{$key}\"] {", $css, "Theme [{$key}] has no token block.");
         }
     }
 

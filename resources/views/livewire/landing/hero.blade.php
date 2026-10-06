@@ -229,46 +229,63 @@
     <section id="realms" class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
         <x-duro.section-heading
             align="center"
-            eyebrow="Five realms, one codebase"
+            :eyebrow="count($families).' realms · '.count($themes).' themes'"
             title="Pick a realm. The whole site transforms."
-            description="Each theme is a full identity — palette, typography, shapes, ornaments and brand art — driven by design tokens. That same flexibility goes into the products I build for clients."
+            description="Each realm reflects a side of who I am — several are love letters to the games that shaped me. Every one ships a light and a dark mode with its own palette, typography, shapes and ornaments, all driven by design tokens."
         />
 
-        <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            @foreach ($themes as $key => $theme)
-                <button
-                    type="button"
-                    data-theme="{{ $key }}"
-                    x-on:click="$store.theme.set(@js($key), $event)"
-                    class="group relative flex flex-col overflow-hidden rounded-card border-2 bg-canvas p-5 text-left text-ink transition duration-300 hover:-translate-y-1.5"
-                    :class="$store.theme.current === @js($key) ? 'border-primary shadow-glow' : 'border-line hover:border-line-strong'"
+        <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($families as $familyKey => $family)
+                <article
+                    class="flex flex-col overflow-hidden rounded-card border-2 bg-surface transition duration-300"
+                    :class="$store.theme.family === @js($familyKey) ? 'border-primary shadow-glow' : 'border-line hover:border-line-strong'"
                     data-reveal
-                    style="--reveal-delay: {{ $loop->index * 70 }}ms"
-                    aria-label="Switch to the {{ $theme['name'] }} theme"
+                    style="--reveal-delay: {{ ($loop->index % 4) * 70 }}ms"
                 >
-                    <span class="absolute right-3 top-3 grid size-6 place-items-center rounded-full bg-primary text-on-primary transition" :class="$store.theme.current === @js($key) ? 'scale-100 opacity-100' : 'scale-50 opacity-0'">
-                        <x-duro.icon name="check" class="size-3.5" stroke="3" />
-                    </span>
+                    <div class="grid grid-cols-2">
+                        @foreach (['light', 'dark'] as $mode)
+                            @php($themeKey = $family[$mode])
+                            <button
+                                type="button"
+                                data-theme="{{ $themeKey }}"
+                                x-on:click="$store.theme.set(@js($themeKey), $event)"
+                                class="group relative flex flex-col items-center gap-2 bg-canvas px-3 pb-4 pt-5 text-center text-ink"
+                                aria-label="Switch to the {{ $themes[$themeKey]['name'] }} theme"
+                            >
+                                <span class="absolute left-2 top-2 inline-flex items-center gap-1 rounded-pill bg-surface-2 px-1.5 py-0.5 text-[0.55rem] font-semibold uppercase tracking-wider text-ink-subtle">
+                                    <x-duro.icon :name="$mode === 'light' ? 'sun' : 'moon'" class="size-2.5" /> {{ $mode }}
+                                </span>
+                                <span class="absolute right-2 top-2 grid size-5 place-items-center rounded-full bg-primary text-on-primary transition" :class="$store.theme.current === @js($themeKey) ? 'scale-100 opacity-100' : 'scale-50 opacity-0'">
+                                    <x-duro.icon name="check" class="size-3" stroke="3" />
+                                </span>
+                                <span class="duro-logo-mark mt-3 block size-16 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"></span>
+                                <span class="font-display text-sm font-bold leading-tight text-ink">{{ $themes[$themeKey]['name'] }}</span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="rounded-ui bg-primary px-2 py-0.5 font-label text-[0.55rem] font-bold uppercase tracking-wider text-on-primary">Go</span>
+                                    <span class="rounded-ui border border-line bg-surface px-2 py-0.5 text-[0.55rem] text-ink-muted">Aa</span>
+                                </span>
+                            </button>
+                        @endforeach
+                    </div>
 
-                    <span class="duro-logo-mark mx-auto my-4 block size-24 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"></span>
-
-                    <span class="font-display text-xl font-bold leading-tight text-ink">{{ $theme['name'] }}</span>
-                    <span class="mt-1 text-xs leading-snug text-ink-muted">{{ $theme['tagline'] }}</span>
-
-                    <span class="mt-5 flex items-center gap-2">
-                        <span class="rounded-ui bg-primary px-2.5 py-1 font-label text-[0.6rem] font-bold uppercase tracking-wider text-on-primary">Button</span>
-                        <span class="rounded-ui border border-line bg-surface px-2.5 py-1 text-[0.65rem] text-ink-muted">Input</span>
-                        <span class="ml-auto flex -space-x-1">
-                            @foreach ($theme['swatches'] as $swatch)
-                                <span class="size-3.5 rounded-full ring-2 ring-canvas" style="background: {{ $swatch }}"></span>
-                            @endforeach
-                        </span>
-                    </span>
-                </button>
+                    <div class="flex flex-1 flex-col gap-2 border-t border-line p-4">
+                        <div class="flex items-start justify-between gap-2">
+                            <h3 class="font-semibold text-ink">{{ $family['name'] }}</h3>
+                            @if ($family['inspiration'])
+                                <span class="shrink-0 rounded-pill border border-line px-2 py-0.5 text-[0.6rem] text-ink-subtle" title="Inspired by {{ $family['inspiration'] }}">
+                                    <x-duro.icon name="star" class="inline size-2.5" /> {{ $family['inspiration'] }}
+                                </span>
+                            @endif
+                        </div>
+                        <p class="text-xs leading-relaxed text-ink-muted">{{ $family['trait'] }}</p>
+                    </div>
+                </article>
             @endforeach
         </div>
 
-        <p class="mt-8 text-center text-xs text-ink-subtle">Tip: press <x-duro.kbd>⌘</x-duro.kbd> <x-duro.kbd>K</x-duro.kbd> inside the UI kit to switch realms from the command palette.</p>
+        <p class="mt-8 text-center text-xs text-ink-subtle">
+            Tip: the <x-duro.icon name="sun" class="inline size-3.5" /> button in the header flips between light and dark, and <x-duro.kbd>⌘</x-duro.kbd> <x-duro.kbd>K</x-duro.kbd> in the UI kit jumps straight to any theme.
+        </p>
     </section>
 
     {{-- ============================================================

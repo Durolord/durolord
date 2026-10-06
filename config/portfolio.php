@@ -79,8 +79,8 @@ return [
         [
             'title' => 'Duro UI Kit',
             'category' => 'Design System',
-            'summary' => 'A Filament-inspired Blade component library with forms, tables, overlays and five complete visual themes.',
-            'outcomes' => ['40+ components', '5 swappable themes', 'Livewire-ready APIs'],
+            'summary' => 'A Filament-inspired Blade component library with forms, tables, overlays and sixteen light and dark themes.',
+            'outcomes' => ['40+ components', '16 swappable themes', 'Livewire-ready APIs'],
             'stack' => ['Blade', 'Alpine.js', 'Tailwind v4'],
             'route' => 'showcase',
             'icon' => 'palette',

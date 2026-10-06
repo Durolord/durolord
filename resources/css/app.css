@@ -527,19 +527,19 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.3 0 0 0 0 0.15 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  [data-theme="neon-circuit"] .duro-backdrop::before {
+  [data-family="neon"] .duro-backdrop::before {
     background-image:
-      linear-gradient(oklch(0.6 0.25 292 / 0.12) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.6 0.25 292 / 0.12) 1px, transparent 1px);
+      linear-gradient(color-mix(in oklab, var(--duro-accent) 12%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--duro-accent) 12%, transparent) 1px, transparent 1px);
     background-size: 48px 48px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 75%);
   }
 
-  [data-theme="neon-circuit"] .duro-backdrop::after {
+  [data-family="neon"] .duro-backdrop::after {
     background:
-      radial-gradient(40rem 28rem at 85% 10%, oklch(0.6 0.25 292 / 0.28), transparent 60%),
-      radial-gradient(36rem 26rem at 5% 30%, oklch(0.86 0.14 200 / 0.14), transparent 60%),
-      radial-gradient(50rem 30rem at 50% 120%, oklch(0.6 0.25 292 / 0.2), transparent 60%);
+      radial-gradient(40rem 28rem at 85% 10%, color-mix(in oklab, var(--duro-accent) 28%, transparent), transparent 60%),
+      radial-gradient(36rem 26rem at 5% 30%, color-mix(in oklab, var(--duro-primary) 14%, transparent), transparent 60%),
+      radial-gradient(50rem 30rem at 50% 120%, color-mix(in oklab, var(--duro-accent) 20%, transparent), transparent 60%);
   }
 
   [data-theme="ink-quill"] .duro-backdrop::before {
@@ -603,15 +603,15 @@
     filter: drop-shadow(0 2px 0 oklch(1 0 0 / 0.8)) drop-shadow(0 4px 10px oklch(0.4 0.08 50 / 0.3));
   }
 
-  [data-theme="neon-circuit"] .duro-display {
+  [data-family="neon"] .duro-display {
     color: var(--duro-primary);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-weight: 800;
     text-shadow:
-      0 0 6px oklch(0.86 0.14 200 / 0.8),
-      0 0 22px oklch(0.86 0.14 200 / 0.45),
-      0 0 46px oklch(0.6 0.25 292 / 0.6);
+      0 0 6px color-mix(in oklab, var(--duro-primary) 80%, transparent),
+      0 0 22px color-mix(in oklab, var(--duro-primary) 45%, transparent),
+      0 0 46px color-mix(in oklab, var(--duro-accent) 60%, transparent);
   }
 
   [data-theme="ink-quill"] .duro-display {
@@ -639,13 +639,13 @@
     letter-spacing: -0.005em;
   }
 
-  [data-theme="neon-circuit"] .duro-heading,
+  [data-family="neon"] .duro-heading,
   [data-theme="crimson-codex"] .duro-heading {
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
 
-  [data-theme="neon-circuit"] .duro-heading { font-size: 0.92em; }
+  [data-family="neon"] .duro-heading { font-size: 0.92em; }
   [data-theme="ink-quill"] .duro-heading { font-weight: 800; letter-spacing: -0.02em; }
 
   .duro-eyebrow {
@@ -668,7 +668,7 @@
     opacity: 0.7;
   }
 
-  [data-theme="neon-circuit"] .duro-eyebrow::before { height: 2px; box-shadow: 0 0 8px currentColor; }
+  [data-family="neon"] .duro-eyebrow::before { height: 2px; box-shadow: 0 0 8px currentColor; }
   [data-theme="ink-quill"] .duro-eyebrow::before { height: 3px; border-radius: 99px; }
   [data-theme="crimson-codex"] .duro-eyebrow::before { width: 0.7rem; height: 0.7rem; background: var(--duro-primary); clip-path: polygon(0 0, 100% 0, 0 100%); opacity: 1; }
 
@@ -817,22 +817,22 @@
   }
 
   /* Neon circuit — chamfered, glowing, uppercase */
-  [data-theme="neon-circuit"] .duro-btn {
+  [data-family="neon"] .duro-btn {
     font-family: var(--duro-font-label);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-size: 0.72rem;
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
   }
-  [data-theme="neon-circuit"] .duro-btn-lg,
-  [data-theme="neon-circuit"] .duro-btn-xl { font-size: 0.8rem; }
-  [data-theme="neon-circuit"] .duro-btn-primary {
-    background: linear-gradient(90deg, oklch(0.86 0.14 200), oklch(0.78 0.15 230));
-    box-shadow: 0 0 24px oklch(0.86 0.14 200 / 0.45);
+  [data-family="neon"] .duro-btn-lg,
+  [data-family="neon"] .duro-btn-xl { font-size: 0.8rem; }
+  [data-family="neon"] .duro-btn-primary {
+    background: linear-gradient(90deg, var(--duro-primary), color-mix(in oklab, var(--duro-primary) 70%, var(--duro-accent)));
+    box-shadow: 0 0 24px color-mix(in oklab, var(--duro-primary) 45%, transparent);
   }
-  [data-theme="neon-circuit"] .duro-btn-primary:hover:not(:disabled) { filter: brightness(1.1); box-shadow: 0 0 32px oklch(0.86 0.14 200 / 0.7); }
-  [data-theme="neon-circuit"] .duro-btn-secondary { background: oklch(0.6 0.25 292 / 0.14); border-color: oklch(0.6 0.25 292 / 0.6); }
-  [data-theme="neon-circuit"] .duro-btn-outline { border-color: var(--duro-primary); box-shadow: inset 0 0 14px oklch(0.86 0.14 200 / 0.2); }
+  [data-family="neon"] .duro-btn-primary:hover:not(:disabled) { filter: brightness(1.1); box-shadow: 0 0 32px color-mix(in oklab, var(--duro-primary) 70%, transparent); }
+  [data-family="neon"] .duro-btn-secondary { background: color-mix(in oklab, var(--duro-accent) 14%, transparent); border-color: color-mix(in oklab, var(--duro-accent) 60%, transparent); }
+  [data-family="neon"] .duro-btn-outline { border-color: var(--duro-primary); box-shadow: inset 0 0 14px color-mix(in oklab, var(--duro-primary) 20%, transparent); }
 
   /* Ink & quill — outlined with a hard offset shadow */
   [data-theme="ink-quill"] .duro-btn {
@@ -914,13 +914,13 @@
     background: linear-gradient(180deg, oklch(0.99 0.006 85), var(--duro-surface));
   }
 
-  [data-theme="neon-circuit"] .duro-card {
-    background: linear-gradient(180deg, oklch(0.19 0.065 284 / 0.92), oklch(0.16 0.05 283 / 0.92));
-    border-color: oklch(0.6 0.25 292 / 0.35);
+  [data-family="neon"] .duro-card {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--duro-surface-2) 92%, transparent), color-mix(in oklab, var(--duro-surface) 92%, transparent));
+    border-color: color-mix(in oklab, var(--duro-accent) 35%, transparent);
   }
 
-  [data-theme="neon-circuit"] .duro-card::before,
-  [data-theme="neon-circuit"] .duro-card::after {
+  [data-family="neon"] .duro-card::before,
+  [data-family="neon"] .duro-card::after {
     content: "";
     position: absolute;
     width: 14px;
@@ -931,9 +931,9 @@
     filter: drop-shadow(0 0 4px var(--duro-primary));
     opacity: 0.85;
   }
-  [data-theme="neon-circuit"] .duro-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
-  [data-theme="neon-circuit"] .duro-card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
-  [data-theme="neon-circuit"] .duro-card-interactive:hover { border-color: oklch(0.86 0.14 200 / 0.6); }
+  [data-family="neon"] .duro-card::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  [data-family="neon"] .duro-card::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+  [data-family="neon"] .duro-card-interactive:hover { border-color: color-mix(in oklab, var(--duro-primary) 60%, transparent); }
 
   [data-theme="ink-quill"] .duro-card { border-color: var(--duro-ink); }
   [data-theme="ink-quill"] .duro-card-flat { border-color: var(--duro-line); border-width: 1px; }
@@ -991,7 +991,7 @@
   }
 
   [data-theme="ink-quill"] .duro-label { letter-spacing: 0.06em; color: var(--duro-ink); }
-  [data-theme="neon-circuit"] .duro-label { font-size: 0.62rem; color: var(--duro-primary-ink); }
+  [data-family="neon"] .duro-label { font-size: 0.62rem; color: var(--duro-primary-ink); }
 
   .duro-hint { font-size: 0.72rem; color: var(--duro-ink-subtle); }
   .duro-error { font-size: 0.72rem; color: var(--duro-danger); font-weight: 500; }
@@ -1059,11 +1059,11 @@
   [data-theme="ink-quill"] .duro-field.is-open,
   [data-theme="ink-quill"] .duro-control:focus { box-shadow: 3px 3px 0 0 var(--duro-primary); border-color: var(--duro-ink); }
 
-  [data-theme="neon-circuit"] .duro-field,
-  [data-theme="neon-circuit"] .duro-control { background: oklch(0.14 0.05 282 / 0.85); border-color: oklch(0.6 0.25 292 / 0.4); }
-  [data-theme="neon-circuit"] .duro-field:focus-within,
-  [data-theme="neon-circuit"] .duro-field.is-open,
-  [data-theme="neon-circuit"] .duro-control:focus { box-shadow: 0 0 0 1px var(--duro-primary), 0 0 18px oklch(0.86 0.14 200 / 0.35); }
+  [data-family="neon"] .duro-field,
+  [data-family="neon"] .duro-control { background: color-mix(in oklab, var(--duro-surface-2) 85%, transparent); border-color: color-mix(in oklab, var(--duro-accent) 40%, transparent); }
+  [data-family="neon"] .duro-field:focus-within,
+  [data-family="neon"] .duro-field.is-open,
+  [data-family="neon"] .duro-control:focus { box-shadow: 0 0 0 1px var(--duro-primary), 0 0 18px color-mix(in oklab, var(--duro-primary) 35%, transparent); }
 
   [data-theme="crimson-codex"] .duro-field:focus-within,
   [data-theme="crimson-codex"] .duro-field.is-open,
@@ -1099,7 +1099,7 @@
   .duro-check:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--duro-primary) 30%, transparent); }
   .duro-check:hover:not(:checked) { border-color: var(--duro-primary); }
   [data-theme="ink-quill"] .duro-check { border-color: var(--duro-ink); }
-  [data-theme="neon-circuit"] .duro-check:checked { box-shadow: 0 0 10px var(--duro-primary); }
+  [data-family="neon"] .duro-check:checked { box-shadow: 0 0 10px var(--duro-primary); }
 
   /* Switch */
   .duro-switch {
@@ -1126,9 +1126,9 @@
   }
   .duro-switch[aria-checked="true"] { background: var(--duro-primary); border-color: var(--duro-primary); }
   .duro-switch[aria-checked="true"] .duro-switch-thumb { transform: translateX(1.2rem); background: var(--duro-on-primary); }
-  [data-theme="neon-circuit"] .duro-switch,
-  [data-theme="neon-circuit"] .duro-switch-thumb { border-radius: 2px; }
-  [data-theme="neon-circuit"] .duro-switch[aria-checked="true"] { box-shadow: 0 0 14px var(--duro-primary); }
+  [data-family="neon"] .duro-switch,
+  [data-family="neon"] .duro-switch-thumb { border-radius: 2px; }
+  [data-family="neon"] .duro-switch[aria-checked="true"] { box-shadow: 0 0 14px var(--duro-primary); }
   [data-theme="crimson-codex"] .duro-switch,
   [data-theme="crimson-codex"] .duro-switch-thumb { border-radius: 0; }
   [data-theme="ink-quill"] .duro-switch { border-color: var(--duro-ink); }
@@ -1144,7 +1144,7 @@
   }
 
   [data-theme="ink-quill"] .duro-panel { border-color: var(--duro-ink); }
-  [data-theme="neon-circuit"] .duro-panel { background: oklch(0.16 0.055 283 / 0.97); border-color: oklch(0.6 0.25 292 / 0.5); backdrop-filter: blur(10px); }
+  [data-family="neon"] .duro-panel { background: color-mix(in oklab, var(--duro-surface) 97%, transparent); border-color: color-mix(in oklab, var(--duro-accent) 50%, transparent); backdrop-filter: blur(10px); }
 
   .duro-menu-item {
     display: flex;
@@ -1239,7 +1239,7 @@
     overflow: hidden;
   }
   [data-theme="ink-quill"] .duro-table-wrap { border-color: var(--duro-ink); box-shadow: var(--duro-shadow-card); }
-  [data-theme="neon-circuit"] .duro-table-wrap { border-color: oklch(0.6 0.25 292 / 0.4); }
+  [data-family="neon"] .duro-table-wrap { border-color: color-mix(in oklab, var(--duro-accent) 40%, transparent); }
 
   .duro-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
   .duro-table thead th {
@@ -1291,7 +1291,7 @@
   }
   .duro-tab:hover { color: var(--duro-ink); }
   .duro-tab[aria-selected="true"] { background: var(--duro-surface); color: var(--duro-ink); box-shadow: 0 1px 3px oklch(0 0 0 / 0.2); }
-  [data-theme="neon-circuit"] .duro-tab[aria-selected="true"] { color: var(--duro-primary); box-shadow: inset 0 -2px 0 var(--duro-primary); background: oklch(0.86 0.14 200 / 0.08); }
+  [data-family="neon"] .duro-tab[aria-selected="true"] { color: var(--duro-primary); box-shadow: inset 0 -2px 0 var(--duro-primary); background: color-mix(in oklab, var(--duro-primary) 8%, transparent); }
   [data-theme="ink-quill"] .duro-tabs { border-color: var(--duro-ink); }
   [data-theme="ink-quill"] .duro-tab[aria-selected="true"] { background: var(--duro-ink); color: var(--duro-surface); box-shadow: none; }
   [data-theme="crimson-codex"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
@@ -1333,7 +1333,7 @@
     transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
   [data-theme="crimson-codex"] .duro-progress,
-  [data-theme="neon-circuit"] .duro-progress { border-radius: 0; }
+  [data-family="neon"] .duro-progress { border-radius: 0; }
   [data-theme="ink-quill"] .duro-progress { border: 2px solid var(--duro-ink); height: 0.75rem; background: var(--duro-surface); }
 
   .duro-skeleton {
@@ -1359,7 +1359,7 @@
     box-shadow: 0 0 0 1px var(--duro-line);
   }
   [data-theme="crimson-codex"] .duro-avatar,
-  [data-theme="neon-circuit"] .duro-avatar { border-radius: var(--duro-radius-ui); }
+  [data-family="neon"] .duro-avatar { border-radius: var(--duro-radius-ui); }
   [data-theme="ink-quill"] .duro-avatar { box-shadow: 0 0 0 2px var(--duro-ink); }
 
   .duro-icon-tile {
@@ -1373,7 +1373,7 @@
     border: 1px solid color-mix(in oklab, var(--duro-primary) 35%, transparent);
   }
   [data-theme="runic-steel"] .duro-icon-tile { box-shadow: 0 0 18px -4px oklch(0.7 0.16 248 / 0.55) inset; }
-  [data-theme="neon-circuit"] .duro-icon-tile { box-shadow: 0 0 16px oklch(0.86 0.14 200 / 0.35); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
+  [data-family="neon"] .duro-icon-tile { box-shadow: 0 0 16px color-mix(in oklab, var(--duro-primary) 35%, transparent); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); }
   [data-theme="ink-quill"] .duro-icon-tile { border: 2px solid var(--duro-ink); background: color-mix(in oklab, var(--duro-primary) 10%, var(--duro-surface)); box-shadow: 2px 2px 0 var(--duro-ink); }
   [data-theme="crimson-codex"] .duro-icon-tile { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
 
@@ -1425,12 +1425,12 @@
     border-radius: var(--duro-radius-ui);
     border: 1px solid oklch(0.28 0.014 260);
   }
-  [data-theme="neon-circuit"] .duro-code { background: oklch(0.11 0.04 282); border-color: oklch(0.6 0.25 292 / 0.35); }
+  [data-family="neon"] .duro-code { background: oklch(0.11 0.04 282); border-color: color-mix(in oklab, var(--duro-accent) 35%, transparent); }
   [data-theme="crimson-codex"] .duro-code { background: oklch(0.09 0.003 20); }
   [data-theme="ink-quill"] .duro-code { background: oklch(0.19 0.01 20); border: 2px solid var(--duro-ink); }
 
   /* Neon sign flicker for decorative text */
-  [data-theme="neon-circuit"] .duro-flicker { animation: duro-flicker 6s infinite; }
+  [data-family="neon"] .duro-flicker { animation: duro-flicker 6s infinite; }
 
   /* Reveal on scroll */
   [data-reveal] {
@@ -1523,4 +1523,1010 @@
   }
 
   [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* =====================================================================
+   REALM FAMILIES — additional light/dark themes
+   ---------------------------------------------------------------------
+   Tokens per theme ([data-theme]) and shared shape language per family
+   ([data-family]). Runic, Neon and Codex families reuse the blocks above.
+   ===================================================================== */
+
+/* ---------- Neon Daylight (light pair of Neon Circuit) ---------- */
+[data-theme="neon-daylight"] {
+  color-scheme: light;
+  --duro-font-display: "Orbitron", "Audiowide", sans-serif;
+  --duro-font-label: "Orbitron", sans-serif;
+  --duro-font-sans: "Exo 2", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "Share Tech Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.972 0.012 285);
+  --duro-canvas-alt: oklch(0.945 0.02 285);
+  --duro-surface: oklch(0.992 0.005 285);
+  --duro-surface-2: oklch(0.962 0.014 285);
+  --duro-surface-3: oklch(0.93 0.022 285);
+  --duro-line: oklch(0.87 0.04 285);
+  --duro-line-strong: oklch(0.62 0.12 288);
+  --duro-ink: oklch(0.21 0.08 280);
+  --duro-ink-muted: oklch(0.42 0.07 280);
+  --duro-ink-subtle: oklch(0.56 0.06 280);
+
+  --duro-primary: oklch(0.62 0.12 210);
+  --duro-primary-hover: oklch(0.55 0.12 212);
+  --duro-primary-ink: oklch(0.5 0.11 213);
+  --duro-on-primary: oklch(0.99 0.005 210);
+  --duro-accent: oklch(0.55 0.24 292);
+  --duro-accent-ink: oklch(0.48 0.22 292);
+  --duro-on-accent: oklch(0.99 0.005 290);
+
+  --duro-success: oklch(0.55 0.15 155);
+  --duro-warning: oklch(0.68 0.15 75);
+  --duro-danger: oklch(0.56 0.22 15);
+  --duro-info: oklch(0.55 0.12 220);
+
+  --duro-radius-ui: 0.2rem;
+  --duro-radius-card: 0.35rem;
+  --duro-radius-pill: 0.15rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 0 0 1px oklch(0.55 0.24 292 / 0.12), 0 18px 40px -24px oklch(0.55 0.24 292 / 0.35);
+  --duro-shadow-pop: 0 0 0 1px oklch(0.62 0.12 210 / 0.3), 0 24px 50px -20px oklch(0.55 0.24 292 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.62 0.12 210 / 0.6), 0 0 18px oklch(0.62 0.12 210 / 0.35);
+  --duro-glow: oklch(0.7 0.13 205);
+
+  --duro-p-h: 210; --duro-p-c: 0.12;
+  --duro-a-h: 292; --duro-a-c: 0.22;
+  --duro-t-h: 285; --duro-t-c: 0.02;
+
+  --duro-logo-mark: url("/images/brand/neon-circuit-mark.webp");
+  --duro-hero-art: url("/images/brand/neon-circuit-word.webp");
+  --duro-wordmark: url("/images/brand/neon-circuit-word.webp");
+  --duro-ornament: "◇ ─ ◆ ─ ◇";
+}
+
+/* ---------- Faerûn Grimoire — Gilded Grimoire (light) ---------- */
+[data-theme="gilded-grimoire"] {
+  color-scheme: light;
+  --duro-font-display: "Cinzel Decorative", "Cinzel", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.955 0.02 85);
+  --duro-canvas-alt: oklch(0.93 0.028 82);
+  --duro-surface: oklch(0.985 0.01 85);
+  --duro-surface-2: oklch(0.952 0.02 82);
+  --duro-surface-3: oklch(0.915 0.03 80);
+  --duro-line: oklch(0.84 0.04 78);
+  --duro-line-strong: oklch(0.62 0.08 72);
+  --duro-ink: oklch(0.25 0.06 320);
+  --duro-ink-muted: oklch(0.42 0.05 320);
+  --duro-ink-subtle: oklch(0.56 0.04 320);
+
+  --duro-primary: oklch(0.62 0.12 78);
+  --duro-primary-hover: oklch(0.56 0.12 75);
+  --duro-primary-ink: oklch(0.5 0.11 72);
+  --duro-on-primary: oklch(0.99 0.01 85);
+  --duro-accent: oklch(0.45 0.17 305);
+  --duro-accent-ink: oklch(0.42 0.17 305);
+  --duro-on-accent: oklch(0.99 0.005 305);
+
+  --duro-success: oklch(0.52 0.12 155);
+  --duro-warning: oklch(0.64 0.14 70);
+  --duro-danger: oklch(0.52 0.19 25);
+  --duro-info: oklch(0.48 0.13 300);
+
+  --duro-radius-ui: 0.3rem;
+  --duro-radius-card: 0.5rem;
+  --duro-radius-pill: 0.25rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.8) inset, 0 16px 34px -24px oklch(0.3 0.12 305 / 0.45);
+  --duro-shadow-pop: 0 22px 48px -20px oklch(0.3 0.12 305 / 0.4), 0 0 0 1px oklch(0.62 0.12 78 / 0.4);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.62 0.12 78 / 0.6), 0 8px 28px -8px oklch(0.62 0.12 78 / 0.55);
+  --duro-glow: oklch(0.78 0.13 80);
+
+  --duro-p-h: 78; --duro-p-c: 0.12;
+  --duro-a-h: 305; --duro-a-c: 0.17;
+  --duro-t-h: 80; --duro-t-c: 0.02;
+
+  --duro-logo-mark: url("/images/brand/gilded-grimoire-mark.svg");
+  --duro-hero-art: url("/images/brand/gilded-grimoire-mark.svg");
+  --duro-wordmark: url("/images/brand/gilded-grimoire-mark.svg");
+  --duro-ornament: "✧ ✦ ✧";
+}
+
+/* ---------- Faerûn Grimoire — Illithid (dark) ---------- */
+[data-theme="illithid"] {
+  color-scheme: dark;
+  --duro-font-display: "Cinzel Decorative", "Cinzel", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "Alegreya Sans", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.14 0.03 310);
+  --duro-canvas-alt: oklch(0.16 0.036 310);
+  --duro-surface: oklch(0.185 0.04 310);
+  --duro-surface-2: oklch(0.215 0.046 310);
+  --duro-surface-3: oklch(0.26 0.056 310);
+  --duro-line: oklch(0.32 0.06 310);
+  --duro-line-strong: oklch(0.55 0.09 82);
+  --duro-ink: oklch(0.94 0.025 85);
+  --duro-ink-muted: oklch(0.77 0.03 300);
+  --duro-ink-subtle: oklch(0.58 0.04 300);
+
+  --duro-primary: oklch(0.83 0.11 85);
+  --duro-primary-hover: oklch(0.88 0.1 88);
+  --duro-primary-ink: oklch(0.85 0.1 85);
+  --duro-on-primary: oklch(0.17 0.03 310);
+  --duro-accent: oklch(0.65 0.2 300);
+  --duro-accent-ink: oklch(0.75 0.16 300);
+  --duro-on-accent: oklch(0.99 0.005 300);
+
+  --duro-success: oklch(0.74 0.14 155);
+  --duro-warning: oklch(0.82 0.13 80);
+  --duro-danger: oklch(0.66 0.2 20);
+  --duro-info: oklch(0.74 0.15 300);
+
+  --duro-radius-ui: 0.3rem;
+  --duro-radius-card: 0.5rem;
+  --duro-radius-pill: 0.25rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.05) inset, 0 22px 44px -26px oklch(0 0 0 / 0.9);
+  --duro-shadow-pop: 0 24px 60px -18px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.83 0.11 85 / 0.3);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.65 0.2 300 / 0.6), 0 0 30px -4px oklch(0.65 0.2 300 / 0.6);
+  --duro-glow: oklch(0.65 0.2 300);
+
+  --duro-p-h: 85; --duro-p-c: 0.11;
+  --duro-a-h: 300; --duro-a-c: 0.2;
+  --duro-t-h: 310; --duro-t-c: 0.035;
+
+  --duro-logo-mark: url("/images/brand/illithid-mark.svg");
+  --duro-hero-art: url("/images/brand/illithid-mark.svg");
+  --duro-wordmark: url("/images/brand/illithid-mark.svg");
+  --duro-ornament: "✧ ✦ ✧";
+}
+
+/* ---------- Lands Between — Erdtree (light) ---------- */
+[data-theme="erdtree"] {
+  color-scheme: light;
+  --duro-font-display: "Cormorant Garamond", "Cormorant", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "Spectral", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.955 0.016 92);
+  --duro-canvas-alt: oklch(0.93 0.022 90);
+  --duro-surface: oklch(0.982 0.01 92);
+  --duro-surface-2: oklch(0.952 0.018 90);
+  --duro-surface-3: oklch(0.92 0.026 88);
+  --duro-line: oklch(0.86 0.03 88);
+  --duro-line-strong: oklch(0.66 0.07 82);
+  --duro-ink: oklch(0.26 0.03 85);
+  --duro-ink-muted: oklch(0.44 0.03 85);
+  --duro-ink-subtle: oklch(0.58 0.03 85);
+
+  --duro-primary: oklch(0.66 0.12 82);
+  --duro-primary-hover: oklch(0.6 0.12 80);
+  --duro-primary-ink: oklch(0.52 0.1 78);
+  --duro-on-primary: oklch(0.99 0.01 90);
+  --duro-accent: oklch(0.52 0.045 150);
+  --duro-accent-ink: oklch(0.44 0.045 150);
+  --duro-on-accent: oklch(0.99 0.005 150);
+
+  --duro-success: oklch(0.52 0.1 150);
+  --duro-warning: oklch(0.66 0.13 75);
+  --duro-danger: oklch(0.52 0.16 30);
+  --duro-info: oklch(0.52 0.06 230);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0.15rem;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 18px 40px -30px oklch(0.45 0.08 80 / 0.5);
+  --duro-shadow-pop: 0 22px 50px -20px oklch(0.45 0.08 80 / 0.45), 0 0 0 1px oklch(0.66 0.12 82 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.66 0.12 82 / 0.6), 0 0 26px -2px oklch(0.8 0.12 85 / 0.7);
+  --duro-glow: oklch(0.82 0.12 85);
+
+  --duro-p-h: 82; --duro-p-c: 0.12;
+  --duro-a-h: 150; --duro-a-c: 0.045;
+  --duro-t-h: 88; --duro-t-c: 0.02;
+
+  --duro-logo-mark: url("/images/brand/erdtree-mark.svg");
+  --duro-hero-art: url("/images/brand/erdtree-mark.svg");
+  --duro-wordmark: url("/images/brand/erdtree-mark.svg");
+  --duro-ornament: "✦";
+}
+
+/* ---------- Lands Between — Tarnished (dark) ---------- */
+[data-theme="tarnished"] {
+  color-scheme: dark;
+  --duro-font-display: "Cormorant Garamond", "Cormorant", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "Spectral", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.13 0.008 85);
+  --duro-canvas-alt: oklch(0.15 0.01 85);
+  --duro-surface: oklch(0.17 0.012 85);
+  --duro-surface-2: oklch(0.2 0.014 85);
+  --duro-surface-3: oklch(0.245 0.018 85);
+  --duro-line: oklch(0.3 0.02 85);
+  --duro-line-strong: oklch(0.5 0.06 85);
+  --duro-ink: oklch(0.92 0.03 90);
+  --duro-ink-muted: oklch(0.74 0.03 88);
+  --duro-ink-subtle: oklch(0.56 0.03 88);
+
+  --duro-primary: oklch(0.8 0.13 85);
+  --duro-primary-hover: oklch(0.86 0.12 88);
+  --duro-primary-ink: oklch(0.83 0.12 86);
+  --duro-on-primary: oklch(0.15 0.01 85);
+  --duro-accent: oklch(0.62 0.045 150);
+  --duro-accent-ink: oklch(0.74 0.045 150);
+  --duro-on-accent: oklch(0.15 0.01 85);
+
+  --duro-success: oklch(0.72 0.11 150);
+  --duro-warning: oklch(0.82 0.13 80);
+  --duro-danger: oklch(0.64 0.18 28);
+  --duro-info: oklch(0.74 0.06 230);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0.15rem;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 24px 50px -30px oklch(0 0 0 / 0.95);
+  --duro-shadow-pop: 0 24px 60px -20px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.8 0.13 85 / 0.3);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.8 0.13 85 / 0.6), 0 0 30px -4px oklch(0.8 0.13 85 / 0.55);
+  --duro-glow: oklch(0.8 0.13 85);
+
+  --duro-p-h: 85; --duro-p-c: 0.13;
+  --duro-a-h: 150; --duro-a-c: 0.045;
+  --duro-t-h: 85; --duro-t-c: 0.012;
+
+  --duro-logo-mark: url("/images/brand/tarnished-mark.svg");
+  --duro-hero-art: url("/images/brand/tarnished-mark.svg");
+  --duro-wordmark: url("/images/brand/tarnished-mark.svg");
+  --duro-ornament: "✦";
+}
+
+/* ---------- Night City — Corpo (light) ---------- */
+[data-theme="corpo"] {
+  color-scheme: light;
+  --duro-font-display: "Oxanium", "Rajdhani", sans-serif;
+  --duro-font-label: "Oxanium", sans-serif;
+  --duro-font-sans: "Rajdhani", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "Share Tech Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.93 0.004 100);
+  --duro-canvas-alt: oklch(0.9 0.006 100);
+  --duro-surface: oklch(0.972 0.003 100);
+  --duro-surface-2: oklch(0.945 0.004 100);
+  --duro-surface-3: oklch(0.905 0.006 100);
+  --duro-line: oklch(0.8 0.008 100);
+  --duro-line-strong: oklch(0.22 0 0);
+  --duro-ink: oklch(0.17 0 0);
+  --duro-ink-muted: oklch(0.38 0 0);
+  --duro-ink-subtle: oklch(0.54 0 0);
+
+  --duro-primary: oklch(0.57 0.22 18);
+  --duro-primary-hover: oklch(0.51 0.21 18);
+  --duro-primary-ink: oklch(0.5 0.21 18);
+  --duro-on-primary: oklch(0.99 0 0);
+  --duro-accent: oklch(0.9 0.18 105);
+  --duro-accent-ink: oklch(0.48 0.1 100);
+  --duro-on-accent: oklch(0.16 0 0);
+
+  --duro-success: oklch(0.55 0.14 155);
+  --duro-warning: oklch(0.7 0.16 85);
+  --duro-danger: oklch(0.55 0.22 18);
+  --duro-info: oklch(0.55 0.12 210);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 oklch(1 0 0 / 0.8) inset, 0 14px 30px -24px oklch(0 0 0 / 0.45);
+  --duro-shadow-pop: 0 20px 44px -18px oklch(0 0 0 / 0.35), 0 0 0 1px oklch(0.22 0 0 / 0.6);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.57 0.22 18 / 0.7), 4px 4px 0 oklch(0.9 0.18 105);
+  --duro-glow: oklch(0.57 0.22 18);
+
+  --duro-p-h: 18; --duro-p-c: 0.22;
+  --duro-a-h: 105; --duro-a-c: 0.18;
+  --duro-t-h: 100; --duro-t-c: 0.004;
+
+  --duro-logo-mark: url("/images/brand/corpo-mark.svg");
+  --duro-hero-art: url("/images/brand/corpo-mark.svg");
+  --duro-wordmark: url("/images/brand/corpo-mark.svg");
+  --duro-ornament: "// ─ //";
+}
+
+/* ---------- Night City — Night City (dark) ---------- */
+[data-theme="night-city"] {
+  color-scheme: dark;
+  --duro-font-display: "Oxanium", "Rajdhani", sans-serif;
+  --duro-font-label: "Oxanium", sans-serif;
+  --duro-font-sans: "Rajdhani", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "Share Tech Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.11 0.005 280);
+  --duro-canvas-alt: oklch(0.135 0.008 280);
+  --duro-surface: oklch(0.155 0.01 280);
+  --duro-surface-2: oklch(0.185 0.012 280);
+  --duro-surface-3: oklch(0.23 0.015 280);
+  --duro-line: oklch(0.3 0.02 280);
+  --duro-line-strong: oklch(0.6 0.13 105);
+  --duro-ink: oklch(0.96 0.03 105);
+  --duro-ink-muted: oklch(0.77 0.03 105);
+  --duro-ink-subtle: oklch(0.57 0.02 280);
+
+  --duro-primary: oklch(0.93 0.2 106);
+  --duro-primary-hover: oklch(0.96 0.17 106);
+  --duro-primary-ink: oklch(0.93 0.19 106);
+  --duro-on-primary: oklch(0.12 0 0);
+  --duro-accent: oklch(0.88 0.15 195);
+  --duro-accent-ink: oklch(0.88 0.15 195);
+  --duro-on-accent: oklch(0.12 0 0);
+
+  --duro-success: oklch(0.85 0.18 150);
+  --duro-warning: oklch(0.93 0.2 106);
+  --duro-danger: oklch(0.65 0.25 10);
+  --duro-info: oklch(0.88 0.15 195);
+
+  --duro-radius-ui: 0;
+  --duro-radius-card: 0;
+  --duro-radius-pill: 0;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 24px 50px -30px oklch(0 0 0 / 0.95);
+  --duro-shadow-pop: 0 24px 60px -20px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.93 0.2 106 / 0.35);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.93 0.2 106 / 0.75), 0 0 24px -2px oklch(0.93 0.2 106 / 0.55);
+  --duro-glow: oklch(0.93 0.2 106);
+
+  --duro-p-h: 106; --duro-p-c: 0.2;
+  --duro-a-h: 195; --duro-a-c: 0.15;
+  --duro-t-h: 280; --duro-t-c: 0.01;
+
+  --duro-logo-mark: url("/images/brand/night-city-mark.svg");
+  --duro-hero-art: url("/images/brand/night-city-mark.svg");
+  --duro-wordmark: url("/images/brand/night-city-mark.svg");
+  --duro-ornament: "// ─ //";
+}
+
+/* ---------- Web-Slinger — Spider-Sense (light) ---------- */
+[data-theme="spider-sense"] {
+  color-scheme: light;
+  --duro-font-display: "Bangers", "Impact", sans-serif;
+  --duro-font-label: "Bebas Neue", "Oswald", sans-serif;
+  --duro-font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.98 0.008 85);
+  --duro-canvas-alt: oklch(0.955 0.012 85);
+  --duro-surface: oklch(1 0 0);
+  --duro-surface-2: oklch(0.97 0.006 85);
+  --duro-surface-3: oklch(0.935 0.01 85);
+  --duro-line: oklch(0.86 0.012 260);
+  --duro-line-strong: oklch(0.23 0.06 265);
+  --duro-ink: oklch(0.21 0.06 265);
+  --duro-ink-muted: oklch(0.42 0.05 265);
+  --duro-ink-subtle: oklch(0.56 0.04 265);
+
+  --duro-primary: oklch(0.58 0.22 25);
+  --duro-primary-hover: oklch(0.52 0.21 25);
+  --duro-primary-ink: oklch(0.52 0.21 25);
+  --duro-on-primary: oklch(1 0 0);
+  --duro-accent: oklch(0.47 0.17 260);
+  --duro-accent-ink: oklch(0.43 0.17 260);
+  --duro-on-accent: oklch(1 0 0);
+
+  --duro-success: oklch(0.55 0.15 150);
+  --duro-warning: oklch(0.72 0.16 80);
+  --duro-danger: oklch(0.55 0.22 25);
+  --duro-info: oklch(0.47 0.17 260);
+
+  --duro-radius-ui: 0.7rem;
+  --duro-radius-card: 1rem;
+  --duro-radius-pill: 999px;
+  --duro-border: 2px;
+
+  --duro-shadow-card: 5px 5px 0 0 oklch(0.47 0.17 260);
+  --duro-shadow-pop: 6px 6px 0 0 oklch(0.21 0.06 265);
+  --duro-shadow-glow: 4px 4px 0 0 oklch(0.58 0.22 25);
+  --duro-glow: oklch(0.58 0.22 25);
+
+  --duro-p-h: 25; --duro-p-c: 0.22;
+  --duro-a-h: 260; --duro-a-c: 0.17;
+  --duro-t-h: 85; --duro-t-c: 0.008;
+
+  --duro-logo-mark: url("/images/brand/spider-sense-mark.svg");
+  --duro-hero-art: url("/images/brand/spider-sense-mark.svg");
+  --duro-wordmark: url("/images/brand/spider-sense-mark.svg");
+  --duro-ornament: "✶ ✶ ✶";
+}
+
+/* ---------- Web-Slinger — Symbiote (dark) ---------- */
+[data-theme="symbiote"] {
+  color-scheme: dark;
+  --duro-font-display: "Bangers", "Impact", sans-serif;
+  --duro-font-label: "Bebas Neue", "Oswald", sans-serif;
+  --duro-font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.095 0.004 280);
+  --duro-canvas-alt: oklch(0.12 0.006 280);
+  --duro-surface: oklch(0.145 0.008 280);
+  --duro-surface-2: oklch(0.175 0.01 280);
+  --duro-surface-3: oklch(0.215 0.014 280);
+  --duro-line: oklch(0.28 0.018 280);
+  --duro-line-strong: oklch(0.62 0.02 280);
+  --duro-ink: oklch(0.97 0.004 280);
+  --duro-ink-muted: oklch(0.76 0.01 280);
+  --duro-ink-subtle: oklch(0.56 0.014 280);
+
+  --duro-primary: oklch(0.97 0.004 280);
+  --duro-primary-hover: oklch(0.9 0.01 280);
+  --duro-primary-ink: oklch(0.97 0.004 280);
+  --duro-on-primary: oklch(0.1 0.004 280);
+  --duro-accent: oklch(0.7 0.14 280);
+  --duro-accent-ink: oklch(0.77 0.12 280);
+  --duro-on-accent: oklch(0.1 0.004 280);
+
+  --duro-success: oklch(0.75 0.14 155);
+  --duro-warning: oklch(0.82 0.14 85);
+  --duro-danger: oklch(0.66 0.22 25);
+  --duro-info: oklch(0.77 0.12 280);
+
+  --duro-radius-ui: 0.7rem;
+  --duro-radius-card: 1rem;
+  --duro-radius-pill: 999px;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 oklch(1 0 0 / 0.06) inset, 0 24px 50px -28px oklch(0 0 0 / 0.95);
+  --duro-shadow-pop: 0 24px 60px -18px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(1 0 0 / 0.15);
+  --duro-shadow-glow: 0 0 0 1px oklch(1 0 0 / 0.55), 0 0 28px -4px oklch(0.7 0.14 280 / 0.6);
+  --duro-glow: oklch(0.7 0.14 280);
+
+  --duro-p-h: 280; --duro-p-c: 0.03;
+  --duro-a-h: 280; --duro-a-c: 0.14;
+  --duro-t-h: 280; --duro-t-c: 0.008;
+
+  --duro-logo-mark: url("/images/brand/symbiote-mark.svg");
+  --duro-hero-art: url("/images/brand/symbiote-mark.svg");
+  --duro-wordmark: url("/images/brand/symbiote-mark.svg");
+  --duro-ornament: "✶ ✶ ✶";
+}
+
+/* ---------- Lordran — Anor Londo (light) ---------- */
+[data-theme="anor-londo"] {
+  color-scheme: light;
+  --duro-font-display: "Cinzel", "Trajan Pro", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "EB Garamond", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.945 0.022 82);
+  --duro-canvas-alt: oklch(0.92 0.028 80);
+  --duro-surface: oklch(0.975 0.012 85);
+  --duro-surface-2: oklch(0.945 0.02 82);
+  --duro-surface-3: oklch(0.91 0.028 80);
+  --duro-line: oklch(0.83 0.035 78);
+  --duro-line-strong: oklch(0.6 0.07 70);
+  --duro-ink: oklch(0.25 0.03 70);
+  --duro-ink-muted: oklch(0.43 0.03 70);
+  --duro-ink-subtle: oklch(0.57 0.03 70);
+
+  --duro-primary: oklch(0.62 0.13 68);
+  --duro-primary-hover: oklch(0.56 0.13 65);
+  --duro-primary-ink: oklch(0.5 0.12 62);
+  --duro-on-primary: oklch(0.99 0.01 85);
+  --duro-accent: oklch(0.5 0.05 250);
+  --duro-accent-ink: oklch(0.44 0.05 250);
+  --duro-on-accent: oklch(0.99 0.005 250);
+
+  --duro-success: oklch(0.52 0.11 150);
+  --duro-warning: oklch(0.65 0.14 70);
+  --duro-danger: oklch(0.52 0.17 30);
+  --duro-info: oklch(0.5 0.07 245);
+
+  --duro-radius-ui: 0.15rem;
+  --duro-radius-card: 0.3rem;
+  --duro-radius-pill: 0.15rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 oklch(1 0 0 / 0.7) inset, 0 18px 38px -26px oklch(0.4 0.07 60 / 0.5);
+  --duro-shadow-pop: 0 22px 48px -20px oklch(0.4 0.07 60 / 0.45), 0 0 0 1px oklch(0.6 0.07 70 / 0.4);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.62 0.13 68 / 0.6), 0 8px 28px -8px oklch(0.75 0.13 75 / 0.6);
+  --duro-glow: oklch(0.8 0.12 78);
+
+  --duro-p-h: 68; --duro-p-c: 0.13;
+  --duro-a-h: 250; --duro-a-c: 0.05;
+  --duro-t-h: 80; --duro-t-c: 0.022;
+
+  --duro-logo-mark: url("/images/brand/anor-londo-mark.svg");
+  --duro-hero-art: url("/images/brand/anor-londo-mark.svg");
+  --duro-wordmark: url("/images/brand/anor-londo-mark.svg");
+  --duro-ornament: "❖";
+}
+
+/* ---------- Lordran — Bonfire (dark) ---------- */
+[data-theme="bonfire"] {
+  color-scheme: dark;
+  --duro-font-display: "Cinzel", "Trajan Pro", serif;
+  --duro-font-label: "Cinzel", serif;
+  --duro-font-sans: "EB Garamond", ui-serif, Georgia, serif;
+  --duro-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --duro-canvas: oklch(0.12 0.008 50);
+  --duro-canvas-alt: oklch(0.14 0.01 50);
+  --duro-surface: oklch(0.165 0.012 50);
+  --duro-surface-2: oklch(0.195 0.014 50);
+  --duro-surface-3: oklch(0.24 0.018 50);
+  --duro-line: oklch(0.29 0.02 50);
+  --duro-line-strong: oklch(0.48 0.05 55);
+  --duro-ink: oklch(0.92 0.02 75);
+  --duro-ink-muted: oklch(0.73 0.02 70);
+  --duro-ink-subtle: oklch(0.55 0.02 60);
+
+  --duro-primary: oklch(0.7 0.18 50);
+  --duro-primary-hover: oklch(0.76 0.17 55);
+  --duro-primary-ink: oklch(0.77 0.15 58);
+  --duro-on-primary: oklch(0.14 0.01 50);
+  --duro-accent: oklch(0.72 0.07 75);
+  --duro-accent-ink: oklch(0.78 0.07 75);
+  --duro-on-accent: oklch(0.14 0.01 50);
+
+  --duro-success: oklch(0.72 0.12 150);
+  --duro-warning: oklch(0.8 0.14 75);
+  --duro-danger: oklch(0.62 0.2 30);
+  --duro-info: oklch(0.74 0.06 240);
+
+  --duro-radius-ui: 0.15rem;
+  --duro-radius-card: 0.3rem;
+  --duro-radius-pill: 0.15rem;
+  --duro-border: 1px;
+
+  --duro-shadow-card: 0 1px 0 oklch(1 0 0 / 0.04) inset, 0 24px 50px -28px oklch(0 0 0 / 0.95);
+  --duro-shadow-pop: 0 24px 60px -18px oklch(0 0 0 / 0.95), 0 0 0 1px oklch(0.7 0.18 50 / 0.3);
+  --duro-shadow-glow: 0 0 0 1px oklch(0.7 0.18 50 / 0.6), 0 0 30px -4px oklch(0.7 0.18 50 / 0.65);
+  --duro-glow: oklch(0.7 0.18 50);
+
+  --duro-p-h: 50; --duro-p-c: 0.18;
+  --duro-a-h: 75; --duro-a-c: 0.07;
+  --duro-t-h: 50; --duro-t-c: 0.012;
+
+  --duro-logo-mark: url("/images/brand/bonfire-mark.svg");
+  --duro-hero-art: url("/images/brand/bonfire-mark.svg");
+  --duro-wordmark: url("/images/brand/bonfire-mark.svg");
+  --duro-ornament: "❖";
+}
+
+@keyframes duro-glitch {
+  0%, 100% { transform: none; }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+@keyframes duro-ember-rise {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 -600px, 0 -900px; }
+}
+
+@keyframes duro-ember-flicker {
+  0%, 100% { filter: drop-shadow(0 0 18px oklch(0.7 0.18 50 / 0.45)); }
+  50% { filter: drop-shadow(0 0 28px oklch(0.75 0.18 55 / 0.7)); }
+}
+
+@layer components {
+  /* ---------- Neon Daylight adjustments ---------- */
+  [data-theme="neon-daylight"] .duro-display {
+    text-shadow: 0 0 1px var(--duro-primary), 0 0 18px color-mix(in oklab, var(--duro-primary) 35%, transparent);
+    color: var(--duro-primary-ink);
+  }
+  [data-theme="neon-daylight"] .duro-code { background: oklch(0.2 0.08 280); }
+
+  /* =========================== FAERÛN GRIMOIRE =========================== */
+  [data-family="grimoire"] .duro-display {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  [data-theme="gilded-grimoire"] .duro-display {
+    background-image: linear-gradient(180deg, #d9b45a 0%, #a07a24 45%, #6e4c10 55%, #c99c3e 75%, #8a6218 100%);
+    filter: drop-shadow(0 2px 0 oklch(1 0 0 / 0.8)) drop-shadow(0 6px 14px oklch(0.3 0.12 305 / 0.25));
+  }
+  [data-theme="illithid"] .duro-display {
+    background-image: linear-gradient(180deg, #fff3c8 0%, #e8c872 40%, #9c7426 58%, #f3d98a 78%, #b48a34 100%);
+    filter: drop-shadow(0 2px 0 oklch(0 0 0 / 0.7)) drop-shadow(0 0 26px oklch(0.65 0.2 300 / 0.55));
+  }
+  [data-family="grimoire"] .duro-heading { font-family: var(--duro-font-label); letter-spacing: 0.02em; }
+  [data-family="grimoire"] .duro-eyebrow::before { width: 0.55rem; height: 0.55rem; transform: rotate(45deg); background: var(--duro-primary); opacity: 1; }
+
+  [data-family="grimoire"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+  [data-family="grimoire"] .duro-btn-lg,
+  [data-family="grimoire"] .duro-btn-xl { font-size: 0.82rem; }
+  [data-family="grimoire"] .duro-btn-primary {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--duro-primary) 80%, white), var(--duro-primary) 50%, color-mix(in oklab, var(--duro-primary) 75%, black));
+    border-color: color-mix(in oklab, var(--duro-primary) 60%, black);
+    box-shadow: 0 1px 0 oklch(1 0 0 / 0.45) inset, 0 0 0 1px color-mix(in oklab, var(--duro-primary) 40%, transparent), 0 8px 22px -10px color-mix(in oklab, var(--duro-accent) 70%, transparent);
+  }
+  [data-family="grimoire"] .duro-btn-secondary { border-color: color-mix(in oklab, var(--duro-primary) 45%, var(--duro-line)); }
+  [data-family="grimoire"] .duro-btn-outline { color: var(--duro-accent-ink); border-color: var(--duro-accent); }
+
+  [data-family="grimoire"] .duro-card {
+    border-color: color-mix(in oklab, var(--duro-primary) 40%, var(--duro-line));
+  }
+  [data-family="grimoire"] .duro-card::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid color-mix(in oklab, var(--duro-primary) 28%, transparent);
+    border-radius: calc(var(--duro-radius-card) - 3px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  [data-family="grimoire"] .duro-card::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    width: 11px;
+    height: 11px;
+    transform: translateX(-50%) rotate(45deg);
+    background: var(--duro-primary);
+    box-shadow: 0 0 0 3px var(--duro-canvas), 0 0 12px var(--duro-glow);
+    pointer-events: none;
+  }
+  [data-family="grimoire"] .duro-card-flat::after { display: none; }
+  [data-family="grimoire"] .duro-icon-tile { border-color: color-mix(in oklab, var(--duro-primary) 55%, transparent); color: var(--duro-primary-ink); background: color-mix(in oklab, var(--duro-accent) 12%, transparent); }
+  [data-family="grimoire"] .duro-tab[aria-selected="true"] { background: var(--duro-accent); color: var(--duro-on-accent); }
+
+  [data-theme="gilded-grimoire"] .duro-backdrop::before {
+    background:
+      radial-gradient(48rem 30rem at 85% -10%, oklch(0.8 0.12 80 / 0.3), transparent 60%),
+      radial-gradient(40rem 28rem at 0% 100%, oklch(0.55 0.15 305 / 0.12), transparent 60%);
+  }
+  [data-theme="gilded-grimoire"] .duro-backdrop::after {
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.32 0 0 0 0 0.12 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  [data-theme="illithid"] .duro-backdrop::before {
+    background:
+      radial-gradient(44rem 30rem at 80% 0%, oklch(0.5 0.2 300 / 0.35), transparent 60%),
+      radial-gradient(36rem 26rem at 0% 80%, oklch(0.45 0.18 320 / 0.25), transparent 60%),
+      radial-gradient(30rem 20rem at 50% 110%, oklch(0.75 0.11 85 / 0.12), transparent 60%);
+  }
+  [data-theme="illithid"] .duro-backdrop::after {
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, oklch(0.95 0.05 85 / 0.7), transparent),
+      radial-gradient(1px 1px at 72% 12%, oklch(0.95 0.05 300 / 0.6), transparent),
+      radial-gradient(1.5px 1.5px at 42% 64%, oklch(0.95 0.05 85 / 0.5), transparent),
+      radial-gradient(1px 1px at 86% 78%, oklch(0.95 0.05 300 / 0.6), transparent),
+      radial-gradient(1px 1px at 24% 88%, oklch(0.95 0.05 85 / 0.5), transparent);
+    background-size: 320px 320px;
+  }
+
+  /* ============================ LANDS BETWEEN ============================ */
+  [data-family="lands-between"] .duro-display {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--duro-primary-ink);
+  }
+  [data-theme="tarnished"] .duro-display {
+    color: oklch(0.88 0.11 88);
+    text-shadow: 0 0 14px oklch(0.8 0.13 85 / 0.6), 0 0 48px oklch(0.8 0.13 85 / 0.35);
+  }
+  [data-theme="erdtree"] .duro-display { text-shadow: 0 0 22px oklch(0.85 0.12 85 / 0.8); }
+  [data-family="lands-between"] .duro-heading { font-weight: 600; letter-spacing: 0.03em; font-size: 1.08em; }
+  [data-family="lands-between"] .duro-eyebrow { letter-spacing: 0.34em; }
+  [data-family="lands-between"] .duro-eyebrow::before { background: linear-gradient(90deg, transparent, currentColor); width: 2.5rem; }
+
+  [data-family="lands-between"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  [data-family="lands-between"] .duro-btn-lg,
+  [data-family="lands-between"] .duro-btn-xl { font-size: 0.76rem; }
+  [data-family="lands-between"] .duro-btn-primary {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--duro-primary) 26%, transparent), color-mix(in oklab, var(--duro-primary) 10%, transparent));
+    color: var(--duro-ink);
+    border-color: color-mix(in oklab, var(--duro-primary) 80%, transparent);
+  }
+  [data-family="lands-between"] .duro-btn-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, color-mix(in oklab, var(--duro-primary) 40%, transparent), color-mix(in oklab, var(--duro-primary) 18%, transparent));
+    border-color: var(--duro-primary);
+  }
+  [data-family="lands-between"] .duro-btn-secondary { background: transparent; }
+
+  [data-family="lands-between"] .duro-card {
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklab, var(--duro-glow) 12%, transparent), transparent 70%),
+      var(--duro-surface);
+    border-color: color-mix(in oklab, var(--duro-primary) 28%, var(--duro-line));
+  }
+  [data-family="lands-between"] .duro-card::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    width: 46%;
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, transparent, var(--duro-primary), transparent);
+    box-shadow: 0 0 12px var(--duro-glow);
+    pointer-events: none;
+  }
+  [data-family="lands-between"] .duro-icon-tile { border-radius: 999px; }
+  [data-family="lands-between"] .duro-tab[aria-selected="true"] { box-shadow: inset 0 -1px 0 var(--duro-primary); background: color-mix(in oklab, var(--duro-primary) 12%, transparent); }
+
+  [data-theme="erdtree"] .duro-backdrop::before {
+    background:
+      radial-gradient(60rem 36rem at 50% -15%, oklch(0.88 0.12 88 / 0.55), transparent 65%),
+      radial-gradient(40rem 30rem at 100% 100%, oklch(0.85 0.04 150 / 0.25), transparent 60%);
+  }
+  [data-theme="tarnished"] .duro-backdrop::before {
+    background:
+      radial-gradient(56rem 34rem at 50% -12%, oklch(0.8 0.13 85 / 0.22), transparent 62%),
+      radial-gradient(40rem 28rem at 0% 100%, oklch(0.5 0.04 150 / 0.12), transparent 60%);
+  }
+  [data-theme="tarnished"] .duro-backdrop::after {
+    background: radial-gradient(ellipse at center, transparent 45%, oklch(0 0 0 / 0.65));
+  }
+
+  /* ============================== NIGHT CITY ============================= */
+  [data-family="night-city"] .duro-display {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--duro-primary);
+    text-shadow: 3px 0 0 color-mix(in oklab, var(--duro-accent) 85%, transparent), -3px 0 0 color-mix(in oklab, var(--duro-danger) 85%, transparent);
+  }
+  [data-theme="corpo"] .duro-display { color: var(--duro-ink); }
+  [data-family="night-city"] .duro-display:hover { animation: duro-glitch 0.35s steps(2) 2; }
+  [data-family="night-city"] .duro-heading { text-transform: uppercase; letter-spacing: 0.04em; }
+  [data-family="night-city"] .duro-eyebrow::before { width: 0.9rem; height: 0.35rem; background: var(--duro-primary); opacity: 1; }
+  [data-theme="corpo"] .duro-eyebrow::before { background: var(--duro-accent); box-shadow: 3px 0 0 var(--duro-primary); }
+
+  [data-family="night-city"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  [data-family="night-city"] .duro-btn-lg,
+  [data-family="night-city"] .duro-btn-xl { font-size: 0.82rem; }
+  [data-family="night-city"] .duro-btn-primary:hover:not(:disabled) { animation: duro-glitch 0.3s steps(2) 1; }
+  [data-family="night-city"] .duro-btn-secondary { border-left: 3px solid var(--duro-accent); }
+
+  [data-family="night-city"] .duro-card {
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+    border-left: 3px solid var(--duro-primary);
+  }
+  [data-family="night-city"] .duro-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(225deg, transparent 46%, var(--duro-primary) 46% 56%, transparent 56%);
+    pointer-events: none;
+  }
+  [data-family="night-city"] .duro-card-flat { border-left-width: 1px; }
+  [data-family="night-city"] .duro-field,
+  [data-family="night-city"] .duro-control { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%); }
+  [data-family="night-city"] .duro-field:focus-within,
+  [data-family="night-city"] .duro-field.is-open,
+  [data-family="night-city"] .duro-control:focus { box-shadow: inset 3px 0 0 var(--duro-primary); }
+  [data-family="night-city"] .duro-icon-tile { clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)); }
+  [data-family="night-city"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
+  [data-family="night-city"] .duro-badge { clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%); }
+
+  [data-theme="night-city"] .duro-backdrop::before {
+    background:
+      repeating-linear-gradient(0deg, oklch(1 0 0 / 0.025) 0 1px, transparent 1px 3px),
+      radial-gradient(40rem 26rem at 100% 0%, oklch(0.93 0.2 106 / 0.14), transparent 60%),
+      radial-gradient(36rem 24rem at 0% 100%, oklch(0.88 0.15 195 / 0.12), transparent 60%),
+      radial-gradient(30rem 20rem at 60% 60%, oklch(0.65 0.25 10 / 0.07), transparent 60%);
+  }
+  [data-theme="corpo"] .duro-backdrop::before {
+    background:
+      linear-gradient(90deg, oklch(0.2 0 0 / 0.04) 1px, transparent 1px) 0 0 / 64px 64px,
+      linear-gradient(oklch(0.2 0 0 / 0.04) 1px, transparent 1px) 0 0 / 64px 64px,
+      radial-gradient(40rem 26rem at 100% 0%, oklch(0.57 0.22 18 / 0.1), transparent 60%);
+  }
+  [data-theme="corpo"] .duro-backdrop::after {
+    background: repeating-linear-gradient(-45deg, oklch(0.9 0.18 105 / 0.55) 0 14px, oklch(0.17 0 0 / 0.55) 14px 28px) bottom / 100% 6px no-repeat;
+  }
+
+  /* ============================= WEB-SLINGER ============================= */
+  [data-family="web-slinger"] .duro-display {
+    font-weight: 400;
+    letter-spacing: 0.035em;
+    line-height: 0.95;
+  }
+  [data-theme="spider-sense"] .duro-display {
+    color: var(--duro-primary);
+    -webkit-text-stroke: 2px var(--duro-ink);
+    paint-order: stroke fill;
+    text-shadow: 5px 5px 0 var(--duro-accent);
+  }
+  [data-theme="symbiote"] .duro-display {
+    color: var(--duro-ink);
+    text-shadow: 0 0 1px var(--duro-ink), 0 0 26px oklch(0.7 0.14 280 / 0.55);
+  }
+  [data-family="web-slinger"] .duro-heading { font-family: var(--duro-font-label); font-weight: 400; letter-spacing: 0.04em; font-size: 1.15em; }
+  [data-family="web-slinger"] .duro-eyebrow { font-size: 0.85rem; letter-spacing: 0.18em; }
+  [data-family="web-slinger"] .duro-label { font-size: 0.85rem; letter-spacing: 0.08em; font-weight: 400; }
+
+  [data-family="web-slinger"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border-radius: 999px;
+  }
+  [data-family="web-slinger"] .duro-btn-sm { font-size: 0.85rem; }
+  [data-family="web-slinger"] .duro-btn-lg,
+  [data-family="web-slinger"] .duro-btn-xl { font-size: 1.15rem; }
+  [data-family="web-slinger"] .duro-btn-icon { border-radius: 999px; }
+  [data-theme="spider-sense"] .duro-btn { border-color: var(--duro-ink); box-shadow: 3px 3px 0 0 var(--duro-accent); }
+  [data-theme="spider-sense"] .duro-btn:hover:not(:disabled) { transform: translate(-1px, -1px) rotate(-1deg); box-shadow: 5px 5px 0 0 var(--duro-accent); }
+  [data-theme="spider-sense"] .duro-btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: none; }
+  [data-theme="spider-sense"] .duro-btn-ghost,
+  [data-theme="spider-sense"] .duro-btn-link { border-color: transparent; box-shadow: none; }
+  [data-theme="symbiote"] .duro-btn-primary:hover:not(:disabled) { box-shadow: var(--duro-shadow-glow); }
+
+  [data-family="web-slinger"] .duro-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background-image: radial-gradient(color-mix(in oklab, var(--duro-primary) 55%, transparent) 1.3px, transparent 1.6px);
+    background-size: 9px 9px;
+    mask-image: radial-gradient(circle at top right, black, transparent 70%);
+    border-top-right-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+  }
+  [data-theme="spider-sense"] .duro-card { border-color: var(--duro-ink); }
+  [data-theme="spider-sense"] .duro-card-flat { border-color: var(--duro-line); }
+  [data-theme="spider-sense"] .duro-card-interactive:hover { transform: translate(-3px, -3px) rotate(-0.4deg); box-shadow: 9px 9px 0 0 var(--duro-accent); border-color: var(--duro-ink); }
+  [data-theme="symbiote"] .duro-card::before { background-image: radial-gradient(oklch(1 0 0 / 0.16) 1.2px, transparent 1.5px); }
+  [data-theme="spider-sense"] .duro-field,
+  [data-theme="spider-sense"] .duro-control { border-color: var(--duro-ink); background: var(--duro-surface); }
+  [data-theme="spider-sense"] .duro-field:focus-within,
+  [data-theme="spider-sense"] .duro-field.is-open,
+  [data-theme="spider-sense"] .duro-control:focus { box-shadow: 3px 3px 0 0 var(--duro-primary); }
+  [data-family="web-slinger"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
+  [data-family="web-slinger"] .duro-icon-tile { border-radius: 999px; }
+  [data-theme="spider-sense"] .duro-icon-tile { border: 2px solid var(--duro-ink); background: color-mix(in oklab, var(--duro-primary) 12%, var(--duro-surface)); box-shadow: 2px 2px 0 var(--duro-accent); }
+
+  [data-theme="spider-sense"] .duro-backdrop::before {
+    background-image:
+      radial-gradient(oklch(0.58 0.22 25 / 0.16) 1.4px, transparent 1.8px),
+      radial-gradient(oklch(0.47 0.17 260 / 0.14) 1.4px, transparent 1.8px);
+    background-size: 14px 14px, 14px 14px;
+    background-position: 0 0, 7px 7px;
+    mask-image: radial-gradient(ellipse 70% 60% at 100% 0%, black, transparent 70%), radial-gradient(ellipse 60% 50% at 0% 100%, black, transparent 70%);
+    mask-composite: add;
+  }
+  [data-theme="spider-sense"] .duro-backdrop::after {
+    background:
+      repeating-conic-gradient(from 0deg at 100% 0%, oklch(0.21 0.06 265 / 0.06) 0deg 0.6deg, transparent 0.6deg 15deg);
+    mask-image: radial-gradient(circle at 100% 0%, black, transparent 55%);
+  }
+  [data-theme="symbiote"] .duro-backdrop::before {
+    background:
+      radial-gradient(40rem 28rem at 85% 0%, oklch(0.7 0.14 280 / 0.18), transparent 60%),
+      radial-gradient(34rem 24rem at 0% 100%, oklch(0.7 0.14 280 / 0.1), transparent 60%);
+  }
+  [data-theme="symbiote"] .duro-backdrop::after {
+    background: repeating-conic-gradient(from 0deg at 100% 0%, oklch(1 0 0 / 0.045) 0deg 0.5deg, transparent 0.5deg 15deg);
+    mask-image: radial-gradient(circle at 100% 0%, black, transparent 60%);
+  }
+
+  /* =============================== LORDRAN =============================== */
+  [data-family="lordran"] .duro-display {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  [data-theme="bonfire"] .duro-display {
+    background-image: linear-gradient(180deg, #ffe0a3 0%, #ffb347 35%, #f07a1f 60%, #a8380e 100%);
+    animation: duro-ember-flicker 4s ease-in-out infinite;
+  }
+  [data-theme="anor-londo"] .duro-display {
+    background-image: linear-gradient(180deg, #d8a548 0%, #9a6618 48%, #5e3c0c 58%, #b88433 100%);
+    filter: drop-shadow(0 2px 0 oklch(1 0 0 / 0.7)) drop-shadow(0 6px 16px oklch(0.75 0.13 75 / 0.35));
+  }
+  [data-family="lordran"] .duro-heading { letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.94em; }
+
+  [data-family="lordran"] .duro-btn {
+    font-family: var(--duro-font-label);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+  [data-family="lordran"] .duro-btn-lg,
+  [data-family="lordran"] .duro-btn-xl { font-size: 0.8rem; }
+  [data-theme="bonfire"] .duro-btn-primary {
+    background: linear-gradient(180deg, oklch(0.78 0.17 60), oklch(0.62 0.19 42));
+    border-color: oklch(0.5 0.16 40);
+    box-shadow: 0 1px 0 oklch(1 0.05 80 / 0.35) inset, 0 8px 26px -8px oklch(0.7 0.18 50 / 0.75);
+  }
+  [data-theme="anor-londo"] .duro-btn-primary {
+    background: linear-gradient(180deg, oklch(0.7 0.13 72), oklch(0.55 0.13 62));
+    border-color: oklch(0.45 0.1 60);
+    box-shadow: 0 1px 0 oklch(1 0.02 85 / 0.45) inset, 0 8px 20px -10px oklch(0.45 0.1 60 / 0.7);
+  }
+
+  [data-family="lordran"] .duro-card::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid color-mix(in oklab, var(--duro-line-strong) 40%, transparent);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: -1;
+  }
+  [data-theme="bonfire"] .duro-card-interactive:hover { box-shadow: var(--duro-shadow-card), 0 0 0 1px oklch(0.7 0.18 50 / 0.5), 0 18px 40px -16px oklch(0.7 0.18 50 / 0.45); }
+  [data-family="lordran"] .duro-tab[aria-selected="true"] { background: var(--duro-primary); color: var(--duro-on-primary); }
+
+  [data-theme="bonfire"] .duro-backdrop::before {
+    background:
+      radial-gradient(50rem 30rem at 50% 115%, oklch(0.62 0.19 45 / 0.35), transparent 62%),
+      radial-gradient(30rem 20rem at 0% 0%, oklch(0.4 0.05 50 / 0.2), transparent 60%);
+  }
+  [data-theme="bonfire"] .duro-backdrop::after {
+    background-image:
+      radial-gradient(2px 2px at 20% 30%, oklch(0.82 0.17 65 / 0.8), transparent),
+      radial-gradient(1.5px 1.5px at 70% 60%, oklch(0.78 0.18 55 / 0.7), transparent),
+      radial-gradient(2px 2px at 45% 80%, oklch(0.85 0.15 75 / 0.6), transparent),
+      radial-gradient(1px 1px at 85% 20%, oklch(0.82 0.17 65 / 0.7), transparent);
+    background-size: 380px 600px, 520px 900px;
+    animation: duro-ember-rise 22s linear infinite;
+    mask-image: linear-gradient(to top, black 20%, transparent 85%);
+  }
+  [data-theme="anor-londo"] .duro-backdrop::before {
+    background:
+      repeating-conic-gradient(from 180deg at 50% -10%, oklch(0.9 0.1 85 / 0.18) 0deg 4deg, transparent 4deg 12deg),
+      radial-gradient(56rem 34rem at 50% -15%, oklch(0.9 0.12 85 / 0.55), transparent 65%);
+    mask-image: linear-gradient(to bottom, black, transparent 75%);
+  }
+  [data-theme="anor-londo"] .duro-backdrop::after {
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.33 0 0 0 0 0.2 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer components {
+  [data-theme="spider-sense"] .duro-logo-text { -webkit-text-stroke-width: 1px; text-shadow: 2px 2px 0 var(--duro-accent); }
+  [data-theme="ink-quill"] .duro-logo-text { -webkit-text-stroke-width: 1.5px; text-shadow: 2px 2px 0 var(--duro-primary); }
 }

@@ -34,12 +34,19 @@
             'icon' => $item['icon'],
             'href' => route($item['route']),
         ]))
+        ->push([
+            'label' => 'Toggle light / dark mode',
+            'group' => 'Realms',
+            'icon' => 'moon',
+            'action' => 'toggle-mode',
+            'keywords' => 'theme dark light mode',
+        ])
         ->merge(collect(config('duro.themes'))->map(fn ($theme, $key) => [
             'label' => 'Switch to '.$theme['name'],
             'group' => 'Realms',
             'icon' => 'palette',
             'theme' => $key,
-            'keywords' => 'theme '.$theme['mode'],
+            'keywords' => 'theme '.$theme['mode'].' '.config('duro.families.'.$theme['family'].'.name').' '.config('duro.families.'.$theme['family'].'.inspiration'),
         ])->values())
         ->values();
 @endphp

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><filter id="g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="iris"><stop offset="0" stop-color="#a67b23"/><stop offset=".45" stop-color="#6b2fa0"/><stop offset="1" stop-color="#f5efe2"/></radialGradient></defs>
+<g fill="none" stroke="#a67b23" stroke-linecap="round">
+  <circle cx="256" cy="256" r="228" stroke-width="7"/><circle cx="256" cy="256" r="196" stroke-width="2.5"/>
+  <g stroke-width="3"><line x1="452.1" y1="308.5" x2="462.7" y2="311.4"/><line x1="431.8" y1="357.5" x2="441.3" y2="363.0"/><line x1="399.5" y1="399.5" x2="407.3" y2="407.3"/><line x1="357.5" y1="431.8" x2="363.0" y2="441.3"/><line x1="308.5" y1="452.1" x2="311.4" y2="462.7"/><line x1="203.5" y1="452.1" x2="200.6" y2="462.7"/><line x1="154.5" y1="431.8" x2="149.0" y2="441.3"/><line x1="112.5" y1="399.5" x2="104.7" y2="407.3"/><line x1="80.2" y1="357.5" x2="70.7" y2="363.0"/><line x1="59.9" y1="308.5" x2="49.3" y2="311.4"/><line x1="59.9" y1="203.5" x2="49.3" y2="200.6"/><line x1="80.2" y1="154.5" x2="70.7" y2="149.0"/><line x1="112.5" y1="112.5" x2="104.7" y2="104.7"/><line x1="154.5" y1="80.2" x2="149.0" y2="70.7"/><line x1="203.5" y1="59.9" x2="200.6" y2="49.3"/><line x1="308.5" y1="59.9" x2="311.4" y2="49.3"/><line x1="357.5" y1="80.2" x2="363.0" y2="70.7"/><line x1="399.5" y1="112.5" x2="407.3" y2="104.7"/><line x1="431.8" y1="154.5" x2="441.3" y2="149.0"/><line x1="452.1" y1="203.5" x2="462.7" y2="200.6"/></g>
+</g>
+<g fill="#a67b23"><path d="M476.0 244.0 L485.0 256.0 L476.0 268.0 L467.0 256.0Z"/><path d="M256.0 464.0 L265.0 476.0 L256.0 488.0 L247.0 476.0Z"/><path d="M36.0 244.0 L45.0 256.0 L36.0 268.0 L27.0 256.0Z"/><path d="M256.0 24.0 L265.0 36.0 L256.0 48.0 L247.0 36.0Z"/></g>
+<g fill="none" stroke="#6b2fa0" stroke-width="9" stroke-linecap="round">
+  <path d="M214 318 C200 368 236 392 214 438"/><path d="M242 330 C240 382 270 404 252 452"/>
+  <path d="M270 330 C272 382 242 404 260 452"/><path d="M298 318 C312 368 276 392 298 438"/>
+</g>
+<path d="M120 250 Q256 112 392 250 Q256 388 120 250Z" fill="#f5efe2" stroke="#a67b23" stroke-width="9" stroke-linejoin="round"/>
+<circle cx="256" cy="250" r="62" fill="url(#iris)"/>
+<ellipse cx="256" cy="250" rx="11" ry="44" fill="#f5efe2"/>
+<path d="M256 214 q8 6 0 12 q-8 6 0 12" fill="none" stroke="#a67b23" stroke-width="3" opacity=".8"/></svg>
