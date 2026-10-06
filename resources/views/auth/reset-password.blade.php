@@ -4,10 +4,10 @@
             <x-duro.badge variant="electric">
                 RESET SIGIL
             </x-duro.badge>
-            <h1 class="duro-heading text-2xl">
+            <h1 class="text-xl font-semibold tracking-tight text-shadow-900 dark:text-neutralfog-50">
                 Choose a new password
             </h1>
-            <p class="text-sm text-ink-muted">
+            <p class="text-sm text-neutral-600 dark:text-neutralfog-300">
                 Enter your email, the recovery token, and your new passphrase to regain access.
             </p>
         </div>

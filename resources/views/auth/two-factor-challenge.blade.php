@@ -8,19 +8,19 @@
                             TWO-FACTOR AUTHENTICATION
                         </x-duro.badge>
 
-                        <h1 class="text-2xl font-extrabold tracking-tight text-primary-ink">
+                        <h1 class="text-2xl font-extrabold tracking-tight text-electric-700 dark:text-electric-300">
                             Verify your second factor
                         </h1>
 
                         <p
-                            class="text-xs text-ink-muted"
+                            class="text-xs text-neutral-700 dark:text-neutralfog-300"
                             x-show="! recovery"
                         >
                             {{ __('Please confirm access to your account by entering the authentication code provided by your authenticator application.') }}
                         </p>
 
                         <p
-                            class="text-xs text-ink-muted"
+                            class="text-xs text-neutral-700 dark:text-neutralfog-300"
                             x-show="recovery"
                         >
                             {{ __('Please confirm access to your account by entering one of your emergency recovery codes.') }}
@@ -52,14 +52,14 @@
                                 autofocus
                             />
 
-                            <p class="text-[11px] text-ink-muted">
+                            <p class="text-[11px] text-neutral-600 dark:text-neutralfog-400">
                                 <button
                                     type="button"
-                                    class="text-xs text-primary-ink underline cursor-pointer"
+                                    class="text-xs text-electric-700 dark:text-electric-300 underline cursor-pointer"
                                     x-on:click="
                                         recovery = true;
                                         $nextTick(() => { $refs.recovery_code.focus() })
-"
+                                    "
                                 >
                                     {{ __('Use a recovery code') }}
                                 </button>
@@ -76,14 +76,14 @@
                                 autofocus
                             />
 
-                            <p class="text-[11px] text-ink-muted">
+                            <p class="text-[11px] text-neutral-600 dark:text-neutralfog-400">
                                 <button
                                     type="button"
-                                    class="text-xs text-primary-ink underline cursor-pointer"
+                                    class="text-xs text-electric-700 dark:text-electric-300 underline cursor-pointer"
                                     x-on:click="
                                         recovery = false;
                                         $nextTick(() => { $refs.code.focus() })
-"
+                                    "
                                 >
                                     {{ __('Use an authentication code') }}
                                 </button>

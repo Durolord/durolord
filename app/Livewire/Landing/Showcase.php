@@ -41,7 +41,7 @@ class Showcase extends Component
     {
         return view('livewire.landing.showcase', [
             'categories' => $this->categories(),
-        ])->layout('components.layouts.app', [
+        ])->layout('components.layouts.kit', [
             'title' => 'UI Kit',
         ]);
     }

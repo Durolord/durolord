@@ -107,7 +107,7 @@ class FormComponents extends Component
         return view('livewire.showcase.form-components', [
             'roles' => ['developer' => 'Developer', 'designer' => 'Designer', 'architect' => 'Architect', 'overseer' => 'Overseer'],
             'skillOptions' => ['laravel' => 'Laravel', 'livewire' => 'Livewire', 'alpine' => 'Alpine.js', 'tailwind' => 'Tailwind CSS', 'vue' => 'Vue', 'mysql' => 'MySQL', 'redis' => 'Redis'],
-        ])->layout('components.layouts.app', [
+        ])->layout('components.layouts.kit', [
             'title' => 'Forms',
         ]);
     }

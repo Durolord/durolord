@@ -210,7 +210,7 @@ class TableComponents extends Component
     public function render(): View
     {
         return view('livewire.showcase.table-components')
-            ->layout('components.layouts.app', [
+            ->layout('components.layouts.kit', [
                 'title' => 'Tables',
             ]);
     }

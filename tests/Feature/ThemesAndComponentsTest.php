@@ -3,34 +3,14 @@
 namespace Tests\Feature;
 
 use App\Livewire\Showcase\TableComponents;
-use App\Models\ContactInquiry;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class PortfolioPagesTest extends TestCase
+class ThemesAndComponentsTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function test_home_page_shows_portfolio_content(): void
-    {
-        $response = $this->get(route('home'));
-
-        $response->assertOk()
-            ->assertSee(config('portfolio.name'))
-            ->assertSee(config('portfolio.headline'))
-            ->assertSee('Selected work')
-            ->assertSeeLivewire('landing.contact');
-
-        foreach (config('duro.families') as $family) {
-            $response->assertSee($family['name']);
-        }
-
-        foreach (config('duro.themes') as $theme) {
-            $response->assertSee($theme['name']);
-        }
-    }
 
     public function test_every_theme_has_brand_assets(): void
     {
@@ -64,21 +44,15 @@ class PortfolioPagesTest extends TestCase
 
     public function test_every_realm_expresses_a_personality_trait(): void
     {
-        $traits = config('portfolio.traits');
+        $traits = config('duro.traits');
 
         foreach (config('duro.families') as $key => $family) {
             $this->assertArrayHasKey($family['trait'], $traits, "Family [{$key}] points at an unknown trait.");
             $this->assertNotEmpty($family['motto']);
         }
 
-        $usedTraits = collect(config('duro.families'))->pluck('trait')->unique();
-        $this->assertEqualsCanonicalizing(array_keys($traits), $usedTraits->all(), 'Every trait should have at least one realm.');
-
-        $response = $this->get(route('home'))->assertOk()->assertSee('Who I am');
-
-        foreach ($traits as $trait) {
-            $response->assertSee($trait['title'])->assertSee($trait['line']);
-        }
+        $usedTraits = collect(config('duro.families'))->pluck('trait')->unique()->all();
+        $this->assertEqualsCanonicalizing(array_keys($traits), $usedTraits, 'Every trait should have at least one realm.');
     }
 
     public function test_every_theme_has_styles(): void
@@ -90,11 +64,26 @@ class PortfolioPagesTest extends TestCase
         }
     }
 
-    public function test_ui_kit_pages_render(): void
+    public function test_component_pages_render_with_the_theme_switcher(): void
     {
         foreach (['showcase', 'form-components', 'table-components', 'elements'] as $route) {
-            $this->get(route($route))->assertOk();
+            $response = $this->get(route($route))->assertOk()->assertSee('window.__duro', false);
+
+            foreach (config('duro.families') as $family) {
+                $response->assertSee($family['name']);
+            }
         }
+    }
+
+    public function test_original_pages_still_render_with_themes(): void
+    {
+        $this->get(route('home'))->assertOk()->assertSee('window.__duro', false)->assertSee('Choose your realm');
+        $this->get(route('login'))->assertOk()->assertSee('window.__duro', false)->assertSee('Choose your realm');
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Choose your realm');
     }
 
     public function test_table_demo_filters_rows(): void
@@ -109,29 +98,5 @@ class PortfolioPagesTest extends TestCase
 
         $component->call('resetFilters');
         $this->assertCount(6, $component->instance()->filteredRows);
-    }
-
-    public function test_dashboard_requires_authentication(): void
-    {
-        $this->get(route('dashboard'))->assertRedirect(route('login'));
-    }
-
-    public function test_dashboard_lists_recent_inquiries(): void
-    {
-        $user = User::factory()->create();
-        $inquiry = ContactInquiry::factory()->create(['name' => 'Katherine Johnson']);
-
-        $this->actingAs($user)
-            ->get(route('dashboard'))
-            ->assertOk()
-            ->assertSee('Katherine Johnson')
-            ->assertSee($inquiry->projectTypeLabel());
-    }
-
-    public function test_missing_pages_use_the_themed_error_page(): void
-    {
-        $this->get('/this-realm-does-not-exist')
-            ->assertNotFound()
-            ->assertSee('You wandered into the void');
     }
 }

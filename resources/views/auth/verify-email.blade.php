@@ -7,10 +7,10 @@
                         EMAIL RITE · VERIFICATION
                     </x-duro.badge>
 
-                    <h1 class="text-2xl font-extrabold tracking-tight text-primary-ink">
+                    <h1 class="text-2xl font-extrabold tracking-tight text-electric-700 dark:text-electric-300">
                         Confirm your sigil
                     </h1>
-                    <p class="text-xs text-ink-muted">
+                    <p class="text-xs text-neutral-700 dark:text-neutralfog-300">
                         Before continuing, please verify your email address. We have sent you a verification link.
                     </p>
                 </div>
@@ -24,7 +24,7 @@
                 <form method="POST" action="{{ route('verification.send') }}" class="flex items-center justify-between gap-2 text-xs">
                     @csrf
 
-                    <span class="text-ink-muted">
+                    <span class="text-neutral-600 dark:text-neutralfog-400">
                         Didn't receive the email?
                     </span>
 
@@ -37,7 +37,7 @@
                     @csrf
                     <button
                         type="submit"
-                        class="text-[11px] text-ink-muted hover:underline"
+                        class="text-[11px] text-neutral-600 dark:text-neutralfog-400 hover:underline"
                     >
                         Log out
                     </button>

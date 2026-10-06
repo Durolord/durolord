@@ -104,7 +104,7 @@
                     <span class="min-w-0 flex-1">
                         <span class="flex items-center gap-2">
                             <span class="truncate text-sm font-semibold text-ink">{{ $family['name'] }}</span>
-                            @if ($trait = config('portfolio.traits.'.$family['trait'].'.title'))
+                            @if ($trait = config('duro.traits.'.$family['trait'].'.title'))
                                 <span class="shrink-0 text-[0.58rem] font-semibold uppercase tracking-wider text-primary-ink">{{ $trait }}</span>
                             @endif
                         </span>

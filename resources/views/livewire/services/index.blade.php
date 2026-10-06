@@ -1,16 +1,18 @@
 <div class="space-y-6">
-    <x-duro.page-header
-        title="Service tracking"
-        description="Search, filter, and review services with message, speaker, and hymn counts."
-        :breadcrumbs="['Workspace' => route('dashboard'), 'Services' => null]"
-    >
-        <x-slot:actions>
-            <x-duro.button :href="route('services.create')" icon="plus">New service</x-duro.button>
-        </x-slot:actions>
-    </x-duro.page-header>
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="space-y-1">
+            <x-duro.badge variant="gold" class="w-max">Services</x-duro.badge>
+            <h1 class="text-2xl font-semibold text-shadow-900 dark:text-neutralfog-50">Service tracking</h1>
+            <p class="text-sm text-neutral-700 dark:text-neutralfog-300">Search, filter, and review services with message, speaker, and hymn counts.</p>
+        </div>
+
+        <div class="flex gap-3">
+            <x-duro.button type="button" class="justify-center" onclick="window.location='{{ route('services.create') }}'">New service</x-duro.button>
+        </div>
+    </div>
 
     {{-- Filters --}}
-    <x-duro.card class="space-y-4">
+    <x-duro.card class="space-y-4 bg-white/80 dark:bg-shadow-900/70">
         <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             <x-duro.input wire:model.live.debounce.300ms="search" name="search" label="Search title/date" placeholder="Search..." />
 
@@ -34,7 +36,7 @@
     </x-duro.card>
 
     {{-- Table --}}
-    <x-duro.card padding="none" class="overflow-hidden">
+    <x-duro.card class="bg-white/85 dark:bg-shadow-900/70 overflow-hidden">
         <x-duro.table.table>
             <x-duro.table.head>
                 <x-duro.table.header-cell>Date</x-duro.table.header-cell>
@@ -49,12 +51,12 @@
                 @forelse ($services as $service)
                     <x-duro.table.row :key="$service->id">
                         <x-duro.table.cell class="whitespace-nowrap">
-                            <div class="font-semibold text-ink">{{ \Illuminate\Support\Carbon::parse($service->date)->format('M d, Y') }}</div>
+                            <div class="font-semibold text-shadow-900 dark:text-neutralfog-50">{{ \Illuminate\Support\Carbon::parse($service->date)->format('M d, Y') }}</div>
                         </x-duro.table.cell>
 
                         <x-duro.table.cell>
-                            <div class="text-sm font-semibold text-ink">{{ $service->title ?? 'Untitled service' }}</div>
-                            <div class="text-xs text-ink-muted line-clamp-1">{{ $service->notes }}</div>
+                            <div class="text-sm font-semibold text-shadow-900 dark:text-neutralfog-100">{{ $service->title ?? 'Untitled service' }}</div>
+                            <div class="text-xs text-neutral-600 dark:text-neutralfog-400 line-clamp-1">{{ $service->notes }}</div>
                         </x-duro.table.cell>
 
                         <x-duro.table.cell class="text-center">
@@ -70,7 +72,9 @@
                         </x-duro.table.cell>
 
                         <x-duro.table.actions-column>
-                            <x-duro.button :href="route('services.edit', $service)" size="sm" variant="secondary" icon="edit">Edit</x-duro.button>
+                            <x-duro.button type="button" size="sm" class="justify-center" onclick="window.location='{{ route('services.edit', $service) }}'">
+                                Edit
+                            </x-duro.button>
                         </x-duro.table.actions-column>
                     </x-duro.table.row>
                 @empty

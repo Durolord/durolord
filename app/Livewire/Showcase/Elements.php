@@ -35,7 +35,7 @@ class Elements extends Component
     public function render(): View
     {
         return view('livewire.showcase.elements')
-            ->layout('components.layouts.app', [
+            ->layout('components.layouts.kit', [
                 'title' => 'Elements',
             ]);
     }

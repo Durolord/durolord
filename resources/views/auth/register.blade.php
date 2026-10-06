@@ -4,10 +4,10 @@
             <x-duro.badge variant="gold">
                 NEW SIGIL
             </x-duro.badge>
-            <h1 class="duro-heading text-2xl">
+            <h1 class="text-xl font-semibold tracking-tight text-shadow-900 dark:text-neutralfog-50">
                 Create your presence
             </h1>
-            <p class="text-sm text-ink-muted">
+            <p class="text-sm text-neutral-600 dark:text-neutralfog-300">
                 Register to unlock dashboards, data vistas, and arcane utilities.
             </p>
         </div>
@@ -65,11 +65,11 @@
             </x-duro.button>
         </form>
 
-        <p class="text-xs text-center text-ink-muted">
+        <p class="text-xs text-center text-neutral-600 dark:text-neutralfog-400">
             Already aligned?
             <a
                 href="{{ route('login') }}"
-                class="text-primary-ink hover:text-primary-ink underline underline-offset-4"
+                class="text-electric-700 hover:text-electric-500 dark:text-electric-300 dark:hover:text-electric-200 underline underline-offset-4"
             >
                 Return to login
             </a>

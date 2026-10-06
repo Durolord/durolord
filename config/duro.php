@@ -4,6 +4,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Brand
+    |--------------------------------------------------------------------------
+    |
+    | Name shown by the logo component and in page titles of the UI kit.
+    |
+    */
+
+    'brand' => 'Durolord',
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Family
     |--------------------------------------------------------------------------
     |
@@ -20,8 +31,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | A family groups a light and a dark theme that share a shape language,
-    | typography and ornaments. "trait" points at a personality trait in
-    | config/portfolio.php, "motto" says how the realm expresses it and
+    | typography and ornaments. "trait" points at one of the personality
+    | traits below, "motto" says how the realm expresses it and
     | "inspiration" credits the game behind it.
     |
     */
@@ -91,6 +102,24 @@ return [
             'light' => 'anor-londo',
             'dark' => 'bonfire',
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Personality Traits
+    |--------------------------------------------------------------------------
+    |
+    | Every realm expresses one of these traits.
+    |
+    */
+
+    'traits' => [
+        'curious' => ['title' => 'Curious', 'line' => 'Explore beyond the obvious.', 'icon' => 'search'],
+        'builder' => ['title' => 'Builder', 'line' => 'Turn ideas into working systems.', 'icon' => 'cube'],
+        'systems-thinker' => ['title' => 'Systems Thinker', 'line' => 'See the architecture behind the problem.', 'icon' => 'layers'],
+        'creative' => ['title' => 'Creative', 'line' => 'Give technology imagination.', 'icon' => 'sparkles'],
+        'relentless' => ['title' => 'Relentless', 'line' => 'Keep solving until it works.', 'icon' => 'bolt'],
+        'quiet-strength' => ['title' => 'Quiet Strength', 'line' => 'Grow, adapt, and keep moving.', 'icon' => 'trending-up'],
     ],
 
     /*

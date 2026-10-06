@@ -1,9 +1,9 @@
 <div class="space-y-6">
-    <x-duro.card class="space-y-4">
+    <x-duro.card class="space-y-4 bg-white/85 dark:bg-shadow-900/70">
         <div class="flex items-center justify-between gap-3">
             <div>
-                <h2 class="text-lg font-semibold text-ink">Service info</h2>
-                <p class="text-xs text-ink-muted">Date, title, and notes for this service.</p>
+                <h2 class="text-lg font-semibold text-shadow-900 dark:text-neutralfog-50">Service info</h2>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">Date, title, and notes for this service.</p>
             </div>
             <x-duro.badge variant="electric" class="text-[10px]">{{ ucfirst($mode) }}</x-duro.badge>
         </div>
@@ -35,21 +35,21 @@
     </x-duro.card>
 
     {{-- Messages --}}
-    <x-duro.card class="space-y-4">
+    <x-duro.card class="space-y-4 bg-white/85 dark:bg-shadow-900/70">
         <div class="flex items-center justify-between gap-3">
             <div>
-                <h3 class="text-sm font-semibold text-primary-ink">Messages</h3>
-                <p class="text-xs text-ink-muted">Title, speaker, and tags per message.</p>
+                <h3 class="text-sm font-semibold text-electric-700 dark:text-electric-300">Messages</h3>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">Title, speaker, and tags per message.</p>
             </div>
             <x-duro.button type="button" size="sm" wire:click="addMessage">Add message</x-duro.button>
         </div>
 
         <div class="space-y-3">
             @forelse ($messages as $index => $message)
-                <div class="rounded-ui border border-line p-4 space-y-3" wire:key="message-{{ $index }}">
+                <div class="rounded-xl border border-neutralfog-200 dark:border-shadow-800 p-4 space-y-3" wire:key="message-{{ $index }}">
                     <div class="flex items-center justify-between gap-3">
                         <x-duro.badge variant="electric">Message {{ $index + 1 }}</x-duro.badge>
-                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeMessage({{ $index }})" class="text-danger">
+                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeMessage({{ $index }})" class="text-red-600 dark:text-red-300">
                             Remove
                         </x-duro.button>
                     </div>
@@ -70,27 +70,27 @@
                     @error('messages.'.$index.'.tags.*') <x-duro.alert variant="danger">{{ $message }}</x-duro.alert> @enderror
                 </div>
             @empty
-                <p class="text-xs text-ink-muted">No messages yet. Add one to begin.</p>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">No messages yet. Add one to begin.</p>
             @endforelse
         </div>
     </x-duro.card>
 
     {{-- Speaker activities --}}
-    <x-duro.card class="space-y-4">
+    <x-duro.card class="space-y-4 bg-white/85 dark:bg-shadow-900/70">
         <div class="flex items-center justify-between gap-3">
             <div>
-                <h3 class="text-sm font-semibold text-primary-ink">Speaker activities</h3>
-                <p class="text-xs text-ink-muted">Who did what in the service.</p>
+                <h3 class="text-sm font-semibold text-electric-700 dark:text-electric-300">Speaker activities</h3>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">Who did what in the service.</p>
             </div>
             <x-duro.button type="button" size="sm" wire:click="addSpeakerActivity">Add activity</x-duro.button>
         </div>
 
         <div class="space-y-3">
             @forelse ($speakerActivities as $index => $activity)
-                <div class="rounded-ui border border-line p-4 space-y-3" wire:key="activity-{{ $index }}">
+                <div class="rounded-xl border border-neutralfog-200 dark:border-shadow-800 p-4 space-y-3" wire:key="activity-{{ $index }}">
                     <div class="flex items-center justify-between gap-3">
                         <x-duro.badge variant="electric">Activity {{ $index + 1 }}</x-duro.badge>
-                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeSpeakerActivity({{ $index }})" class="text-danger">
+                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeSpeakerActivity({{ $index }})" class="text-red-600 dark:text-red-300">
                             Remove
                         </x-duro.button>
                     </div>
@@ -102,27 +102,27 @@
                     @error('speakerActivities.'.$index.'.activity') <x-duro.alert variant="danger">{{ $message }}</x-duro.alert> @enderror
                 </div>
             @empty
-                <p class="text-xs text-ink-muted">No activities yet.</p>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">No activities yet.</p>
             @endforelse
         </div>
     </x-duro.card>
 
     {{-- Hymns --}}
-    <x-duro.card class="space-y-4">
+    <x-duro.card class="space-y-4 bg-white/85 dark:bg-shadow-900/70">
         <div class="flex items-center justify-between gap-3">
             <div>
-                <h3 class="text-sm font-semibold text-primary-ink">Hymns used</h3>
-                <p class="text-xs text-ink-muted">Track hymn number and type.</p>
+                <h3 class="text-sm font-semibold text-electric-700 dark:text-electric-300">Hymns used</h3>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">Track hymn number and type.</p>
             </div>
             <x-duro.button type="button" size="sm" wire:click="addHymnUsage">Add hymn</x-duro.button>
         </div>
 
         <div class="space-y-3">
             @forelse ($hymnUsages as $index => $hymn)
-                <div class="rounded-ui border border-line p-4 space-y-3" wire:key="hymn-{{ $index }}">
+                <div class="rounded-xl border border-neutralfog-200 dark:border-shadow-800 p-4 space-y-3" wire:key="hymn-{{ $index }}">
                     <div class="flex items-center justify-between gap-3">
                         <x-duro.badge variant="electric">Hymn {{ $index + 1 }}</x-duro.badge>
-                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeHymnUsage({{ $index }})" class="text-danger">
+                        <x-duro.button type="button" variant="ghost" size="sm" wire:click="removeHymnUsage({{ $index }})" class="text-red-600 dark:text-red-300">
                             Remove
                         </x-duro.button>
                     </div>
@@ -140,7 +140,7 @@
                     @error('hymnUsages.'.$index.'.hymn_type') <x-duro.alert variant="danger">{{ $message }}</x-duro.alert> @enderror
                 </div>
             @empty
-                <p class="text-xs text-ink-muted">No hymns recorded yet.</p>
+                <p class="text-xs text-neutral-600 dark:text-neutralfog-400">No hymns recorded yet.</p>
             @endforelse
         </div>
     </x-duro.card>
