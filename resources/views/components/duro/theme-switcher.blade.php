@@ -102,7 +102,12 @@
                         <span class="absolute bottom-1.5 right-1.5 size-2.5 rounded-full" style="background: {{ $dark['swatches'][2] }}"></span>
                     </span>
                     <span class="min-w-0 flex-1">
-                        <span class="block truncate text-sm font-semibold text-ink">{{ $family['name'] }}</span>
+                        <span class="flex items-center gap-2">
+                            <span class="truncate text-sm font-semibold text-ink">{{ $family['name'] }}</span>
+                            @if ($trait = config('portfolio.traits.'.$family['trait'].'.title'))
+                                <span class="shrink-0 text-[0.58rem] font-semibold uppercase tracking-wider text-primary-ink">{{ $trait }}</span>
+                            @endif
+                        </span>
                         <span class="block truncate text-[0.7rem] text-ink-subtle">
                             {{ $light['name'] }} · {{ $dark['name'] }}@if ($family['inspiration']) — {{ $family['inspiration'] }}@endif
                         </span>

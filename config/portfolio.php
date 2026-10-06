@@ -34,6 +34,55 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Personality Traits
+    |--------------------------------------------------------------------------
+    |
+    | Shown in the "Who I am" section. Each realm in config/duro.php points at
+    | one of these keys through its "trait" option.
+    |
+    */
+
+    'traits' => [
+        'curious' => [
+            'title' => 'Curious',
+            'line' => 'Explore beyond the obvious.',
+            'icon' => 'search',
+            'detail' => 'I dig past the first answer — reading the source, questioning assumptions and finding the approach nobody tried yet.',
+        ],
+        'builder' => [
+            'title' => 'Builder',
+            'line' => 'Turn ideas into working systems.',
+            'icon' => 'cube',
+            'detail' => 'Ideas are cheap until they ship. I take rough concepts all the way to tested, deployed software people actually use.',
+        ],
+        'systems-thinker' => [
+            'title' => 'Systems Thinker',
+            'line' => 'See the architecture behind the problem.',
+            'icon' => 'layers',
+            'detail' => 'Data models, boundaries and flows come first, so features slot in cleanly instead of piling up as debt.',
+        ],
+        'creative' => [
+            'title' => 'Creative',
+            'line' => 'Give technology imagination.',
+            'icon' => 'sparkles',
+            'detail' => 'Software should feel like something. Sixteen themes on this site exist because I can never resist adding character.',
+        ],
+        'relentless' => [
+            'title' => 'Relentless',
+            'line' => 'Keep solving until it works.',
+            'icon' => 'bolt',
+            'detail' => 'Stubborn bugs, impossible deadlines, hostile legacy code — I keep iterating until the problem gives in.',
+        ],
+        'quiet-strength' => [
+            'title' => 'Quiet Strength',
+            'line' => 'Grow, adapt, and keep moving.',
+            'icon' => 'trending-up',
+            'detail' => 'Calm under pressure and always learning. I let the work speak, adapt when plans change and keep moving forward.',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Services
     |--------------------------------------------------------------------------
     */

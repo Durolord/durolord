@@ -20,64 +20,73 @@ return [
     |--------------------------------------------------------------------------
     |
     | A family groups a light and a dark theme that share a shape language,
-    | typography and ornaments. "trait" describes the side of my personality
-    | the realm represents; "inspiration" credits the game behind it.
+    | typography and ornaments. "trait" points at a personality trait in
+    | config/portfolio.php, "motto" says how the realm expresses it and
+    | "inspiration" credits the game behind it.
     |
     */
 
     'families' => [
         'runic' => [
             'name' => 'Runic Forge',
-            'trait' => 'The craftsman — every detail hammered into place.',
+            'trait' => 'builder',
+            'motto' => 'Forged, not generated — every detail hammered into place.',
             'inspiration' => null,
             'light' => 'runic-bronze',
             'dark' => 'runic-steel',
         ],
         'neon' => [
             'name' => 'Neon Circuit',
-            'trait' => 'The tinkerer — happiest wiring new ideas together.',
+            'trait' => 'systems-thinker',
+            'motto' => 'Every component wired into a circuit that makes sense.',
             'inspiration' => null,
             'light' => 'neon-daylight',
             'dark' => 'neon-circuit',
         ],
         'codex' => [
             'name' => 'Quill & Codex',
-            'trait' => 'The storyteller — code that reads like good prose.',
+            'trait' => 'creative',
+            'motto' => 'Code and story share the same craft: structure that reads beautifully.',
             'inspiration' => null,
             'light' => 'ink-quill',
             'dark' => 'crimson-codex',
         ],
         'grimoire' => [
             'name' => 'Faerûn Grimoire',
-            'trait' => 'The strategist — every choice has consequences, so choose well.',
+            'trait' => 'systems-thinker',
+            'motto' => 'Every choice has consequences, so I plan the whole campaign.',
             'inspiration' => "Baldur's Gate 3",
             'light' => 'gilded-grimoire',
             'dark' => 'illithid',
         ],
         'lands-between' => [
             'name' => 'Lands Between',
-            'trait' => 'The explorer — curiosity is always rewarded.',
+            'trait' => 'curious',
+            'motto' => 'The best discoveries hide off the beaten path.',
             'inspiration' => 'Elden Ring',
             'light' => 'erdtree',
             'dark' => 'tarnished',
         ],
         'night-city' => [
             'name' => 'Night City',
-            'trait' => 'The rebel — fast, sharp and unafraid of the unconventional.',
+            'trait' => 'creative',
+            'motto' => 'Chrome, neon and a little rebellion — technology with imagination.',
             'inspiration' => 'Cyberpunk 2077',
             'light' => 'corpo',
             'dark' => 'night-city',
         ],
         'web-slinger' => [
             'name' => 'Web-Slinger',
-            'trait' => 'The protector — dependable under pressure, with a sense of humour.',
+            'trait' => 'quiet-strength',
+            'motto' => 'No spotlight needed — show up, adapt, protect what matters.',
             'inspiration' => "Marvel's Spider-Man",
             'light' => 'spider-sense',
             'dark' => 'symbiote',
         ],
         'lordran' => [
             'name' => 'Lordran',
-            'trait' => 'The persistent — try, fail, learn, master.',
+            'trait' => 'relentless',
+            'motto' => 'You died. Try again. Learn. Master it.',
             'inspiration' => 'Dark Souls',
             'light' => 'anor-londo',
             'dark' => 'bonfire',

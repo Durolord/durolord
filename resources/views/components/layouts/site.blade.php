@@ -5,6 +5,7 @@
 
 @php
     $navLinks = [
+        'About' => route('home').'#about',
         'Work' => route('home').'#work',
         'Services' => route('home').'#services',
         'Realms' => route('home').'#realms',

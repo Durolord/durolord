@@ -102,6 +102,58 @@
     </section>
 
     {{-- ============================================================
+         WHO I AM (TRAITS)
+    ============================================================ --}}
+    <section id="about" class="mx-auto max-w-7xl px-4 pt-24 sm:px-6 lg:px-8 lg:pt-32">
+        <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+            <div class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+                <x-duro.section-heading
+                    eyebrow="Who I am"
+                    title="Six traits behind every line of code."
+                    description="Skills can be listed on a CV. These are the habits that decide how a project actually goes — and each one has a realm on this site you can step into."
+                />
+                <div class="flex flex-wrap gap-2" data-reveal>
+                    @foreach ($portfolio['traits'] as $trait)
+                        <span class="duro-badge duro-badge-neutral normal-case tracking-normal"><x-duro.icon :name="$trait['icon']" class="size-3" /> {{ $trait['title'] }}</span>
+                    @endforeach
+                </div>
+            </div>
+
+            <ol class="grid gap-4 sm:grid-cols-2">
+                @foreach ($portfolio['traits'] as $traitKey => $trait)
+                    @php($traitFamilies = collect($families)->filter(fn ($family) => $family['trait'] === $traitKey))
+                    <li class="duro-card duro-card-interactive group flex flex-col p-6" data-reveal style="--reveal-delay: {{ ($loop->index % 2) * 90 }}ms">
+                        <div class="flex items-start justify-between gap-4">
+                            <span class="duro-icon-tile size-12 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110"><x-duro.icon :name="$trait['icon']" size="lg" /></span>
+                            <span class="font-display text-4xl font-bold leading-none text-ink/10 transition group-hover:text-primary/30" aria-hidden="true">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        </div>
+                        <h3 class="duro-heading mt-5 text-2xl">{{ $trait['title'] }}</h3>
+                        <p class="mt-1 font-semibold text-primary-ink">{{ $trait['line'] }}</p>
+                        <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{{ $trait['detail'] }}</p>
+
+                        @if ($traitFamilies->isNotEmpty())
+                            <div class="mt-5 flex flex-wrap items-center gap-2 border-t border-line pt-4">
+                                <span class="text-[0.65rem] uppercase tracking-wider text-ink-subtle">Realm</span>
+                                @foreach ($traitFamilies as $familyKey => $family)
+                                    <button
+                                        type="button"
+                                        x-on:click="$store.theme.setFamily(@js($familyKey), $event)"
+                                        class="inline-flex items-center gap-1.5 rounded-pill border border-line bg-surface-2 px-2.5 py-1 text-xs text-ink transition hover:border-primary hover:text-primary-ink"
+                                        :class="$store.theme.family === @js($familyKey) && '!border-primary !text-primary-ink'"
+                                        x-tooltip="'Step into {{ $family['name'] }}'"
+                                    >
+                                        <x-duro.icon name="palette" class="size-3" /> {{ $family['name'] }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+                    </li>
+                @endforeach
+            </ol>
+        </div>
+    </section>
+
+    {{-- ============================================================
          SERVICES
     ============================================================ --}}
     <section id="services" class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
@@ -277,7 +329,13 @@
                                 </span>
                             @endif
                         </div>
-                        <p class="text-xs leading-relaxed text-ink-muted">{{ $family['trait'] }}</p>
+                        @php($trait = $portfolio['traits'][$family['trait']] ?? null)
+                        @if ($trait)
+                            <p class="inline-flex w-max items-center gap-1.5 font-label text-[0.62rem] font-bold uppercase tracking-[0.18em] text-primary-ink">
+                                <x-duro.icon :name="$trait['icon']" class="size-3" /> {{ $trait['title'] }}
+                            </p>
+                        @endif
+                        <p class="text-xs leading-relaxed text-ink-muted">{{ $family['motto'] }}</p>
                     </div>
                 </article>
             @endforeach

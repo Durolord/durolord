@@ -62,6 +62,25 @@ class PortfolioPagesTest extends TestCase
         $this->assertSame('runic-steel', config('duro.families.runic.dark'));
     }
 
+    public function test_every_realm_expresses_a_personality_trait(): void
+    {
+        $traits = config('portfolio.traits');
+
+        foreach (config('duro.families') as $key => $family) {
+            $this->assertArrayHasKey($family['trait'], $traits, "Family [{$key}] points at an unknown trait.");
+            $this->assertNotEmpty($family['motto']);
+        }
+
+        $usedTraits = collect(config('duro.families'))->pluck('trait')->unique();
+        $this->assertEqualsCanonicalizing(array_keys($traits), $usedTraits->all(), 'Every trait should have at least one realm.');
+
+        $response = $this->get(route('home'))->assertOk()->assertSee('Who I am');
+
+        foreach ($traits as $trait) {
+            $response->assertSee($trait['title'])->assertSee($trait['line']);
+        }
+    }
+
     public function test_every_theme_has_styles(): void
     {
         $css = file_get_contents(resource_path('css/app.css'));
